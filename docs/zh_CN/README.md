@@ -2687,20 +2687,12 @@ compiler.clear ();
 
 
 
-### 输出 {{}} 、{html{}}
+### 输出 {{}} 
 
-允许采用文本特殊符号的模板语法来输出变量。
+允许采用文本特殊符号的模板语法来输出 HTML 内容的变量，用法等价 `webpanda-html` 。
 
 ```html
 <div>{{ message }}</div>
-```
-
-默认情况下会自动执行了 `webpanda.encodeHTML` 方法。
-
-可以使用如下方法来输出 HTML 内容的变量：
-
-```html
-<div>{html{ message }}</div>
 ```
 
 使用 JavaScript 表达式：
@@ -2711,11 +2703,25 @@ compiler.clear ();
 
 
 
+### 替换 (())
+
+允许采用文本特殊符号的模板语法来输出变量。
+
+```html
+<div>(( message ))</div>
+```
+
+`(())`  是与 `webpanda-text` 输出效果一样，会自动执行了 `webpanda.encodeHTML` 方法。
+
+> 注意，如果文本中存在多个替换值，而某一个替换值发生改变，那么该文本节点的所有替换值都要重新执行，全部重新替换。
+
+
+
 ### 打印 webpanda\-text、webpanda\-html
 
 该命令的表达式结果会作为字符串返回值来打印。该命令不能在同一个标签中存在多个。
 
-> 注意，输出{{}}、{html{}}语法是打印av-text、av-html的别名写法，彼此效果一致。
+> 注意，输出(())、{{}}语法是打印av-text、av-html的别名写法，彼此效果一致。
 
  **如果当前节点包含子内容，那么其子内容跳过编译过程，会被当做源字符串打印输出，也就是说不会识别模板语法命令。**
 
@@ -2902,41 +2908,59 @@ compiler.render(test, {
 
 
 
-### 无效 webpanda\-void、\<webpanda\>
+### 无效 webpanda\-void、\<webpanda\>、/\*\[\[webpanda\]\]\*/、\<\!\-\-[[webpanda]]\-\-\>
 
-该命令是将节点当做无效的包裹节点，最终的渲染结果将不包含其节点。
+该命令是将节点当做无效的包裹节点，最终的渲染结果将不包含其节点，但会渲染其子节点。
 
 如果同一个标签存在其他的命令，下列命令才有效果：
 
+> 这些命令具有优先级，会先执行，所以会有效果。
+
 ```shell
-webpanda-template,webpanda-for,webpanda-if,webpanda-else-if,webpanda-else,webpanda-is,webpanda-text,webpanda-html
+webpanda-before,webpanda-template,webpanda-for,webpanda-if,webpanda-else-if,webpanda-else,webpanda-is,webpanda-text,webpanda-html
 ```
 
-如果非上列命令，让其他命令与其搭配的话将无其他命令效果，因为webpanda\-void是具有优先级的。该命令有两种写法，一种是属性的方式，一种是标签的方式。
+如果非上列命令，让其他命令与其搭配的话将无其他命令效果，因为无效节点是具有优先级的。该命令有四种写法，一种是属性的方式，一种是标签的方式，其他是注释的方式。
 
 ```html
 <ul id="example">
-    <!--属性的方式-->
+    <!-- 属性的方式 -->
     <div webpanda-void webpanda-for="(item, index) items">
-      <li>
+    <li>
         {{ item.message }}
-      </li>
+    </li>
     </div>
 </ul>
 <ul id="example">
-    <!--标签的方式-->
+    <!-- 标签的方式 -->
     <webpanda webpanda-for="(item, index) items">
-      <li>
+    <li>
         {{ item.message }}
-      </li>
+    </li>
     </webpanda>
+</ul>
+<ul id="example">
+    <!-- css注释的方式 -->
+	/* [[webpanda]] webpanda-for="(item, index) items" */
+    <li>
+        {{ item.message }}
+    </li>
+	/* [[/webpanda]] */
+</ul>
+<ul id="example">
+    <!-- html注释的方式 -->
+    <!-- [[webpanda]] webpanda-for="(item, index) items" -->
+	<li>
+        {{ item.message }}
+    </li>
+	<!-- [[/webpanda]] -->
 </ul>
 ```
 
-用无效命令配合打印命令实现插值`{{}}`功能：
+用无效命令单标签的方式，配合打印命令实现插值`{{}}`功能：
 
 ```html
-<webpanda webpanda-text="message"/>
+<webpanda webpanda-html="message"/>
 ```
 
 上例等同于下例写法：
@@ -2944,6 +2968,8 @@ webpanda-template,webpanda-for,webpanda-if,webpanda-else-if,webpanda-else,webpan
 ```html
 {{message}}
 ```
+
+> 注意，注释的方式是不支持单标签的方式，必须需要一个结束标签。
 
 
 
