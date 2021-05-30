@@ -58,6 +58,7 @@ webpanda.js 是面向前后端分离、视图与数据分离，基于 ECMAScript
     - [extend 继承](#extend-继承)
       - [继承冲突问题](#继承冲突问题)
       - [直属与非直属多次继承](#直属与非直属多次继承)
+    - [friend 友元工程](#friend-友元工程)
     - [property 工程成员属性](#property-工程成员属性)
     - [data 工程渲染数据](#data-工程渲染数据)
     - [onreadied(project, env) 工程完成准备时](#onreadiedproject-env-工程完成准备时-1)
@@ -99,8 +100,8 @@ webpanda.js 是面向前后端分离、视图与数据分离，基于 ECMAScript
     - [stop() 停止执行或渲染](#stop-停止执行或渲染)
     - [event(config) 启用或关闭事件](#eventconfig-启用或关闭事件)
     - [template(content) 设置或获取模板内容](#templatecontent-设置或获取模板内容)
+    - [compiler(compilerObject) 设置或获取编译器](#compilercompilerobject-设置或获取编译器)
     - [selector(ele) 设置或获取筛选器](#selectorele-设置或获取筛选器)
-    - [compiler() 获取编译器](#compiler-获取编译器)
     - [html() 获取渲染后的节点字符串](#html-获取渲染后的节点字符串)
     - [text() 获取渲染后的文本字符串](#text-获取渲染后的文本字符串)
   - [选项 webpanda\.project\.option](#选项-webpandaprojectoption)
@@ -115,12 +116,13 @@ webpanda.js 是面向前后端分离、视图与数据分离，基于 ECMAScript
     - [reload() 重新解析模板](#reload-重新解析模板)
     - [clear() 清理渲染节点](#clear-清理渲染节点)
   - [模板语法](#模板语法)
-    - [输出 {{}} 、{html{}}](#输出--html)
-    - [打印 webpanda\-text、webpanda\-html](#打印-webpanda-textwebpanda-html)
+    - [HTML输出  webpanda\-html](#html输出--webpanda-html)
+    - [文本打印 webpanda\-text 、{{}}](#文本打印-webpanda-text-)
+    - [文本替换 (())](#文本替换-)
     - [模板 webpanda\-template](#模板-webpanda-template)
       - [模板递归嵌入会造成死循环](#模板递归嵌入会造成死循环)
     - [遍历 webpanda\-for](#遍历-webpanda-for)
-    - [无效 webpanda\-void、\<webpanda\>](#无效-webpanda-voidwebpanda)
+    - [无效 webpanda\-void、\<webpanda\>、/\*\*\[\[webpanda\]\]\*\*/、\<\!\-\-\-[[webpanda]]\-\-\-\>](#无效-webpanda-voidwebpandawebpanda---webpanda---)
     - [分支 webpanda\-if、webpanda\-else\-if、webpanda\-elseif、webpanda\-else](#分支-webpanda-ifwebpanda-else-ifwebpanda-elseifwebpanda-else)
     - [条件 webpanda\-is](#条件-webpanda-is)
     - [属性 webpanda\-attribute、webpanda\-attr](#属性-webpanda-attributewebpanda-attr)
@@ -139,7 +141,7 @@ webpanda.js 是面向前后端分离、视图与数据分离，基于 ECMAScript
     - [命令前缀  “webpanda\-” 简写为 “\-”](#命令前缀--webpanda--简写为--)
     - [命令前缀  “webpanda\-attribute-” 简写为 “\-\-”](#命令前缀--webpanda-attribute--简写为---)
   - [知识点](#知识点)
-    - [webpanda\-template、webpanda\-html、{html{}} 打印模板字符串比较](#webpanda-templatewebpanda-htmlhtml-打印模板字符串比较)
+    - [webpanda\-template、webpanda\-html 打印模板字符串比较](#webpanda-templatewebpanda-html-打印模板字符串比较)
     - [webpanda\-template、webpanda\-for 模板与遍历的编译性质](#webpanda-templatewebpanda-for-模板与遍历的编译性质)
     - [webpanda\-void、\<webpanda\>、webpanda\-for 无效与遍历渲染性质](#webpanda-voidwebpandawebpanda-for-无效与遍历渲染性质)
   - [常见错误](#常见错误)
@@ -152,7 +154,7 @@ webpanda.js 是面向前后端分离、视图与数据分离，基于 ECMAScript
     - [merge() 合并URL地址或者url对象](#merge-合并url地址或者url对象)
     - [toString(options) 把 url 对象换为 URL 字符串(构造 URL)](#tostringoptions-把-url-对象换为-url-字符串构造-url)
       - [选项 webpanda\.url\.option](#选项-webpandaurloption)
-- [webpanda\.history() 浏览记录](#webpandahistory-浏览记录)
+- [webpanda\.history 浏览记录](#webpandahistory-浏览记录)
   - [属性](#属性-2)
     - [backLength 上一页的数量](#backlength-上一页的数量)
     - [forwardLength 下一页的数量](#forwardlength-下一页的数量)
@@ -2687,23 +2689,48 @@ compiler.clear ();
 
 
 
-### 输出 {{}} 
 
-允许采用文本特殊符号的模板语法来输出 HTML 内容的变量，用法等价 `webpanda-html` 。
+
+### HTML输出  webpanda\-html
+
+允许采用文本特殊符号的模板语法来输出 HTML 内容的变量。
+
+该命令不能在同一个标签中存在多个。如果其节点包含子内容，那么其子内容跳过编译过程，会被当做源字符串打印输出，也就是说不会识别模板语法命令。
 
 ```html
-<div>{{ message }}</div>
+<div webpanda-html="name"></div>
+<!--支持单标签-->
+<div webpanda-html="name"/>
 ```
 
-使用 JavaScript 表达式：
+
+
+
+
+### 文本打印 webpanda\-text 、{{}} 
+
+允许采用文本特殊符号的模板语法来输出文本内容的变量。该命令的使用会将html实体编码（自动执行了 `webpanda.encodeHTML` 方法）。
+
+其中，`webpanda-text` 命令不能在同一个标签中存在多个。如果其节点包含子内容，那么其子内容跳过编译过程，会被当做源字符串打印输出，也就是说不会识别模板语法命令。
+
+> 注意， {{}} 是 webpanda\-text 等价写法。
 
 ```html
+<div webpanda-text="message"></div>
+<!--支持单标签-->
+<div webpanda-text="message"/>
+
+<!--字符串的写法-->
+<div>{{ message }}</div>
+<!--使用 JavaScript 表达式-->
 <div>{{ message + '测试' }}</div>
 ```
 
 
 
-### 替换 (())
+
+
+### 文本替换 (())
 
 允许采用文本特殊符号的模板语法来输出变量。
 
@@ -2714,70 +2741,6 @@ compiler.clear ();
 `(())`  是与 `webpanda-text` 输出效果一样，会自动执行了 `webpanda.encodeHTML` 方法。
 
 > 注意，如果文本中存在多个替换值，而某一个替换值发生改变，那么该文本节点的所有替换值都要重新执行，全部重新替换。
-
-
-
-### 打印 webpanda\-text、webpanda\-html
-
-该命令的表达式结果会作为字符串返回值来打印。该命令不能在同一个标签中存在多个。
-
-> 注意，输出(())、{{}}语法是打印av-text、av-html的别名写法，彼此效果一致。
-
- **如果当前节点包含子内容，那么其子内容跳过编译过程，会被当做源字符串打印输出，也就是说不会识别模板语法命令。**
-
-打印普通文本，该命令会将html实体编码（自动执行了 `webpanda.encodeHTML` 方法）：
-
-```html
-<div webpanda-text="name"></div>
-<!--支持单标签-->
-<div webpanda-text="name"/>
-```
-
-打印HTML标签，该命令对html实体不做任何处理：
-
-```html
-<div webpanda-html="name"></div>
-<!--支持单标签-->
-<div webpanda-html="name"/>
-```
-
-如果将打印标签中存在子标签，那么打印永远会渲染到最后面（跟 `webpanda-template` 语法情况类似），但是标签子内容是不会被编译解析的，如下情况：
-
-```html
-<div webpanda-text="name"><span>这是测试原始子节点{{test}}</span>测试</div>
-```
-
-渲染数据如下：
-
-```javascript
-// 获取编译对象
-var compiler = webpanda.compiler ($('#app').html());
-// 渲染数据
-var test = {
-    name: 'NAME',
-    test: 'TEST'
-};
-// 渲染
-compiler.render (test, {
-    selector : "view"
-});
-```
-
-渲染结果为：
-
-```html
-<div><span>这是测试原始子节点{{test}}</span>测试NAME</div>
-```
-
-即使渲染数据里面定义了 `test` 这里仍然是显示的 `{{test}}`字符串。即使 `webpanda-html` 会把子内容当成HTML显示，但是其内容也会跳过编译解析。
-
-又如下示例，即使渲染数据里面定义了`msg`属性变量，但在这里仍然是显示的`{{msg}}`字符串，也就是把内容当成HTML显示。
-
-```html
-<span webpanda-html>
-    <div>{{msg}}<div>
-</span>
-```
 
 
 
@@ -2908,7 +2871,7 @@ compiler.render(test, {
 
 
 
-### 无效 webpanda\-void、\<webpanda\>、/\*\[\[webpanda\]\]\*/、\<\!\-\-[[webpanda]]\-\-\>
+### 无效 webpanda\-void、\<webpanda\>、/\*\*\[\[webpanda\]\]\*\*/、\<\!\-\-\-[[webpanda]]\-\-\-\>
 
 该命令是将节点当做无效的包裹节点，最终的渲染结果将不包含其节点，但会渲染其子节点。
 
@@ -2940,27 +2903,33 @@ webpanda-before,webpanda-template,webpanda-for,webpanda-if,webpanda-else-if,webp
     </webpanda>
 </ul>
 <ul id="example">
-    <!-- css注释的方式 -->
-	/* [[webpanda]] webpanda-for="(item, index) items" */
+    <!-- css注释的方式, 注意，前后标签都是两个“*”符号 -->
+	/** [[webpanda]] webpanda-for="(item, index) items" **/
     <li>
         {{ item.message }}
     </li>
-	/* [[/webpanda]] */
+	/** [[/webpanda]] **/
 </ul>
 <ul id="example">
-    <!-- html注释的方式 -->
-    <!-- [[webpanda]] webpanda-for="(item, index) items" -->
+    <!-- html注释的方式, 注意，前后标签都是三个“-”符号 -->
+    <!--- [[webpanda]] webpanda-for="(item, index) items" --->
 	<li>
         {{ item.message }}
     </li>
-	<!-- [[/webpanda]] -->
+	<!--- [[/webpanda]] --->
 </ul>
 ```
 
 用无效命令单标签的方式，配合打印命令实现插值`{{}}`功能：
 
 ```html
-<webpanda webpanda-html="message"/>
+<webpanda webpanda-text="message"/>
+
+<!-- css注释的方式, 注意，前标签的前后都是一个“*”符号 -->
+/* [[webpanda]] webpanda-text="message" */
+
+<!-- html注释的方式, 注意，前标签的前后都是两个“-”符号 -->
+<!-- [[webpanda]] webpanda-text="message" -->
 ```
 
 上例等同于下例写法：
@@ -2969,7 +2938,7 @@ webpanda-before,webpanda-template,webpanda-for,webpanda-if,webpanda-else-if,webp
 {{message}}
 ```
 
-> 注意，注释的方式是不支持单标签的方式，必须需要一个结束标签。
+
 
 
 
@@ -3400,11 +3369,11 @@ this.eClickFnTest = function (e) {
 
 
 
-### webpanda\-template、webpanda\-html、{html{}} 打印模板字符串比较
+### webpanda\-template、webpanda\-html 打印模板字符串比较
 
-webpanda\-html、{html{}}两者等价，其内部文本会及时编译并且始终显示在节点前面。webpanda\-template是不会被强制渲染刷新，除非模板字符发生变更，而webpanda\-html、{html{}}是可以强制渲染刷新的。
+webpanda\-html 内部文本会及时编译并且始终显示在节点前面。webpanda\-template 是不会被强制渲染刷新，除非模板字符发生变更，而 webpanda\-html 是可以强制渲染刷新的。
 
-> webpanda\-template与webpanda\-html、{html{}}最大区别：webpanda\-template会将模板中存在的模板语法递归解析出来，而webpanda\-html、{html{}}返回的模板语法是不会被解析的。
+> webpanda\-template与webpanda\-html最大区别：webpanda\-template会将模板中存在的模板语法递归解析出来，而webpanda\-html返回的模板语法是不会被解析的。
 
 
 
