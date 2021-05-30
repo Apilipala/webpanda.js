@@ -3604,6 +3604,8 @@ url.toString (opt.all & ~ opt.query);// "https://example.com:8080/path/Test/"
 
 # webpanda\.history 浏览记录
 
+> 注意，当页面不存在时（触发 onpagenotfound 事件），是不会储存（错误页面）浏览记录的。
+
 
 
 ## 属性
