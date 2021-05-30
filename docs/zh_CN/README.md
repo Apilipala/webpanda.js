@@ -117,7 +117,7 @@ webpanda.js 是面向前后端分离、视图与数据分离，基于 ECMAScript
     - [clear() 清理渲染节点](#clear-清理渲染节点)
   - [模板语法](#模板语法)
     - [HTML输出  webpanda\-html](#html输出--webpanda-html)
-    - [文本打印 webpanda\-text 、{{}}](#文本打印-webpanda-text-)
+    - [文本打印 webpanda\-text 、\{\{\}\}](#文本打印-webpanda-text-)
     - [文本替换 (())](#文本替换-)
     - [模板 webpanda\-template](#模板-webpanda-template)
       - [模板递归嵌入会造成死循环](#模板递归嵌入会造成死循环)
@@ -2707,13 +2707,13 @@ compiler.clear ();
 
 
 
-### 文本打印 webpanda\-text 、{{}} 
+### 文本打印 webpanda\-text 、\{\{\}\} 
 
 允许采用文本特殊符号的模板语法来输出文本内容的变量。该命令的使用会将html实体编码（自动执行了 `webpanda.encodeHTML` 方法）。
 
 其中，`webpanda-text` 命令不能在同一个标签中存在多个。如果其节点包含子内容，那么其子内容跳过编译过程，会被当做源字符串打印输出，也就是说不会识别模板语法命令。
 
-> 注意， {{}} 是 webpanda\-text 等价写法。
+> 注意， \{\{\}\} 是 webpanda\-text 等价写法。
 
 ```html
 <div webpanda-text="message"></div>
