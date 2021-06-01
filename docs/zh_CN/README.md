@@ -480,11 +480,25 @@ hash 模式如：
 http://example.com/#login?id=123456
 ```
 
+
+
 history 模式如：
 
 ```shell
 http://example.com/login?id=123456
 ```
+
+如果是 history 模式，需要服务端伪静态支持。如下 Nginx 示例：
+
+```shell
+location / {
+  if (!-e $request_filename){
+    rewrite ^.*$ /index.html last;
+  }
+}
+```
+
+
 
 
 
