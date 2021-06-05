@@ -1389,11 +1389,25 @@ webpanda.project ({
 
 
 
+### property 自定义成员属性
+
+自定义工程的成员属性，不会被渲染监听，用于非模板非渲染的操作。
+
+自定义的成员属性，会直接绑定到工程对象 this 上，所以注意自定义成员属性时，其属性名称不要使用如下关键字：
+
+```javascript
+index,name,parent,children,extend,friend,data,ready,clone,compiler,template,selector,event,page,execute,render,start,pause,stop,html,text,remove,debug
+```
+
+并且，属性名称不能以 `on` 关键字开头。
+
+> 在自定义成员属性中，是不能定义工程事件的。
+
+但是，如果只是作为继承类来使用，并且在继承的时候设置别名称，那么是可以不用考虑关键字的问题，而只是别名称需要考虑即可。因为自定义的成员属性都定义在别名属性下了，跟工程的基础属性名称并不会冲突。
 
 
-### property 工程成员属性
 
-定义工程的成员属性，不会被渲染监听，用于非模板非渲染的操作。
+
 
 定义 Object 的方式：
 
@@ -2103,35 +2117,15 @@ webpanda.project ({
 
 
 
-### property 成员属性
+### friend 友元属性
 
-非渲染数据，不会被渲染监听，相对于模板渲染来说，该属性是私有的，也就是说在模板中无法使用该属性值，只能通过 data 中代理处理。
-
-示例如下：
+获取该工程的友元工程名称集合，返回一个索引数组。
 
 ```javascript
-webpanda.project ({
-
-    name : 'test',
-    // 非渲染数据的定义
-    property : function () {
-
-        this.demonstrator = function (node) {
-            // ......
-        };
-
-    },
-    // 渲染数据
-    data : function (project) {
-        
-        // 在模板中访问 toDemonstrator (#node), 代理执行了 project.property.demonstrator
-        this.toDemonstrator = function (node) {
-            project.property.demonstrator (node);
-        };
-
-    },
-
-});
+// 获取友元工程名称集合
+webpanda.project ().friend ();
+// 添加友元工程
+webpanda.project ().friend ().push ("test");
 ```
 
 
@@ -2433,6 +2427,50 @@ webpanda.project("test").event ({
 ### text() 获取渲染后的文本字符串
 
 获取筛选器元素的文本内容，如果筛选器未设置，则从编译器的默认渲染节点中获取。
+
+
+
+
+
+### 其他 property 自定义的成员属性
+
+自定义的成员属性，会直接绑定到工程对象 this 上，调用的方式如下：
+
+```javascript
+// 获取工程对象
+var project = webpanda.project ('工程名称');
+// 访问自定义成员属性
+project['自定义成员属性名称'];
+```
+
+自定义的成员属性是非渲染数据，不会被渲染监听，相对于模板渲染来说，该属性是私有的，也就是说在模板中无法使用该属性值，只能通过 data 中代理处理。
+
+示例如下：
+
+```javascript
+webpanda.project ({
+
+    name : 'test',
+    // 非渲染数据的定义
+    property : function () {
+
+        this.demonstrator = function (node) {
+            // ......
+        };
+
+    },
+    // 渲染数据
+    data : function (project) {
+        
+        // 在模板中访问 toDemonstrator (#node), 代理执行了 project.demonstrator
+        this.toDemonstrator = function (node) {
+            project.demonstrator (node);
+        };
+
+    },
+
+});
+```
 
 
 
