@@ -59,7 +59,7 @@
       - [继承冲突问题](#继承冲突问题)
       - [直属与非直属多次继承](#直属与非直属多次继承)
     - [friend 友元工程](#friend-友元工程)
-    - [property 工程成员属性](#property-工程成员属性)
+    - [property 自定义成员属性](#property-自定义成员属性)
     - [data 工程渲染数据](#data-工程渲染数据)
     - [onreadied(project, env) 工程完成准备时](#onreadiedproject-env-工程完成准备时-1)
     - [onpaged(project, env) 页面最后执行时](#onpagedproject-env-页面最后执行时-1)
@@ -88,9 +88,9 @@
     - [parent 父工程](#parent-父工程)
     - [children 子工程](#children-子工程)
     - [extend 继承属性](#extend-继承属性)
-    - [property 成员属性](#property-成员属性)
     - [data 渲染数据](#data-渲染数据)
     - [ready(callback, setting) 准备工程或准备完成执行](#readycallback-setting-准备工程或准备完成执行)
+    - [friend() 友元属性](#friend-友元属性)
     - [clone(name) 克隆工程](#clonename-克隆工程)
     - [page() 加载页面](#page-加载页面)
     - [execute(args) 执行工程](#executeargs-执行工程)
@@ -104,6 +104,7 @@
     - [selector(ele) 设置或获取筛选器](#selectorele-设置或获取筛选器)
     - [html() 获取渲染后的节点字符串](#html-获取渲染后的节点字符串)
     - [text() 获取渲染后的文本字符串](#text-获取渲染后的文本字符串)
+    - [其他 property 自定义的成员属性](#其他-property-自定义的成员属性)
   - [选项 webpanda\.project\.option](#选项-webpandaprojectoption)
   - [检测 webpanda\.project\.isInstanceOf (obj)](#检测-webpandaprojectisinstanceof-obj)
   - [获取工程对象](#获取工程对象)
@@ -2117,19 +2118,6 @@ webpanda.project ({
 
 
 
-### friend 友元属性
-
-获取该工程的友元工程名称集合，返回一个索引数组。
-
-```javascript
-// 获取友元工程名称集合
-webpanda.project ().friend ();
-// 添加友元工程
-webpanda.project ().friend ().push ("test");
-```
-
-
-
 ### data 渲染数据
 
 渲染页面的数据，会添加渲染监听，相对于模板渲染来说，该数据是公开的，也就是说在模板中可以直接访问该数据的属性值。
@@ -2179,6 +2167,23 @@ var readyState = test.ready (function () {
     }
 });
 ```
+
+
+
+
+
+### friend() 友元属性
+
+获取该工程的友元工程名称集合，返回一个索引数组。
+
+```javascript
+// 获取友元工程名称集合
+var friends = webpanda.project ().friend ();
+// 添加友元工程名称
+webpanda.project ().friend ().push ("test");
+```
+
+
 
 
 
