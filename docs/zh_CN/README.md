@@ -105,13 +105,13 @@
     - [html() 获取渲染后的节点字符串](#html-获取渲染后的节点字符串)
     - [text() 获取渲染后的文本字符串](#text-获取渲染后的文本字符串)
   - [选项 webpanda\.project\.option](#选项-webpandaprojectoption)
-  - [检测 webpanda\.project\.isInstanceOf ()](#检测-webpandaprojectisinstanceof-)
+  - [检测 webpanda\.project\.isInstanceOf (obj)](#检测-webpandaprojectisinstanceof-obj)
   - [获取工程对象](#获取工程对象)
   - [获取工程准备状态值](#获取工程准备状态值)
   - [获取当前页面工程](#获取当前页面工程)
 - [webpanda\.compiler(template,config) 编译模板](#webpandacompilertemplateconfig-编译模板)
   - [选项 webpanda.compiler.option](#选项-webpandacompileroption)
-  - [检测 webpanda\.compiler\.isInstanceOf ()](#检测-webpandacompilerisinstanceof-)
+  - [检测 webpanda\.compiler\.isInstanceOf (obj)](#检测-webpandacompilerisinstanceof-obj)
   - [属性](#属性)
   - [方法](#方法)
     - [render(data, config) 渲染](#renderdata-config-渲染)
@@ -166,14 +166,14 @@
     - [log() 获取页面的浏览记录列表](#log-获取页面的浏览记录列表)
 - [webpanda\.url(location) 地址解析](#webpandaurllocation-地址解析)
   - [选项 webpanda\.url\.option](#选项-webpandaurloption)
-  - [检测 webpanda\.url\.isInstanceOf ()](#检测-webpandaurlisinstanceof-)
+  - [检测 webpanda\.url\.isInstanceOf (obj)](#检测-webpandaurlisinstanceof-obj)
   - [属性](#属性-2)
   - [方法](#方法-2)
     - [merge() 合并URL地址或者url对象](#merge-合并url地址或者url对象)
     - [toString(options) 把 url 对象换为 URL 字符串(构造 URL)](#tostringoptions-把-url-对象换为-url-字符串构造-url)
 - [webpanda\.require(config) 引入资源文件](#webpandarequireconfig-引入资源文件)
   - [选项 webpanda.require.option](#选项-webpandarequireoption)
-  - [检测 webpanda\.require\.isInstanceOf ()](#检测-webpandarequireisinstanceof-)
+  - [检测 webpanda\.require\.isInstanceOf (obj)](#检测-webpandarequireisinstanceof-obj)
   - [属性](#属性-3)
   - [方法](#方法-3)
     - [onerror(e) 错误事件](#onerrore-错误事件)
@@ -186,7 +186,7 @@
     - [remove() 删除已加载的全部资源文件](#remove-删除已加载的全部资源文件)
 - [webpanda.ajax(config) 网络请求](#webpandaajaxconfig-网络请求)
   - [选项 webpanda.ajax.option](#选项-webpandaajaxoption)
-  - [检测 webpanda\.ajax\.isInstanceOf ()](#检测-webpandaajaxisinstanceof-)
+  - [检测 webpanda\.ajax\.isInstanceOf (obj)](#检测-webpandaajaxisinstanceof-obj)
   - [属性](#属性-4)
   - [方法](#方法-4)
     - [onready(readyState) 当 readyState 改变时执行事件](#onreadyreadystate-当-readystate-改变时执行事件)
@@ -2472,7 +2472,7 @@ webpanda.project.option.readyState
 
 
 
-## 检测 webpanda\.project\.isInstanceOf ()
+## 检测 webpanda\.project\.isInstanceOf (obj)
 
 判断变量的对象类型是否为 webpanda\.project 实例对象。如果是返回 true，否则返回 false 。
 
@@ -2624,7 +2624,7 @@ webpanda.compiler.option.disableCommand
 
 
 
-## 检测 webpanda\.compiler\.isInstanceOf ()
+## 检测 webpanda\.compiler\.isInstanceOf (obj)
 
 判断变量的对象类型是否为 webpanda\.compiler 实例对象。如果是返回 true，否则返回 false 。
 
@@ -3719,7 +3719,7 @@ var url3 = webpanda.url("file:///C:/Users/example/AppData/Local/Temp/wangdan.jpg
 
 
 
-## 检测 webpanda\.url\.isInstanceOf ()
+## 检测 webpanda\.url\.isInstanceOf (obj)
 
 判断变量的对象类型是否为 webpanda\.url 实例对象。如果是返回 true，否则返回 false 。
 
@@ -3840,7 +3840,7 @@ webpanda.require.option.repeat
 
 
 
-## 检测 webpanda\.require\.isInstanceOf ()
+## 检测 webpanda\.require\.isInstanceOf (obj)
 
 判断变量的对象类型是否为 webpanda\.require 实例对象。如果是返回 true，否则返回 false 。
 
@@ -4096,7 +4096,7 @@ webpanda.ajax.option.post
 
 
 
-## 检测 webpanda\.ajax\.isInstanceOf ()
+## 检测 webpanda\.ajax\.isInstanceOf (obj)
 
 判断变量的对象类型是否为 webpanda\.ajax 实例对象。如果是返回 true，否则返回 false 。
 
