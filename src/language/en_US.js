@@ -1,9 +1,9 @@
 webpanda.language ({
 
     // compiler
-    'compiler-0001' : 'The error tag',
+    'compiler-0001' : 'The error command',
     'compiler-0002' : 'Content of the template',
-    'compiler-0003' : 'The Warning tag',
+    'compiler-0003' : 'The Warning command',
     'compiler-0004' : 'Content of the template',
     
     // parse

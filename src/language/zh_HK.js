@@ -1,9 +1,9 @@
 webpanda.language ({
 
     // compiler
-    'compiler-0001' : '錯誤標簽',
+    'compiler-0001' : '錯誤命令',
     'compiler-0002' : '模板內容',
-    'compiler-0003' : '警告標簽',
+    'compiler-0003' : '警告命令',
     'compiler-0004' : '模板內容',
 
     // parse
