@@ -1,11 +1,11 @@
 # webpanda\.js 
 
-webpanda.js 是面向前后端分离、视图与数据分离，基于 ECMAScript 5 特性的单页应用（SPA）框架。
+
+官方网站：[http://webpandajs.com](http://webpandajs.com)  
+
 
 > webpanda.js 是用于在 web 上构建项目的 JavaScript 框架。  
 > webpanda.js is JavaScript framework for building project on the web.
-
-
 
 
 
@@ -105,11 +105,13 @@ webpanda.js 是面向前后端分离、视图与数据分离，基于 ECMAScript
     - [html() 获取渲染后的节点字符串](#html-获取渲染后的节点字符串)
     - [text() 获取渲染后的文本字符串](#text-获取渲染后的文本字符串)
   - [选项 webpanda\.project\.option](#选项-webpandaprojectoption)
+  - [检测 webpanda\.project\.isInstanceOf ()](#检测-webpandaprojectisinstanceof-)
   - [获取工程对象](#获取工程对象)
   - [获取工程准备状态值](#获取工程准备状态值)
   - [获取当前页面工程](#获取当前页面工程)
 - [webpanda\.compiler(template,config) 编译模板](#webpandacompilertemplateconfig-编译模板)
   - [选项 webpanda.compiler.option](#选项-webpandacompileroption)
+  - [检测 webpanda\.compiler\.isInstanceOf ()](#检测-webpandacompilerisinstanceof-)
   - [属性](#属性)
   - [方法](#方法)
     - [render(data, config) 渲染](#renderdata-config-渲染)
@@ -148,19 +150,13 @@ webpanda.js 是面向前后端分离、视图与数据分离，基于 ECMAScript
     - [为什么渲染数据的变量更新了，然而视图并没有自动刷新渲染？](#为什么渲染数据的变量更新了然而视图并没有自动刷新渲染)
     - [避免渲染数据中函数体未变动以为变动，然后视图并没有自动刷新渲染的错误](#避免渲染数据中函数体未变动以为变动然后视图并没有自动刷新渲染的错误)
     - [模板渲染出现”Maximum call stack size exceeded“错误](#模板渲染出现maximum-call-stack-size-exceeded错误)
-- [webpanda\.url(location) 地址解析](#webpandaurllocation-地址解析)
-  - [属性](#属性-1)
-  - [方法](#方法-1)
-    - [merge() 合并URL地址或者url对象](#merge-合并url地址或者url对象)
-    - [toString(options) 把 url 对象换为 URL 字符串(构造 URL)](#tostringoptions-把-url-对象换为-url-字符串构造-url)
-      - [选项 webpanda\.url\.option](#选项-webpandaurloption)
 - [webpanda\.history 浏览记录](#webpandahistory-浏览记录)
-  - [属性](#属性-2)
+  - [属性](#属性-1)
     - [backLength 上一页的数量](#backlength-上一页的数量)
     - [forwardLength 下一页的数量](#forwardlength-下一页的数量)
     - [lastLength 上一步的数量](#lastlength-上一步的数量)
     - [nextLength 下一步的数量](#nextlength-下一步的数量)
-  - [方法](#方法-2)
+  - [方法](#方法-1)
     - [back() 上一页](#back-上一页)
     - [forward() 下一页](#forward-下一页)
     - [go(number) 跳转到某一页](#gonumber-跳转到某一页)
@@ -168,24 +164,16 @@ webpanda.js 是面向前后端分离、视图与数据分离，基于 ECMAScript
     - [next() 下一步](#next-下一步)
     - [step(number) 跳转到某一步](#stepnumber-跳转到某一步)
     - [log() 获取页面的浏览记录列表](#log-获取页面的浏览记录列表)
-- [webpanda\.encodeURL(var) 编码 URL](#webpandaencodeurlvar-编码-url)
-- [webpanda\.decodeURL(var) 解码 URL](#webpandadecodeurlvar-解码-url)
-- [webpanda\.parseQuery(string) 将URL字符串的query部分, 解析成一个对象](#webpandaparsequerystring-将url字符串的query部分-解析成一个对象)
-- [webpanda\.buildQuery(object) 将关联数组和对象生成 URL Query 字符串](#webpandabuildqueryobject-将关联数组和对象生成-url-query-字符串)
-- [webpanda\.formData(object) 将关联数组和对象生成 FormData 键值对结构\[!\<=IE9\]](#webpandaformdataobject-将关联数组和对象生成-formdata-键值对结构ie9)
-- [webpanda\.encodeHTML(string) 编码HTML标签](#webpandaencodehtmlstring-编码html标签)
-- [webpanda\.decodeHTML(string) 解码HTML实体](#webpandadecodehtmlstring-解码html实体)
-- [webpanda\.reloadURL(clear) 刷新当前页面地址](#webpandareloadurlclear-刷新当前页面地址)
-- [webpanda\.requestURL(href, clear) 请求并跳转地址](#webpandarequesturlhref-clear-请求并跳转地址)
-- [webpanda\.openURL(href, width, height, config) 弹出并打开地址](#webpandaopenurlhref-width-height-config-弹出并打开地址)
-- [webpanda\.targetURL(href, config) 改变网址而不刷新页面\[!\<=IE9\]](#webpandatargeturlhref-config-改变网址而不刷新页面ie9)
-- [webpanda\.date(fmt,timestamp) 时间格式化](#webpandadatefmttimestamp-时间格式化)
-- [webpanda\.byte(bytes,decollator) 获取字节单位换算](#webpandabytebytesdecollator-获取字节单位换算)
-- [webpanda\.triggerEventClick(node) 触发节点的点击事件](#webpandatriggereventclicknode-触发节点的点击事件)
-- [webpanda\.createFileURL(file) 创建文件表单资源的URL信息](#webpandacreatefileurlfile-创建文件表单资源的url信息)
-- [webpanda\.title(title,src) 获取或动态修改浏览器中的title](#webpandatitletitlesrc-获取或动态修改浏览器中的title)
+- [webpanda\.url(location) 地址解析](#webpandaurllocation-地址解析)
+  - [选项 webpanda\.url\.option](#选项-webpandaurloption)
+  - [检测 webpanda\.url\.isInstanceOf ()](#检测-webpandaurlisinstanceof-)
+  - [属性](#属性-2)
+  - [方法](#方法-2)
+    - [merge() 合并URL地址或者url对象](#merge-合并url地址或者url对象)
+    - [toString(options) 把 url 对象换为 URL 字符串(构造 URL)](#tostringoptions-把-url-对象换为-url-字符串构造-url)
 - [webpanda\.require(config) 引入资源文件](#webpandarequireconfig-引入资源文件)
   - [选项 webpanda.require.option](#选项-webpandarequireoption)
+  - [检测 webpanda\.require\.isInstanceOf ()](#检测-webpandarequireisinstanceof-)
   - [属性](#属性-3)
   - [方法](#方法-3)
     - [onerror(e) 错误事件](#onerrore-错误事件)
@@ -198,6 +186,7 @@ webpanda.js 是面向前后端分离、视图与数据分离，基于 ECMAScript
     - [remove() 删除已加载的全部资源文件](#remove-删除已加载的全部资源文件)
 - [webpanda.ajax(config) 网络请求](#webpandaajaxconfig-网络请求)
   - [选项 webpanda.ajax.option](#选项-webpandaajaxoption)
+  - [检测 webpanda\.ajax\.isInstanceOf ()](#检测-webpandaajaxisinstanceof-)
   - [属性](#属性-4)
   - [方法](#方法-4)
     - [onready(readyState) 当 readyState 改变时执行事件](#onreadyreadystate-当-readystate-改变时执行事件)
@@ -209,6 +198,14 @@ webpanda.js 是面向前后端分离、视图与数据分离，基于 ECMAScript
     - [post() 发起POST请求](#post-发起post请求)
     - [get() 发起GET请求](#get-发起get请求)
     - [abort() 中断请求任务](#abort-中断请求任务)
+- [webpanda.trim(string) 去除字符串两端的空白字符](#webpandatrimstring-去除字符串两端的空白字符)
+- [webpanda\.encodeURL(var) 编码 URL](#webpandaencodeurlvar-编码-url)
+- [webpanda\.decodeURL(var) 解码 URL](#webpandadecodeurlvar-解码-url)
+- [webpanda\.parseQuery(string) 将URL字符串的query部分, 解析成一个对象](#webpandaparsequerystring-将url字符串的query部分-解析成一个对象)
+- [webpanda\.buildQuery(object) 将关联数组和对象生成 URL Query 字符串](#webpandabuildqueryobject-将关联数组和对象生成-url-query-字符串)
+- [webpanda\.formData(object) 将关联数组和对象生成 FormData 键值对结构\[!\<=IE9\]](#webpandaformdataobject-将关联数组和对象生成-formdata-键值对结构ie9)
+- [webpanda\.encodeHTML(string) 编码HTML标签](#webpandaencodehtmlstring-编码html标签)
+- [webpanda\.decodeHTML(string) 解码HTML实体](#webpandadecodehtmlstring-解码html实体)
 
 
 
@@ -1350,6 +1347,8 @@ webpanda.project ("home", function () {
 
 当该工程为页面工程加载渲染时，或者在渲染设置 `webpanda.project.option.alone` 选项时，被设为友元的工程所渲染的节点不会被清理掉，也就是说该工程与友元工程的渲染节点（筛选容器）如果相同，则渲染节点（筛选容器）共享。
 
+> 友元工程的设置，对页面工程有很大的帮助。
+
 以数组的方式定义：
 
 ```javascript
@@ -2473,6 +2472,18 @@ webpanda.project.option.readyState
 
 
 
+## 检测 webpanda\.project\.isInstanceOf ()
+
+判断变量的对象类型是否为 webpanda\.project 实例对象。如果是返回 true，否则返回 false 。
+
+```javascript
+if (webpanda.project.isInstanceOf (obj)) {
+    // 是 webpanda.project 对象
+}
+```
+
+
+
 
 
 
@@ -2483,13 +2494,13 @@ webpanda.project.option.readyState
 
 ```javascript
 // 如果工程对象不存在，则返回 `undefined` 
-var project =  webpanda.project("test");
+var project =  webpanda.project ("test");
 ```
 
 不清楚对象是否已经载入，只知道工程名称，可以使用回调方式，并且返回一个工程准备状态值：
 
 ```javascript
-var readyState = webpanda.project("test", function () {
+var readyState = webpanda.project ("test", function () {
     // 当工程载入并且准备完毕后，会执行这个回调函数
     // this 就是这个工程对象
     console.log (this);
@@ -2501,7 +2512,7 @@ var readyState = webpanda.project("test", function () {
 如果这个工程名称在当前页面下一直不存在，那么这个操作会一直循环判断，（不切换页面时）无法将其中断，这样就会存在占用资源的情况，所以可以通过超时设置解决这个问题，可以更好的控制。示例如下：
 
 ```javascript
-var readyState = webpanda.project("test", function () {
+var readyState = webpanda.project ("test", function () {
     // 当工程载入并且准备完毕后，会执行这个回调函数
     // this 就是这个准备好的工程对象
     console.log (this);
@@ -2522,7 +2533,7 @@ var readyState = webpanda.project("test", function () {
 第二个参数传入选项值，返回状态数值：
 
 ```javascript
-var readyState = webpanda.project("test", webpanda.project.option.readyState);
+var readyState = webpanda.project ("test", webpanda.project.option.readyState);
 ```
 
 返回的状态数值：
@@ -2543,7 +2554,7 @@ var readyState = webpanda.project("test", webpanda.project.option.readyState);
 
 ```javascript
 // 如果工程对象不存在，则返回 `undefined`
-var pageProject = webpanda.project();
+var pageProject = webpanda.project ();
 ```
 
 
@@ -2608,6 +2619,24 @@ webpanda.compiler.option.disableCommand
 
 
 > 注意，当前编译对象 或者 父级编译对象的选项设置了 `disableListener`，那么将不允许绑定、触发数据监听。 同理，当前编译对象 或者 父级编译对象的选项设置了 `disableRender` ，那么将不允许渲染。
+
+
+
+
+
+## 检测 webpanda\.compiler\.isInstanceOf ()
+
+判断变量的对象类型是否为 webpanda\.compiler 实例对象。如果是返回 true，否则返回 false 。
+
+```javascript
+if (webpanda.compiler.isInstanceOf (obj)) {
+    // 是 webpanda.compiler 对象
+}
+```
+
+
+
+
 
 
 
@@ -3526,96 +3555,6 @@ _this.setCatalogsScrollTop = function() {
 
 
 
-#  webpanda\.url(location) 地址解析
-
-传入一个网络协议地址进行解析。
-
-```javascript
-// http 协议地址
-var url = webpanda.url("https://example.com:8080/?a=index&t=article&bbbb=default");
-var url2 = webpanda.url("http://username:password@hostname/path?arg=value#hash");
-// file 协议地址
-var url3 = webpanda.url("file:///C:/Users/example/AppData/Local/Temp/wangdan.jpg?a=index");
-```
-
-
-
-## 属性
-
-| 名称           | 值示例                                | 描述                                                         |
-| -------------- | ------------------------------------- | ------------------------------------------------------------ |
-| protocol       | "http"                                | 协议前缀                                                     |
-| user           | "user"                                | 账户名                                                       |
-| password       | "password"                            | 账户密码                                                     |
-| domain         | "example\.com"                        | 域名名称                                                     |
-| port           | 8080                                  | 端口号                                                       |
-| path           | Array ( [0] => index.html)            | 路径                                                         |
-| query          | Object ([a] => index [t] => article ) | 键值对                                                       |
-| hashPath     | Array ( [0] => index)                 | 锚点路径                                                     |
-| hashQuery    | Object ([a] => index [t] => article ) | 锚点键值对                                                   |
-| hashStatus   | false                                 | 锚点状态，默认 false。  <br />如果锚点存在， "\#/" 或者是 "\#" 那么 hashStatus 为 true，绑定时则保留为\#，为 false 则清理 \# |
-| fileStatus     | false                                 | 文件模式状态，默认 false 。  <br />如果是 true 文件模式，也就是说 path 最后不加 "/" 斜杠，否则要加上。只有在 path 存在参数时有效 |
-| absoluteStatus | false                                 | 是否是绝对路径，默认 false。  <br />如果是 true 也就是说 path 前面有 '/'斜杠，需要加上。只有在 protocol、account、domain、port 选项所绑定数据为空时有效 |
-
-
-
-## 方法
-
-
-
-### merge() 合并URL地址或者url对象
-
-支持 `webpanda.url` 对象、路由地址字符串。
-
-```javascript
-var url = webpanda.url("https://example.com:8080?a=index");
-url.merge("/path/Test/");
-url.toString();// "https://example.com:8080/path/Test/?a=index"
-```
-
-
-
-
-
-### toString(options) 把 url 对象换为 URL 字符串(构造 URL)
-
-构造地址字符串，options 选项值来自于 `webpanda.url.option` 静态属性 。
-
-```javascript
-var url = webpanda.url("https://example.com:8080/path/Test/?a=index&t=article&bbbb=default");
-// 选项为空默认 webpanda.url.option.all, 也就是获取完整路由
-url.toString ();// "https://example.com:8080/path/Test/?a=index&t=article&bbbb=default"
-var opt =  webpanda.url.option;
-// 只获取域名、协议
-url.toString (opt.domain | opt.protocol);// "https://example.com"
-// 除了路径，都要获取
-url.toString (opt.all & ~ opt.path);// "https://example.com:8080/?a=index&t=article&bbbb=default"
-// 除了Query，都要获取。
-url.toString (opt.all & ~ opt.query);// "https://example.com:8080/path/Test/"
-```
-
-
-
-####  选项 webpanda\.url\.option
-
-| 名称      | 值示例                                                       | 描述                                    |
-| --------- | ------------------------------------------------------------ | --------------------------------------- |
-| protocol  | "http://"、"file://"                                         | 构造 URL 时，获取协议                   |
-| account   | "username:password@"                                         | 构造 URL 时，获取账户信息               |
-| domain    | "example\.com"                                               | 构造 URL 时，获取域名端口               |
-| port      | 8080                                                         | 构造 URL 时，获取端口                   |
-| path      | "/index\.html"                                               | 构造 URL 时，获取路径                   |
-| query     | "?a=index\&t=article"                                        | 构造 URL 时，获取 query（键值对）       |
-| hashPath  | "\#test/index"                                               | 构造 URL 时，获取锚点中路径             |
-| hashQuery | "\#?a=index&b=test"                                          | 构造 URL 时，获取锚点中 query（键值对） |
-| hash      | "\#test/index?a=index&b=test"                                | 构造 URL 时，获取完整锚点               |
-| host      | "http://username:password@example\.com:8080"                 | 完整的主机信息                          |
-| all       | "http://example.com:8080/index\.html?a=index&t=article\#test/index?a=index\&b=test" | 构造 URL 时，获取完整路由。默认值       |
-
-
-
-
-
 # webpanda\.history 浏览记录
 
 > 注意，当页面不存在时（触发 onpagenotfound 事件），是不会储存（错误页面）浏览记录的。
@@ -3746,289 +3685,106 @@ var logs = webpanda.history.log ();
 
 
 
-# webpanda\.encodeURL(var) 编码 URL
+#  webpanda\.url(location) 地址解析
 
-支持数组、对象、字符串。
-
-```javascript
-var test = "abc@#$%&*^xyz";
-var code = webpanda.encodeURL (test);
-console.log(code);// abc%40%23%24%25%26*%5Exyz
-
-var test = ["abc@#xyz","123$%456"];
-var code = webpanda.encodeURL (test);
-console.log(code);// ["abc%40%23xyz", "123%24%25456"]
-
-var test = {a:"abc@#xyz",b:"123$%456"};
-var code = webpanda.encodeURL (test);
-console.log(code);// {a: "abc%40%23xyz", b: "123%24%25456"}
-```
-
-
-
-# webpanda\.decodeURL(var) 解码 URL
-
-支持数组、对象、字符串。
+传入一个网络协议地址进行解析。
 
 ```javascript
-var test = "abc%40%23%24%25%26*%5Exyz";
-var code = webpanda.decodeURL (test);
-console.log(code);// abc@#$%&*^xyz
-
-var test = ["abc%40%23xyz", "123%24%25456"];
-var code = webpanda.decodeURL (test);
-console.log(code);// ["abc@#xyz", "123$%456"]
-
-var test = {a: "abc%40%23xyz", b: "123%24%25456"};
-var code = webpanda.decodeURL (test);
-console.log(code);// {a: "abc@#xyz", b: "123$%456"}
+// http 协议地址
+var url = webpanda.url("https://example.com:8080/?a=index&t=article&bbbb=default");
+var url2 = webpanda.url("http://username:password@hostname/path?arg=value#hash");
+// file 协议地址
+var url3 = webpanda.url("file:///C:/Users/example/AppData/Local/Temp/wangdan.jpg?a=index");
 ```
 
 
 
 
 
-# webpanda\.parseQuery(string) 将URL字符串的query部分, 解析成一个对象
+##  选项 webpanda\.url\.option
+
+| 名称      | 值示例                                                       | 描述                                    |
+| --------- | ------------------------------------------------------------ | --------------------------------------- |
+| protocol  | "http://"、"file://"                                         | 构造 URL 时，获取协议                   |
+| account   | "username:password@"                                         | 构造 URL 时，获取账户信息               |
+| domain    | "example\.com"                                               | 构造 URL 时，获取域名端口               |
+| port      | 8080                                                         | 构造 URL 时，获取端口                   |
+| path      | "/index\.html"                                               | 构造 URL 时，获取路径                   |
+| query     | "?a=index\&t=article"                                        | 构造 URL 时，获取 query（键值对）       |
+| hashPath  | "\#test/index"                                               | 构造 URL 时，获取锚点中路径             |
+| hashQuery | "\#?a=index&b=test"                                          | 构造 URL 时，获取锚点中 query（键值对） |
+| hash      | "\#test/index?a=index&b=test"                                | 构造 URL 时，获取完整锚点               |
+| host      | "http://username:password@example\.com:8080"                 | 完整的主机信息                          |
+| all       | "http://example.com:8080/index\.html?a=index&t=article\#test/index?a=index\&b=test" | 构造 URL 时，获取完整路由。默认值       |
+
+
+
+## 检测 webpanda\.url\.isInstanceOf ()
+
+判断变量的对象类型是否为 webpanda\.url 实例对象。如果是返回 true，否则返回 false 。
 
 ```javascript
-var queryObject = webpanda.parseQuery ("a=a1&b=b1&c=c1");
-console.log (queryObject);// {a: "a1", b: "b1", c: "c1"}
-
-var queryObject2 = webpanda.parseQuery ("a[1]=a1&a[0]=b1&a[c]=c1");
-console.log (queryObject2);// {a: {0: "b1", 1: "a1", c: "c1"}}
-```
-
-
-
-# webpanda\.buildQuery(object) 将关联数组和对象生成 URL Query 字符串
-
-```javascript
-var test1 = {a: "a1", b: "b1", c: "c1"};
-var queryString = webpanda.buildQuery (test1);
-console.log (queryString);// a=a1&b=b1&c=c1
-
-var test2 = {a: {0: "b1", 1: "a1", c: "c1"}};
-var queryString2 = webpanda.buildQuery (test2);
-console.log (queryString2);// a[0]=b1&a[1]=a1&a[c]=c1
-```
-
-
-
-
-
-# webpanda\.formData(object) 将关联数组和对象生成 FormData 键值对结构\[!\<=IE9\]
-
-> 注意，FormData接口在IE9及IE9以下版不支持。更多参考：[FormData](https://developer.mozilla.org/zh-CN/docs/Web/API/FormData)
-
-```javascript
-var obj = {
-	"b":{"api":"user.oauth.github.AccessToken","args":{"primaryKey":""}},
-	"a":{"api":"testApi1","args":{"name":"王阿和","info":"这是测试"}}
-};
-var forms = webpanda.formData (obj);
-console.log (JSON.stringify (forms));
-```
-
-打印输出：
-
-```shell
-[{
-	"key":"b[api]",
-	"value":"user.oauth.github.AccessToken"
-},
-{
-	"key":"b[args][primaryKey]",
-	"value":""
-},
-{
-	"key":"a[api]",
-	"value":"testApi1"
-},
-{
-	"key":"a[args][name]",
-	"value":"王阿和"
-},
-{
-	"key":"a[args][info]",
-	"value":"这是测试"
-}]
-```
-
-
-
-# webpanda\.encodeHTML(string) 编码HTML标签
-
-```javascript
-var test = "<span>这是测试</span>";
-var code = webpanda.encodeHTML (test);
-console.log (code);// &lt;span&gt;这是测试&lt;/span&gt;
+if (webpanda.url.isInstanceOf (obj)) {
+    // 是 webpanda.url 对象
+}
 ```
 
 
 
 
 
-# webpanda\.decodeHTML(string) 解码HTML实体
+## 属性
+
+| 名称           | 值示例                                | 描述                                                         |
+| -------------- | ------------------------------------- | ------------------------------------------------------------ |
+| protocol       | "http"                                | 协议前缀                                                     |
+| user           | "user"                                | 账户名                                                       |
+| password       | "password"                            | 账户密码                                                     |
+| domain         | "example\.com"                        | 域名名称                                                     |
+| port           | 8080                                  | 端口号                                                       |
+| path           | Array ( [0] => index.html)            | 路径                                                         |
+| query          | Object ([a] => index [t] => article ) | 键值对                                                       |
+| hashPath       | Array ( [0] => index)                 | 锚点路径                                                     |
+| hashQuery      | Object ([a] => index [t] => article ) | 锚点键值对                                                   |
+| hashStatus     | false                                 | 锚点状态，默认 false。  <br />如果锚点存在， "\#/" 或者是 "\#" 那么 hashStatus 为 true，绑定时则保留为\#，为 false 则清理 \# |
+| fileStatus     | false                                 | 文件模式状态，默认 false 。  <br />如果是 true 文件模式，也就是说 path 最后不加 "/" 斜杠，否则要加上。只有在 path 存在参数时有效 |
+| absoluteStatus | false                                 | 是否是绝对路径，默认 false。  <br />如果是 true 也就是说 path 前面有 '/'斜杠，需要加上。只有在 protocol、account、domain、port 选项所绑定数据为空时有效 |
+
+
+
+## 方法
+
+
+
+### merge() 合并URL地址或者url对象
+
+支持 `webpanda.url` 对象、路由地址字符串。
 
 ```javascript
-var test = "&lt;span&gt;这是测试&lt;/span&gt;";
-var code = webpanda.decodeHTML (test);
-console.log (code);// <span>这是测试</span>
-```
-
-
-
-# webpanda\.reloadURL(clear) 刷新当前页面地址
-
-```javascript
-// 参数为空，从客户端缓存里取当前页。
-webpanda.reloadURL ();
-// 参数为 true, 则以 GET 方式，从服务端取最新的页面, 相当于客户端点击 F5("刷新")
-webpanda.reloadURL (true);
-```
-
-
-
-# webpanda\.requestURL(href, clear) 请求并跳转地址
-
-参数中， `href` 是地址字符串或者 `webpanda.url` 对象。
-
-```javascript
-// 创建一个url对象
-var url = webpanda.url("https://www.baidu.com/");
-// 跳转
-webpanda.requestURL (url);
-// 跳转, 第二个参数为 true 表示清空历史记录（也就是无法返回了）
-webpanda.requestURL ("https://www.baidu.com/", true);
-```
-
-
-
-# webpanda\.openURL(href, width, height, config) 弹出并打开地址
-
-```javascript
-// 创建一个url对象
-var url = webpanda.url ("https://www.baidu.com/");
-// 默认宽高、配置
-webpanda.openURL (url);
-// 设置宽高
-webpanda.openURL ("https://www.baidu.com/", 500, 300);
-```
-
-参数中，`href` 是地址字符串或者 `webpanda.url` 对象，`width` 窗口宽度，`height` 窗口高度，`config` 配置信息，如下可设置属性：
-
-| 名称       | 描述                                                         |
-| :--------- | :----------------------------------------------------------- |
-| left       | 窗口距离屏幕左侧的象素值；默认值 (window\.screen\.width \- width) / 2 |
-| top        | 窗口距离屏幕上方的象素值；默认值 (window\.screen\.height \- height) / 2 |
-| target     | 弹出窗口的名字（不是文件名），非必须，可用空''代替； \_blank \-\- 在新窗口中打开链接（默认） \_parent \-\- 在父窗体中打开链接 \_self \-\- 在当前窗体打开链接,此为默认值 \_top \-\- 在当前窗体打开链接，并替换当前的整个窗体(框架页) |
-| toolbar    | 是否显示工具栏，默认no，yes为显示；                          |
-| scrollbars | 是否显示滚动栏，默认no，yes为显示；                          |
-| menubar    | 是否显示菜单栏，默认no，yes为显示；                          |
-| location   | 是否显示地址栏，默认no，yes为允许；                          |
-| resizable  | 是否允许改变窗口大小，默认no，yes为允许；                    |
-| status     | 是否显示状态栏内的信息（通常是文件已经打开），默认no，yes为允许； |
-
-
-
-
-
-# webpanda\.targetURL(href, config) 改变网址而不刷新页面\[!\<=IE9\]
-
-> 注意，该方法在IE9及IE9以下版本不支持。更多参考：[History.pushState()](https://developer.mozilla.org/zh-CN/docs/Web/API/History/pushState)
-
- 仅改变网址，网页不会真的跳转，也不会获取到新的内容，本质上网页还停留在原页面。注意，存在跨域限制。
-
-```javascript
-// 创建一个url对象
-var url = webpanda.url ("/home/?id=123");
-// 不能跨域
-webpanda.targetURL (url, {
-    state : null,// 状态对象：传给目标路由的信息,可为空
-    title : '',// 页面标题：目前所有浏览器都不支持,填空字符串即可
-    replaceState : false,// 是否为 replaceState 方式执行。直接替换掉当前url,不会在history中留下记录
-});
+var url = webpanda.url("https://example.com:8080?a=index");
+url.merge("/path/Test/");
+url.toString();// "https://example.com:8080/path/Test/?a=index"
 ```
 
 
 
 
 
+### toString(options) 把 url 对象换为 URL 字符串(构造 URL)
 
-
-# webpanda\.date(fmt,timestamp) 时间格式化
-
-> fmt 就是格式字符串，月(M)、日(d)、12小时(h)、24小时(H)、分(m)、秒(s)、周(E)、季度(q)， 可以用 1-2 个占位符。年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字) 。   
-> timestamp 即指定要格式化的时间戳，毫秒。如果为空，则默认当前时间戳。
+构造地址字符串，options 选项值来自于 `webpanda.url.option` 静态属性 。
 
 ```javascript
-webpanda.date ("yyyy-MM-dd hh:mm:ss.S");// 2019-12-17 05:53:43.288    
-webpanda.date ("yyyy-MM-dd E HH:mm:ss");// 2019-12-17 二 17:54:13
-webpanda.date ("yyyy-MM-dd EE hh:mm:ss");// 2019-12-17 周二 05:54:34
-webpanda.date ("yyyy-MM-dd EEE hh:mm:ss");// 2019-12-17 星期二 05:55:02     
-webpanda.date ("yyyy-M-d h:m:s.S");// 2019-12-17 5:55:15.354
-webpanda.date ("yyyy-MM-dd q hh:mm:ss");// 2019-12-17 4 05:55:32
-
-// 自定义格式化时间戳
-webpanda.date ("yyyy-MM-dd EEE hh:mm:ss", 696007439000);// 1992-01-21 星期二 11:23:59
-```
-
-
-
-
-
-# webpanda\.byte(bytes,decollator) 获取字节单位换算
-
-bytes 字节数，decollator 是分隔符。
-
-```javascript
-webpanda.byte (123," ");// "123 bytes"
-webpanda.byte (12345);// "12.06KB"
-webpanda.byte (102400000,"-");// "97.66-MB"
-```
-
-
-
-
-
-# webpanda\.triggerEventClick(node) 触发节点的点击事件
-
-```javascript
-// 比如选择文件功能，重写文件input按钮的场景
-webpanda.triggerEventClick (node);
-```
-
-
-
-
-
-
-
-# webpanda\.createFileURL(file) 创建文件表单资源的URL信息
-
-```javascript
-// 比如文件input选择了一张图片，我要获取其URL信息，用于在页面上显示
-webpanda.createFileURL (node.files[0]);
-```
-
-
-
-
-
-# webpanda\.title(title,src) 获取或动态修改浏览器中的title
-
-src 参数是为了兼容change事件：由于有些浏览器只在页面首次加载时初始化了标题title，之后就没有再监听 window.title的change事件：
-
-> 所以这里修改了title后，立即创建一个请求，加载一个空的iframe，由于加载后立即就移除，也不会对页面造成影响，但这样浏览器上的title便刷新了。 如果src为空，那么上面的方式将视为不采用(不会加载iframe)。
-
-```javascript
-// 修改页面标题，返回一个布尔值
-var is = webpanda.title ("这是测试修改标题");
-// 采用兼容模式
-webpanda.title ("这是测试", "https://www.baidu.com/");
-
-// 获取当前页面标题
-var title = webpanda.title ();
+var url = webpanda.url("https://example.com:8080/path/Test/?a=index&t=article&bbbb=default");
+// 选项为空默认 webpanda.url.option.all, 也就是获取完整路由
+url.toString ();// "https://example.com:8080/path/Test/?a=index&t=article&bbbb=default"
+var opt =  webpanda.url.option;
+// 只获取域名、协议
+url.toString (opt.domain | opt.protocol);// "https://example.com"
+// 除了路径，都要获取
+url.toString (opt.all & ~ opt.path);// "https://example.com:8080/?a=index&t=article&bbbb=default"
+// 除了Query，都要获取。
+url.toString (opt.all & ~ opt.query);// "https://example.com:8080/path/Test/"
 ```
 
 
@@ -4081,6 +3837,20 @@ webpanda.require.option.repeat
 | css    | 引入类型为 css                     |
 
 引入类型同时设置的话，请求优先级为 `js>css`；引入类型，如果为空，会根据文件地址自动获取。目前只支持 css 和 js 。
+
+
+
+## 检测 webpanda\.require\.isInstanceOf ()
+
+判断变量的对象类型是否为 webpanda\.require 实例对象。如果是返回 true，否则返回 false 。
+
+```javascript
+if (webpanda.require.isInstanceOf (obj)) {
+    // 是 webpanda.require 对象
+}
+```
+
+
 
 
 
@@ -4326,6 +4096,18 @@ webpanda.ajax.option.post
 
 
 
+## 检测 webpanda\.ajax\.isInstanceOf ()
+
+判断变量的对象类型是否为 webpanda\.ajax 实例对象。如果是返回 true，否则返回 false 。
+
+```javascript
+if (webpanda.ajax.isInstanceOf (obj)) {
+    // 是 ajax.require 对象
+}
+```
+
+
+
 
 
 ## 属性
@@ -4491,9 +4273,151 @@ ajax.post ();
 
 
 
+# webpanda.trim(string) 去除字符串两端的空白字符
+
+```javascript
+var str = "         lots of spaces before and after         ";
+console.log( "Original String: '" + str + "'" );
+console.log( "webpanda.trim()'ed: '" + webpanda.trim(str) + "'" );
+
+// 输出：
+// Original String: '         lots of spaces before and after         '
+// webpanda.trim()'ed: 'lots of spaces before and after'
+```
 
 
 
+
+
+# webpanda\.encodeURL(var) 编码 URL
+
+支持数组、对象、字符串。
+
+```javascript
+var test = "abc@#$%&*^xyz";
+var code = webpanda.encodeURL (test);
+console.log(code);// abc%40%23%24%25%26*%5Exyz
+
+var test = ["abc@#xyz","123$%456"];
+var code = webpanda.encodeURL (test);
+console.log(code);// ["abc%40%23xyz", "123%24%25456"]
+
+var test = {a:"abc@#xyz",b:"123$%456"};
+var code = webpanda.encodeURL (test);
+console.log(code);// {a: "abc%40%23xyz", b: "123%24%25456"}
+```
+
+
+
+# webpanda\.decodeURL(var) 解码 URL
+
+支持数组、对象、字符串。
+
+```javascript
+var test = "abc%40%23%24%25%26*%5Exyz";
+var code = webpanda.decodeURL (test);
+console.log(code);// abc@#$%&*^xyz
+
+var test = ["abc%40%23xyz", "123%24%25456"];
+var code = webpanda.decodeURL (test);
+console.log(code);// ["abc@#xyz", "123$%456"]
+
+var test = {a: "abc%40%23xyz", b: "123%24%25456"};
+var code = webpanda.decodeURL (test);
+console.log(code);// {a: "abc@#xyz", b: "123$%456"}
+```
+
+
+
+
+
+# webpanda\.parseQuery(string) 将URL字符串的query部分, 解析成一个对象
+
+```javascript
+var queryObject = webpanda.parseQuery ("a=a1&b=b1&c=c1");
+console.log (queryObject);// {a: "a1", b: "b1", c: "c1"}
+
+var queryObject2 = webpanda.parseQuery ("a[1]=a1&a[0]=b1&a[c]=c1");
+console.log (queryObject2);// {a: {0: "b1", 1: "a1", c: "c1"}}
+```
+
+
+
+# webpanda\.buildQuery(object) 将关联数组和对象生成 URL Query 字符串
+
+```javascript
+var test1 = {a: "a1", b: "b1", c: "c1"};
+var queryString = webpanda.buildQuery (test1);
+console.log (queryString);// a=a1&b=b1&c=c1
+
+var test2 = {a: {0: "b1", 1: "a1", c: "c1"}};
+var queryString2 = webpanda.buildQuery (test2);
+console.log (queryString2);// a[0]=b1&a[1]=a1&a[c]=c1
+```
+
+
+
+
+
+# webpanda\.formData(object) 将关联数组和对象生成 FormData 键值对结构\[!\<=IE9\]
+
+> 注意，FormData接口在IE9及IE9以下版不支持。更多参考：[FormData](https://developer.mozilla.org/zh-CN/docs/Web/API/FormData)
+
+```javascript
+var obj = {
+	"b":{"api":"user.oauth.github.AccessToken","args":{"primaryKey":""}},
+	"a":{"api":"testApi1","args":{"name":"王阿和","info":"这是测试"}}
+};
+var forms = webpanda.formData (obj);
+console.log (JSON.stringify (forms));
+```
+
+打印输出：
+
+```shell
+[{
+	"key":"b[api]",
+	"value":"user.oauth.github.AccessToken"
+},
+{
+	"key":"b[args][primaryKey]",
+	"value":""
+},
+{
+	"key":"a[api]",
+	"value":"testApi1"
+},
+{
+	"key":"a[args][name]",
+	"value":"王阿和"
+},
+{
+	"key":"a[args][info]",
+	"value":"这是测试"
+}]
+```
+
+
+
+# webpanda\.encodeHTML(string) 编码HTML标签
+
+```javascript
+var test = "<span>这是测试</span>";
+var code = webpanda.encodeHTML (test);
+console.log (code);// &lt;span&gt;这是测试&lt;/span&gt;
+```
+
+
+
+
+
+# webpanda\.decodeHTML(string) 解码HTML实体
+
+```javascript
+var test = "&lt;span&gt;这是测试&lt;/span&gt;";
+var code = webpanda.decodeHTML (test);
+console.log (code);// <span>这是测试</span>
+```
 
 
 
