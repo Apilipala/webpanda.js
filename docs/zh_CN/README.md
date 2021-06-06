@@ -90,6 +90,7 @@
     - [extend 继承属性](#extend-继承属性)
     - [data 渲染数据](#data-渲染数据)
     - [ready(callback, setting) 准备工程或准备完成执行](#readycallback-setting-准备工程或准备完成执行)
+    - [include() 包含源文件](#include-包含源文件)
     - [friend() 友元属性](#friend-友元属性)
     - [clone(name) 克隆工程](#clonename-克隆工程)
     - [page() 加载页面](#page-加载页面)
@@ -116,7 +117,7 @@
   - [属性](#属性)
   - [方法](#方法)
     - [render(data, config) 渲染](#renderdata-config-渲染)
-    - [reload() 重新解析模板](#reload-重新解析模板)
+    - [reparse() 重新解析模板](#reparse-重新解析模板)
     - [clear() 清理渲染节点](#clear-清理渲染节点)
   - [模板语法](#模板语法)
     - [HTML输出  webpanda\-html](#html输出--webpanda-html)
@@ -439,10 +440,6 @@ webpanda ({
                 src : function (env) {
                     return env.prefix + "/index.js";
                 },
-                // 回调函数，[保留操作]加载工程文件成功时执行（如果已经加载不会执行）
-                callback : function (e) {
-                    console.log (e);
-                }
             },
             {
                 // 路径
@@ -451,10 +448,6 @@ webpanda ({
                 name : "home",
                 // 工程源文件地址
                 src : "",
-                // 回调函数
-                callback : function (e) {
-                    console.log (e);
-                }
             },
             {    
                 path : '/login',
@@ -1035,14 +1028,25 @@ webpanda.project ({
             src : "index.html",
             option : webpanda.project.option.text,
             callback : function (project, env) {
-                // 引入成功后执行
+                // 无论包含成功还是失败都会执行
                 // project 当前的工程对象。注意，这个时候的工程对象都是未准备好的
                 // env 环境变量。来自框架设置中自定义的环境变量
                 // this 就是引入对象
                 // this.result 就是 Ajax 对象的返回值
                 // this.result.data 就是模板内容
-                project.template (this.result.data);
-            }
+                
+                // 判断是否包含成功
+                if (this.isError ()) {
+                    project.template (this.result.data);
+                }
+                
+            },
+            onsuccess : function (project, env) {
+                // 引入成功后执行
+            },
+            onerror : function (project, env) {
+                // 引入失败后执行
+            },
         },
         {
             src : "index.json",// 也可以忽略其他 option 、callback 参数
@@ -1398,7 +1402,7 @@ webpanda.project ({
 自定义的成员属性，会直接绑定到工程对象 this 上，所以注意自定义成员属性时，其属性名称不要使用如下关键字：
 
 ```javascript
-index,name,parent,children,extend,friend,data,ready,clone,compiler,template,selector,event,page,execute,render,start,pause,stop,html,text,remove,debug
+index,name,parent,children,extend,include,friend,data,ready,clone,compiler,template,selector,event,page,execute,render,start,pause,stop,html,text,remove,debug
 ```
 
 并且，属性名称不能以 `on` 关键字开头。
@@ -2171,6 +2175,45 @@ var readyState = test.ready (function () {
 
 
 
+### include() 包含源文件
+
+如果传入的参数不合法，则返回 false ，否则返回 true 。
+
+> 主要用于一些插件、组件等源文件，在使用时才加载。
+
+包含源文件示例：
+
+```javascript
+// 获取工程对象
+var project = webpanda.project ();
+// 包含源文件
+project.include ({
+    src : "components/components.js",
+    option : webpanda.project.option.js,
+    callback : function (project, env) {
+        // 无论包含成功还是失败都会执行
+        // project 当前的工程对象。注意，这个时候的工程对象都是未准备好的
+        // env 环境变量。来自框架设置中自定义的环境变量
+        // this 就是引入对象
+        // this.result 就是 Ajax 对象的返回值
+        // this.result.data 就是模板内容
+        
+        // 判断是否包含成功
+        if (this.isError ()) {
+            project.template (this.result.data);
+        }
+    },
+    onsuccess : function (project, env) {
+        // 包含成功后执行
+    },
+    onerror : function (project, env) {
+        // 包含失败后执行
+    }
+});
+```
+
+
+
 
 
 ### friend() 友元属性
@@ -2364,7 +2407,7 @@ project.render ({
 下面是不支持操作的事件：
 
 ```javascript
-oninclude,onincluded,onproject,onprojected,onpage,onpaged,onpagenotfound,onpageprogress,onready,onreadied,onpagechange,onexecute,onexecuted,onexecutestart,onexecutepause,onexecutestop,onrender,onrendered,onrenderstart,onrenderpause,onrenderstop,onrenderlistener
+oninclude,onincluded,onproject,onprojected,onpage,onpagenotfound,onpageprogress,onready,onreadied,onexecute,onexecuted,onexecutestart,onexecutepause,onexecutestop,onrender,onrendered,onrenderstart,onrenderpause,onrenderstop,onrenderlistener
 ```
 
 参数是布尔值，表示操作所有事件：
@@ -2657,7 +2700,7 @@ webpanda.compiler.option.disableCommand
 | disableCommand  | webpanda\.compiler()             | 禁用（不解析）模板语法命令                     |
 | disableRender   | webpanda\.compiler()             | 禁用（不允许）渲染                             |
 | disableListener | webpanda\.compiler()、\.render() | 禁用（不允许）绑定、触发数据的监听             |
-| reloadListener  | \.render()                       | 强制重载渲染数据的监听（注意，是重载数据监听） |
+| resetListener   | \.render()                       | 强制重置渲染数据的监听（注意，是重载数据监听） |
 | refresh         | \.render()                       | 强制渲染刷新                                   |
 
 
@@ -2686,15 +2729,16 @@ if (webpanda.compiler.isInstanceOf (obj)) {
 
 ## 属性
 
-| 名称                   | 类型        | 描述               |
-| :--------------------- | :---------- | :----------------- |
-| index                  | Int         | 唯一索引           |
-| node                   | HTMLElement | 默认渲染节点       |
-| option                 | Int         | 选项值             |
-| template               | String      | 模板内容           |
-| abstractNodeTree       | Object      | 抽象节点树对象     |
-| parent                 | Object      | 父级编译对象       |
-| parentAbstractNodeTree | Object      | 父级抽象节点树对象 |
+| 名称                   | 类型        | 描述                                                         |
+| :--------------------- | :---------- | :----------------------------------------------------------- |
+| index                  | Int         | 唯一索引                                                     |
+| node                   | HTMLElement | 默认渲染节点                                                 |
+| option                 | Int         | 选项值                                                       |
+| template               | String      | 模板内容                                                     |
+| abstractNodeTree       | Object      | 抽象节点树对象                                               |
+| parent                 | Object      | 父级编译对象                                                 |
+| parentAbstractNodeTree | Object      | 父级抽象节点树对象                                           |
+| status                 | Boolean     | 状态，为true表示存在渲染节点，为false表示未渲染或者已清理、重新解析模板 |
 
 
 
@@ -2728,7 +2772,7 @@ compiler.render (test, {
     // 筛选器
     selector : "view",
     // 选项
-    option : options.disableListener|options.reloadListener|options.refresh,
+    option : options.disableListener|options.resetListener|options.refresh,
     // 自定义数据更新触发事件。如果数据禁掉了观察者，那么onlistener方法将无效。
     onlistener : function (e) {
         console.log (this);// 节点树对象
@@ -2741,7 +2785,7 @@ compiler.render (test, {
 
 
 
-### reload() 重新解析模板
+### reparse() 重新解析模板
 
 会重新解析节点树，之前的节点树会被摒弃。
 
@@ -2749,7 +2793,7 @@ compiler.render (test, {
 // 获取编译对象
 var compiler = webpanda.compiler (document.getElementById ("app").innerHTML);
 // 重新解析模板
-compiler.reload ();
+compiler.reparse ();
 ```
 
 
