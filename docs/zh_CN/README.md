@@ -1155,7 +1155,7 @@ webpanda.project ({
 通过以下选项值（option）设置继承特殊性：
 
 ```javascript
-webpanda.project.option.override			覆盖式继承事件。派生工程的事件未定义的情况下才被继承
+webpanda.project.option.overrideEvent		覆盖式继承事件, 派生工程的事件未定义的情况下才被继承
 webpanda.project.option.disableSelector     禁止继承父级 selector
 webpanda.project.option.disableTemplate     禁止继承父级 template
 webpanda.project.option.disableEvent        禁止继承父级事件函数 on*  
