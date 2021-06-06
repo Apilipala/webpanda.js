@@ -3303,20 +3303,20 @@ this.eClickFnTest = function (e) {
 
 ```html
 <div webpanda-for="(value, index)arr">
-    <div webpanda-before="getValue(#t, value)"></div>
+    <div webpanda-before="getValue(#template, value)"></div>
 </div>
 ```
 
 注意，配合循环节点 `webpanda-for` 的使用的时候，`webpanda-before` 会被多执行一次，这是因为`webpanda-before` 具有优先级，会在遍历命令未处理之前会执行一次。如下：
 
 ```html
-<div webpanda-before="getValue(#t)" webpanda-for="(value, index)arr" ></div>
+<div webpanda-before="getValue(#template)" webpanda-for="(value, index)arr" ></div>
 ```
 
 还有一种情况会被多次执行，那就是获取节点的时候，会绑定，节点创建后更新渲染：
 
 ```html
-<div webpanda-before="getValue(#n)" webpanda-for="(value, index)arr" ></div>
+<div webpanda-before="getValue(#node)" webpanda-for="(value, index)arr" ></div>
 ```
 
 当然还有其他情况造成多次执行，比如在命令表达式中使用其他渲染数据而触发绑定也会重复执行。
@@ -3330,7 +3330,7 @@ this.eClickFnTest = function (e) {
 节点最后执行的命令是在节点添加到父级节点上之后执行，用法同 `webpanda-before` 命令。
 
 ```html
-<div webpanda-after="methodFnTest(#n)"></div>
+<div webpanda-after="methodFnTest(#node)"></div>
 ```
 
 注意，该命令是在 `webpanda-if` 、`webpanda-is` 命令之后执行的。所以如果前面判断为假，那么该后置命令是不会被执行的。
@@ -3357,6 +3357,20 @@ this.eClickFnTest = function (e) {
 | template         | String | 获取节点编译时的模板数据                                     |
 | html             | String | 获取节点的html内容                                           |
 | text             | String | 获取节点包含的文本内容组合起来的文本                         |
+
+
+
+### 模板预编译参数会不会与字符串的 “\#” 井号冲突呢？不会
+
+如下写法：
+
+```html
+<h1 --test="'#node-'+title" -after="console.log (#node)">{{title}}</h1>
+```
+
+上面的代码中，`'#node-'+title` 的 `#node` 会不会被解析成模板预编译参数呢？明确告诉你，不会！因为编译器会自动识别是否在字符串内（是否在单引号或双引号内），如果是字符串则不会被解析的。而后面 `-after="console.log (#node)"`  的 `#node` 则会被解析成模板预编译参数。
+
+
 
 
 
