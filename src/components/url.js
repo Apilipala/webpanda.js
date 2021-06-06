@@ -49,7 +49,7 @@ webpanda.project ({
          */
         request : function (href, clear) {
             // 如果是 url 对象则转换为链接字符串
-            if (typeof href == 'object' && href.constructor == url) {
+            if (webpanda.url.isInstanceOf (href)) {
                 href = href.toString ();
             }
             // 不是字符串则不再往下执行
