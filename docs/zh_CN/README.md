@@ -3630,7 +3630,70 @@ _this.setCatalogsScrollTop = function() {
 
 
 
+# webpanda\.timer (callback, timeout, count) 页面计时器
 
+所谓页面计时器，就是在当前页面有效，只要页面更新就会被清理。
+
+返回一个计时器对象, 如果参数不合法则返回 undefined 。参数介绍如下：
+
+> callback 回调函数；   
+> timeout 超时时间；   
+> count 执行次数，如果小于1，则表示无限循环。
+
+
+
+超时器：
+
+```javascript
+webpanda.timer (function () {
+    console.log ("3秒的超时器");
+}, 3000, 1);
+```
+
+
+
+定时器：
+
+```javascript
+webpanda.timer (function () {
+    console.log ("3秒的定时器");
+}, 3000);// 第三个参数默认为 0 
+```
+
+
+
+## 属性
+
+## 
+
+| 名称     | 类型     | 描述                           |
+| -------- | -------- | ------------------------------ |
+| callback | Function | 回调函数                       |
+| count    | Number   | 执行的总次数                   |
+| counted  | Number   | 已经执行次数                   |
+| index    | Number   | 索引                           |
+| origin   | Number   | 开端的毫秒时间戳               |
+| runtime  | Number   | 当前页面的运行时间(页面版本号) |
+| timeout  | Number   | 超时时间、间隔时间             |
+
+
+
+
+
+## 方法
+
+
+
+### clear() 取消计时器
+
+```javascript
+var timer = webpanda.timer (function () {
+    console.log ("3秒的定时器");
+}, 3000);// 第三个参数默认为 0 
+
+// 取消
+timer.clear ();
+```
 
 # webpanda\.history 浏览记录
 
