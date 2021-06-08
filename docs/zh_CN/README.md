@@ -88,6 +88,7 @@
     - [parent 父工程](#parent-父工程)
     - [children 子工程](#children-子工程)
     - [extend 继承属性](#extend-继承属性)
+    - [property 成员属性](#property-成员属性)
     - [data 渲染数据](#data-渲染数据)
     - [ready(callback, setting) 准备工程或准备完成执行](#readycallback-setting-准备工程或准备完成执行)
     - [include() 包含源文件](#include-包含源文件)
@@ -105,7 +106,6 @@
     - [selector(ele) 设置或获取筛选器](#selectorele-设置或获取筛选器)
     - [html() 获取渲染后的节点字符串](#html-获取渲染后的节点字符串)
     - [text() 获取渲染后的文本字符串](#text-获取渲染后的文本字符串)
-    - [其他 property 自定义的成员属性](#其他-property-自定义的成员属性)
   - [选项 webpanda\.project\.option](#选项-webpandaprojectoption)
   - [检测 webpanda\.project\.isInstanceOf (obj)](#检测-webpandaprojectisinstanceof-obj)
   - [获取工程对象](#获取工程对象)
@@ -153,13 +153,19 @@
     - [为什么渲染数据的变量更新了，然而视图并没有自动刷新渲染？](#为什么渲染数据的变量更新了然而视图并没有自动刷新渲染)
     - [避免渲染数据中函数体未变动以为变动，然后视图并没有自动刷新渲染的错误](#避免渲染数据中函数体未变动以为变动然后视图并没有自动刷新渲染的错误)
     - [模板渲染出现”Maximum call stack size exceeded“错误](#模板渲染出现maximum-call-stack-size-exceeded错误)
-- [webpanda\.history 浏览记录](#webpandahistory-浏览记录)
+- [webpanda\.timer (callback, timeout, count, global) 页面计时器](#webpandatimer-callback-timeout-count-global-页面计时器)
   - [属性](#属性-1)
+  - [方法](#方法-1)
+    - [start() 启动计时器](#start-启动计时器)
+    - [stop() 停止计时器](#stop-停止计时器)
+    - [status() 状态](#status-状态)
+- [webpanda\.history 浏览记录](#webpandahistory-浏览记录)
+  - [属性](#属性-2)
     - [backLength 上一页的数量](#backlength-上一页的数量)
     - [forwardLength 下一页的数量](#forwardlength-下一页的数量)
     - [lastLength 上一步的数量](#lastlength-上一步的数量)
     - [nextLength 下一步的数量](#nextlength-下一步的数量)
-  - [方法](#方法-1)
+  - [方法](#方法-2)
     - [back() 上一页](#back-上一页)
     - [forward() 下一页](#forward-下一页)
     - [go(number) 跳转到某一页](#gonumber-跳转到某一页)
@@ -170,15 +176,15 @@
 - [webpanda\.url(location) 地址解析](#webpandaurllocation-地址解析)
   - [选项 webpanda\.url\.option](#选项-webpandaurloption)
   - [检测 webpanda\.url\.isInstanceOf (obj)](#检测-webpandaurlisinstanceof-obj)
-  - [属性](#属性-2)
-  - [方法](#方法-2)
+  - [属性](#属性-3)
+  - [方法](#方法-3)
     - [merge() 合并URL地址或者url对象](#merge-合并url地址或者url对象)
     - [toString(options) 把 url 对象换为 URL 字符串(构造 URL)](#tostringoptions-把-url-对象换为-url-字符串构造-url)
 - [webpanda\.require(config) 引入资源文件](#webpandarequireconfig-引入资源文件)
   - [选项 webpanda.require.option](#选项-webpandarequireoption)
   - [检测 webpanda\.require\.isInstanceOf (obj)](#检测-webpandarequireisinstanceof-obj)
-  - [属性](#属性-3)
-  - [方法](#方法-3)
+  - [属性](#属性-4)
+  - [方法](#方法-4)
     - [onerror(e) 错误事件](#onerrore-错误事件)
     - [onsuccess(e) 成功事件](#onsuccesse-成功事件)
     - [append() 向选择器的元素内部追加资源](#append-向选择器的元素内部追加资源)
@@ -190,8 +196,8 @@
 - [webpanda.ajax(config) 网络请求](#webpandaajaxconfig-网络请求)
   - [选项 webpanda.ajax.option](#选项-webpandaajaxoption)
   - [检测 webpanda\.ajax\.isInstanceOf (obj)](#检测-webpandaajaxisinstanceof-obj)
-  - [属性](#属性-4)
-  - [方法](#方法-4)
+  - [属性](#属性-5)
+  - [方法](#方法-5)
     - [onready(readyState) 当 readyState 改变时执行事件](#onreadyreadystate-当-readystate-改变时执行事件)
     - [onrequest(XMLHttpRequest) 发送请求前执行事件](#onrequestxmlhttprequest-发送请求前执行事件)
     - [onresponse(result) 请求完成后执行事件](#onresponseresult-请求完成后执行事件)
@@ -975,7 +981,9 @@ webpanda.project ({
 
 ```javascript
 webpanda.project ({
-    template : webpanda.url ('index.html');,
+    template : {
+        src : 'index.html',// 也支持 webpanda.url 对象
+    },
 });
 ```
 
@@ -986,7 +994,10 @@ webpanda.project ({
 ```javascript
 webpanda.project ({
     template : function (project, env) {
-        return webpanda.url (env.domain () + '/index.html');
+        // 可以返回对象，也可以返回字符串
+        return {
+            src : webpanda.url (env.domain () + '/index.html')
+        };
     },
 });
 ```
@@ -2185,6 +2196,7 @@ var readyState = test.ready (function () {
     // this 就是这个准备好的工程对象
     console.log (this);
 }, {
+    global : true,// 是否全局有效，默认false非全局(页面刷新会被取消)
     timeout : 3000,// 3秒后超时
     callback : function () {
         console.log ('这是超时回调函数');
@@ -2569,7 +2581,7 @@ var readyState = webpanda.project ("test", function () {
 });
 ```
 
-注意，如果回调函数还没有满足条件而未执行（工程没有载入），当页面跳转（切换页面）时，该回调函数将会被清理。指定的工程如果始终都没有载入，那么该回调函数会一直（定时器中）循环判断。
+注意，如果回调函数还没有满足条件而未执行（工程没有载入），当页面跳转（切换页面）时，该回调函数默认将会被清理（非全局设置下）。指定的工程如果始终都没有载入，那么该回调函数会一直（定时器中）循环判断。
 
 如果这个工程名称在当前页面下一直不存在，那么这个操作会一直循环判断，（不切换页面时）无法将其中断，这样就会存在占用资源的情况，所以可以通过超时设置解决这个问题，可以更好的控制。示例如下：
 
@@ -2579,6 +2591,7 @@ var readyState = webpanda.project ("test", function () {
     // this 就是这个准备好的工程对象
     console.log (this);
 }, {
+    global : true,// 是否全局有效，默认false非全局(页面刷新会被取消)
     timeout : 3000,// 3秒后超时
     callback : function () {
         console.log ('这是超时回调函数');
@@ -3630,16 +3643,16 @@ _this.setCatalogsScrollTop = function() {
 
 
 
-# webpanda\.timer (callback, timeout, count) 页面计时器
-
-所谓页面计时器，就是在当前页面有效，只要页面更新就会被清理。
+# webpanda\.timer (callback, timeout, limit, global) 页面计时器
 
 返回一个计时器对象, 如果参数不合法则返回 undefined 。参数介绍如下：
 
 > callback 回调函数；   
 > timeout 超时时间；   
-> count 执行次数，如果小于1，则表示无限循环。
+> limit 执行次数限制，如果小于1，则表示无限循环。  
+> global 是否为全局有效，如果为true表示全局，页面更新不会被清理，否则页面更新就会被清理。
 
+不是全局的计时器被认作为页面计时器，就是在当前页面有效，只要页面更新就会自动取消。在单页应用模式下，我怀疑定时器、超时器的ID池存在不够用、爆库的风险。所以建议使用计时器统一管理。
 
 
 超时器：
@@ -3647,7 +3660,7 @@ _this.setCatalogsScrollTop = function() {
 ```javascript
 webpanda.timer (function () {
     console.log ("3秒的超时器");
-}, 3000, 1);
+}, 3000, 1).start ();
 ```
 
 
@@ -3657,24 +3670,36 @@ webpanda.timer (function () {
 ```javascript
 webpanda.timer (function () {
     console.log ("3秒的定时器");
-}, 3000);// 第三个参数默认为 0 
+}, 3000).start ();// 第三个参数默认为 0 
 ```
+
+
+
+全局的模式：
+
+```javascript
+webpanda.timer (function () {
+    console.log ("3秒的定时器");
+}, 3000, 0, true).start ();
+```
+
+
 
 
 
 ## 属性
 
-## 
 
-| 名称     | 类型     | 描述                           |
-| -------- | -------- | ------------------------------ |
-| callback | Function | 回调函数                       |
-| count    | Number   | 执行的总次数                   |
-| counted  | Number   | 已经执行次数                   |
-| index    | Number   | 索引                           |
-| origin   | Number   | 开端的毫秒时间戳               |
-| runtime  | Number   | 当前页面的运行时间(页面版本号) |
-| timeout  | Number   | 超时时间、间隔时间             |
+| 名称     | 类型     | 描述                                                    |
+| -------- | -------- | ------------------------------------------------------- |
+| callback | Function | 回调函数                                                |
+| limit    | Number   | 可执行的总次数、限制执行次数。如果为0表示不限制         |
+| executed | Number   | 已经执行次数                                            |
+| index    | Number   | 索引，随着页面更新索引有可能会自动改变                  |
+| origin   | Number   | 开端的毫秒时间戳                                        |
+| runtime  | Number   | 当前页面的运行时间(页面版本号)                          |
+| timeout  | Number   | 超时时间、间隔时间                                      |
+| global   | Boolean  | 是否全局有效，true表示全局，false表示属于当前页面计时器 |
 
 
 
@@ -3684,16 +3709,40 @@ webpanda.timer (function () {
 
 
 
-### clear() 取消计时器
+### start() 启动计时器
+
+返回计时器对象。
 
 ```javascript
 var timer = webpanda.timer (function () {
     console.log ("3秒的定时器");
-}, 3000);// 第三个参数默认为 0 
-
-// 取消
-timer.clear ();
+}, 3000).start ();// 第三个参数默认为 0 
 ```
+
+
+
+
+
+### stop() 停止计时器
+
+返回计时器对象。
+
+```javascript
+var timer = webpanda.timer (function () {
+    console.log ("3秒的定时器");
+}, 3000).start ();// 第三个参数默认为 0 
+
+// 停止
+timer.stop ();
+```
+
+
+
+### status() 状态
+
+查询是否存在执行队列中。如果该计时器已经被停止，则返回 false 。
+
+
 
 # webpanda\.history 浏览记录
 
