@@ -5,6 +5,7 @@ webpanda.language ({
     'compiler-0002' : 'Content of the template',
     'compiler-0003' : 'The Warning command',
     'compiler-0004' : 'Content of the template',
+    'compiler-0005' : 'Debug flag',
     
     // parse
     'parse-0001' : '"${1}" command cannot exist in the same tag or more than one!',
@@ -42,5 +43,6 @@ webpanda.language ({
     'project-0005' : '"${1}" project already exists, project duplication definition blocked!',
     'project-0006' : 'The filter for "${1}" project "${2}" is not configured properly. Failed to create render filter node!',
     'project-0007' : 'Project "${1}" failed to inherit from parent project "${2}", parent project does not exist!',
+    'project-0008' : 'Name of the project: ${1} ',
 
 });

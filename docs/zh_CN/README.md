@@ -153,7 +153,7 @@
     - [为什么渲染数据的变量更新了，然而视图并没有自动刷新渲染？](#为什么渲染数据的变量更新了然而视图并没有自动刷新渲染)
     - [避免渲染数据中函数体未变动以为变动，然后视图并没有自动刷新渲染的错误](#避免渲染数据中函数体未变动以为变动然后视图并没有自动刷新渲染的错误)
     - [模板渲染出现”Maximum call stack size exceeded“错误](#模板渲染出现maximum-call-stack-size-exceeded错误)
-- [webpanda\.timer (callback, timeout, count, global) 页面计时器](#webpandatimer-callback-timeout-count-global-页面计时器)
+- [webpanda\.timer (callback, timeout, limit, global) 页面计时器](#webpandatimer-callback-timeout-limit-global-页面计时器)
   - [属性](#属性-1)
   - [方法](#方法-1)
     - [start() 启动计时器](#start-启动计时器)
@@ -966,6 +966,8 @@ webpanda.project ({
 ### template 模板
 
 模板定义支持字符串、`webpanda.url`对象、函数，其中函数的返回值必须是字符串或者 `webpanda.url`对象。
+
+> 注意，在继承模板时，URL的方式具有优先级。这是因为字符串模板会先执行赋值，而URL包含是最后执行，会覆盖前面的模板数据。
 
 以字符串的方式定义：
 
@@ -2212,7 +2214,7 @@ var readyState = test.ready (function () {
 
 > 主要用于一些插件、组件等源文件，在使用时才加载。
 
-包含源文件示例：
+包含单个源文件示例：
 
 ```javascript
 // 获取工程对象
@@ -2242,6 +2244,40 @@ project.include ({
     }
 });
 ```
+
+包含多个源文件示例：
+
+```javascript
+// 获取工程对象
+var project = webpanda.project ();
+// 包含源文件
+project.include ([
+    // 引入模板
+    'components/components.html',
+    // 引入插件中的插件，使用异步
+    {
+        src : "components/components-plugin.js",
+        option : webpanda.project.option.js,
+        onsuccess : function (project, env) {
+            // 包含成功后执行去准备
+            webpanda.project ('components-plugin').ready ();
+        },
+    },
+    // 引入临时使用的工程
+    {
+        src : "components/components.js",
+        option : webpanda.project.option.js,
+        onsuccess : function (project, env) {
+            // 包含成功后执行去准备工程，工程准备好后就执行
+            webpanda.project ('components').ready (function () {
+                this.execute ();
+            });
+        },
+    }
+]);
+```
+
+
 
 
 
@@ -2655,6 +2691,8 @@ var pageProject = webpanda.project ();
 var app = document.getElementById ("app");
 // 获取编译对象
 var compiler = webpanda.compiler (app.innerHTML, {
+    // 调试信息
+    debug : '字符串或者数字，渲染出错时定位所属操作',
     // 传入父级编译对象
     parent : null, 
     // 传入父级节点树
@@ -2727,6 +2765,7 @@ if (webpanda.compiler.isInstanceOf (obj)) {
 | parent                 | Object      | 父级编译对象                                                 |
 | parentAbstractNodeTree | Object      | 父级抽象节点树对象                                           |
 | status                 | Boolean     | 状态，为true表示存在渲染节点，为false表示未渲染或者已清理、重新解析模板 |
+| debug                  | String/Int  | 调试标记                                                     |
 
 
 
@@ -2761,6 +2800,8 @@ compiler.render (test, {
     selector : "view",
     // 选项
     option : options.disableListener|options.resetListener|options.refresh,
+    // 调试信息
+    debug : '字符串或者数字，渲染出错时定位所属操作',
     // 自定义数据更新触发事件。如果数据禁掉了观察者，那么onlistener方法将无效。
     onlistener : function (e) {
         console.log (this);// 节点树对象
