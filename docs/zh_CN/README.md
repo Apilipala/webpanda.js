@@ -111,6 +111,7 @@
   - [获取工程对象](#获取工程对象)
   - [获取工程准备状态值](#获取工程准备状态值)
   - [获取当前页面工程](#获取当前页面工程)
+- [webpanda\.include 包含资源文件](#webpandainclude-包含资源文件)
 - [webpanda\.compiler(template,config) 编译模板](#webpandacompilertemplateconfig-编译模板)
   - [选项 webpanda.compiler.option](#选项-webpandacompileroption)
   - [检测 webpanda\.compiler\.isInstanceOf (obj)](#检测-webpandacompilerisinstanceof-obj)
@@ -984,7 +985,7 @@ webpanda.project ({
 ```javascript
 webpanda.project ({
     template : {
-        src : 'index.html',// 也支持 webpanda.url 对象
+        src : 'index.html',// 也支持 webpanda.url 对象，如：webpanda.url ('index.html')
     },
 });
 ```
@@ -1101,6 +1102,21 @@ webpanda.project ({
     
 });
 ```
+
+
+
+支持单个包含引入：
+
+```javascript
+webpanda.project ({
+    
+    // 单个操作的方式
+    include : "index.js",
+    
+});
+```
+
+
 
 
 
@@ -1240,6 +1256,25 @@ webpanda.project ({
 
 });
 ```
+
+
+
+支持单个继承：
+
+```javascript
+webpanda.project ({
+    
+    // 单个操作的方式
+    extend : "components-test",
+    
+});
+```
+
+
+
+
+
+
 
 
 
@@ -1403,6 +1438,21 @@ webpanda.project ({
     
 });
 ```
+
+
+
+支持单个友元：
+
+```javascript
+webpanda.project ({
+    
+    // 单个操作的方式
+    friend : "components-test",
+    
+});
+```
+
+
 
 
 
@@ -2674,9 +2724,31 @@ var pageProject = webpanda.project ();
 
 
 
+# webpanda\.include 包含资源文件
 
+与工程对象的 include 操作一样，不过函数传入工程参数始终返回当前页面的工程对象。
 
+```javascript
+webpanda.include ({
+    src : 'https://repository.webpandajs.com/docs/zh_CN/README.md',
+    onsuccess : function (project, env) {
+        console.log (project);// 始终返回当前页面工程对象，可能为 undefined
+        console.log (this.result);// 返回值
+    },
+});
+```
 
+常使用的方式：
+
+```javascript
+// 包含工程
+webpanda.include ('https://repository.webpandajs.com/src/components/element.js');
+// 操作工程
+webpanda.project ('webpanda-element', function () {
+    // 工程包含成功并且准备完成之后执行
+    console.log (this);
+});
+```
 
 
 

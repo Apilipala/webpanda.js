@@ -87,10 +87,10 @@ webpanda.project ({
             }
 
             // 初始化格式
-            if (!isString (name) && !isNumber (name)) {
+            if (typeof data != 'string' && typeof data != 'number') {
                 name = '';
             }
-
+            
             // 如果标题没改变
             if (document.title == name) {
                 return false;
