@@ -24,6 +24,7 @@ webpanda.language ({
     'render-0003' : 'Render error, "${1}" is an attribute of the render data and cannot be defined as a different name of the traversal unit index!',
     'render-0004' : 'Rendering error, "${1}" is not an object!',
     'render-0005' : 'Rendering error, "${1}" is not a string!',
+    'render-0006' : 'Rendering error, selector is an abstract node tree, no renderable valid node found!',
 
     // ajax
     'ajax-0001' : 'Your browser does not support Ajax!',

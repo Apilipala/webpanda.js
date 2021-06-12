@@ -2576,7 +2576,7 @@ webpanda.project("test").event ({
 
 ### selector(ele) 设置或获取筛选器
 
-如果参数不为空，表示设置设置的筛选器，返回该工程对象。
+如果参数不为空，表示设置设置的筛选器（支持DOM节点、抽象节点树对象），返回该工程对象。
 
 如果参数为空，则表示只获取，返回该工程已经设置的筛选器。
 
@@ -2868,7 +2868,7 @@ var test = {
 };
 // 下面是将渲染的内容放置<view>节点之下
 compiler.render (test, {
-    // 筛选器
+    // 筛选器：支持数组、筛选字符串、抽象节点树对象
     selector : "view",
     // 选项
     option : options.disableListener|options.resetListener|options.refresh,
@@ -3103,7 +3103,7 @@ compiler.render(test, {
 
 
 
-### 无效 webpanda\-void、\<webpanda\>、/\*\*\[\[webpanda\]\]\*\*/、\<\!\-\-\-[[webpanda]]\-\-\-\>
+### 置空  webpanda\-void、 \<webpanda\>、/\*\*\[\[webpanda\]\]\*\*/、\<\!\-\-\-[[webpanda]]\-\-\-\>
 
 该命令是将节点当做无效的包裹节点，最终的渲染结果将不包含其节点，但会渲染其子节点。
 
@@ -3494,15 +3494,15 @@ this.eClickFnTest = function (e) {
 <div webpanda-style="{'color':getColor(#node,#abstractNodeTree)}"></div>
 ```
 
-| 参数标签         | 值类型 | 描述                                                         |
-| :--------------- | :----- | :----------------------------------------------------------- |
-| abstractNodeTree | Object | 获取当前抽象节点树                                           |
-| event            | Object | 获取当前事件对象                                             |
-| node             | Object | 获取标签的节点对象。这个注意，节点的渲染出错等等，该参数在实际情况有可能为null |
-| value            | Mixed  | 获取节点的值，一般用于input、textarea、select等表单节点      |
-| template         | String | 获取节点编译时的模板数据                                     |
-| html             | String | 获取节点的html内容                                           |
-| text             | String | 获取节点包含的文本内容组合起来的文本                         |
+| 参数标签 | 值类型 | 描述                                                         |
+| :------- | :----- | :----------------------------------------------------------- |
+| object   | Object | 获取当前抽象节点树                                           |
+| event    | Object | 获取当前事件对象                                             |
+| node     | Object | 获取标签的节点对象。这个注意，节点的渲染出错等等，该参数在实际情况有可能为null |
+| value    | Mixed  | 获取节点的值，一般用于input、textarea、select等表单节点      |
+| template | String | 获取节点编译时的模板数据                                     |
+| html     | String | 获取节点的html内容                                           |
+| text     | String | 获取节点包含的文本内容组合起来的文本                         |
 
 
 
