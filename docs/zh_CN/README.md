@@ -126,7 +126,7 @@
     - [模板 webpanda\-template](#模板-webpanda-template)
       - [模板递归嵌入会造成死循环](#模板递归嵌入会造成死循环)
     - [遍历 webpanda\-for](#遍历-webpanda-for)
-    - [置空  webpanda\-void 、 \<webpanda\>](#置空--webpanda-void--webpanda)
+    - [包裹  webpanda\-void 、&lt;webpanda&gt;](#包裹--webpanda-void-webpanda)
     - [分支 webpanda\-if、webpanda\-else\-if、webpanda\-elseif、webpanda\-else](#分支-webpanda-ifwebpanda-else-ifwebpanda-elseifwebpanda-else)
     - [条件 webpanda\-is](#条件-webpanda-is)
     - [属性 webpanda\-attribute、webpanda\-attr](#属性-webpanda-attributewebpanda-attr)
@@ -3096,7 +3096,7 @@ compiler.render(test, {
 
 
 
-### 置空  webpanda\-void 、 \<webpanda\> 
+### 包裹  webpanda\-void 、&lt;webpanda&gt;
 
 该命令是将节点当做包裹节点，最终的渲染结果将不包含其节点，但会渲染其子节点。
 
