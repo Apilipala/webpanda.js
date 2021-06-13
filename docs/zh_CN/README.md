@@ -15,6 +15,7 @@
   - [多语言与自定义语言](#多语言与自定义语言)
   - [开发环境与生产环境](#开发环境与生产环境)
 - [框架](#框架)
+  - [选项 webpanda.option](#选项-webpandaoption)
   - [代码示例](#代码示例)
   - [webpanda(object) 定义](#webpandaobject-定义)
     - [version 版本号](#version-版本号)
@@ -273,6 +274,24 @@ webpanda.language ({
 
 # 框架
 
+## 选项 webpanda.option
+
+使用示例：
+
+```javascript
+webpanda.option.caseInsensitive
+```
+
+
+
+| 名称            | 描述                         |
+| --------------- | ---------------------------- |
+| hash            | 路由 hash 模式               |
+| history         | 路由 history 模式            |
+| caseInsensitive | 设置路径检索时，大小写不敏感 |
+
+
+
 
 
 ## 代码示例
@@ -430,7 +449,7 @@ webpanda ({
     router : {
         // 模式: webpanda.option.hash 、 webpanda.option.history
         // 大小写不敏感设置: webpanda.option.caseInsensitive
-        option : webpanda.option.hash ,
+        option : webpanda.option.hash | webpanda.option.caseInsensitive,
         // 页面路径配置
         page : [
             {
