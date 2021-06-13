@@ -121,13 +121,12 @@
     - [reparse() 重新解析模板](#reparse-重新解析模板)
     - [clear() 清理渲染节点](#clear-清理渲染节点)
   - [模板语法](#模板语法)
-    - [HTML输出  webpanda\-html](#html输出--webpanda-html)
-    - [文本打印 webpanda\-text 、\{\{\}\}](#文本打印-webpanda-text-)
-    - [文本替换 (())](#文本替换-)
+    - [文本输出  webpanda\-html、双小括号](#文本输出--webpanda-html双小括号)
+    - [文本打印 webpanda\-text、双大括号](#文本打印-webpanda-text双大括号)
     - [模板 webpanda\-template](#模板-webpanda-template)
       - [模板递归嵌入会造成死循环](#模板递归嵌入会造成死循环)
     - [遍历 webpanda\-for](#遍历-webpanda-for)
-    - [置空  webpanda\-void、 \<webpanda\>、/\*\*\[\[webpanda\]\]\*\*/、\<\!\-\-\-[[webpanda]]\-\-\-\>](#置空--webpanda-void-webpandawebpanda---webpanda---)
+    - [置空  webpanda\-void 、 \<webpanda\>](#置空--webpanda-void--webpanda)
     - [分支 webpanda\-if、webpanda\-else\-if、webpanda\-elseif、webpanda\-else](#分支-webpanda-ifwebpanda-else-ifwebpanda-elseifwebpanda-else)
     - [条件 webpanda\-is](#条件-webpanda-is)
     - [属性 webpanda\-attribute、webpanda\-attr](#属性-webpanda-attributewebpanda-attr)
@@ -2923,23 +2922,32 @@ compiler.clear ();
 
 
 
-### HTML输出  webpanda\-html
+### 文本输出  webpanda\-html、双小括号
 
-允许采用文本特殊符号的模板语法来输出 HTML 内容的变量。
+允许采用文本特殊符号的模板语法来输出 HTML 内容的变量。也就是说不会自动执行了 `webpanda.encodeHTML` 方法。
 
-该命令不能在同一个标签中存在多个。如果其节点包含子内容，那么其子内容跳过编译过程，会被当做源字符串打印输出，也就是说不会识别模板语法命令。
+其中，`webpanda-html` 命令不能在同一个标签中存在多个。如果其节点包含子内容，那么其子内容跳过编译过程，会被当做源字符串打印输出，也就是说不会识别模板语法命令。
+
+> 注意， \(\(\)\) 是 webpanda\-html 等价写法。
 
 ```html
 <div webpanda-html="name"></div>
 <!--支持单标签-->
 <div webpanda-html="name"/>
+
+<!--字符串的写法-->
+<div>(( message ))</div>
+<!--使用 JavaScript 表达式-->
+<div>(( message + '测试' ))</div>
 ```
 
 
 
 
 
-### 文本打印 webpanda\-text 、\{\{\}\} 
+
+
+### 文本打印 webpanda\-text、双大括号
 
 允许采用文本特殊符号的模板语法来输出文本内容的变量。该命令的使用会将html实体编码（自动执行了 `webpanda.encodeHTML` 方法）。
 
@@ -2958,21 +2966,6 @@ compiler.clear ();
 <div>{{ message + '测试' }}</div>
 ```
 
-
-
-
-
-### 文本替换 (())
-
-允许采用文本特殊符号的模板语法来输出变量。
-
-```html
-<div>(( message ))</div>
-```
-
-`(())`  是与 `webpanda-text` 输出效果一样，会自动执行了 `webpanda.encodeHTML` 方法。
-
-> 注意，如果文本中存在多个替换值，而某一个替换值发生改变，那么该文本节点的所有替换值都要重新执行，全部重新替换。
 
 
 
@@ -3103,9 +3096,9 @@ compiler.render(test, {
 
 
 
-### 置空  webpanda\-void、 \<webpanda\>、/\*\*\[\[webpanda\]\]\*\*/、\<\!\-\-\-[[webpanda]]\-\-\-\>
+### 置空  webpanda\-void 、 \<webpanda\> 
 
-该命令是将节点当做无效的包裹节点，最终的渲染结果将不包含其节点，但会渲染其子节点。
+该命令是将节点当做包裹节点，最终的渲染结果将不包含其节点，但会渲染其子节点。
 
 如果同一个标签存在其他的命令，下列命令才有效果：
 
@@ -3116,6 +3109,10 @@ webpanda-before,webpanda-template,webpanda-for,webpanda-if,webpanda-else-if,webp
 ```
 
 如果非上列命令，让其他命令与其搭配的话将无其他命令效果，因为无效节点是具有优先级的。该命令有四种写法，一种是属性的方式，一种是标签的方式，其他是注释的方式。
+
+
+> /\*\*\[\[webpanda\]\]\*\*/、\<\!\-\-\-[[webpanda]]\-\-\-\> 是注释的方式写法，与 webpanda\-void 、 \<webpanda\>  的写法是等价的。
+
 
 ```html
 <ul id="example">
