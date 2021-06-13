@@ -40,7 +40,7 @@ webpanda.language ({
     'project-0001' : '${1} "${2}" file import failed, frame includeSelector "${3}" configuration is not valid!',
     'project-0002' : '${1} "${2}" file import failed, frame includes methods includeMethod "${3}" configuration is not valid!Optional values: "prepend | append"',
     'project-0003' : '${1} "${2}" file introduces an exception!',
-    'project-0004' : 'Project "${1}" has duplicate preparation. Check if there are multiple projects inheriting from each other in the project definition. To prevent infinite loop, the current progress has been terminated!',
+    'project-0004' : 'Project initialization error, "${1}" project and "${2}" project between the mutual inheritance relationship, so that there are defects in the project preparation!',
     'project-0005' : '"${1}" project already exists, project duplication definition blocked!',
     'project-0006' : 'The filter for "${1}" project "${2}" is not configured properly. Failed to create render filter node!',
     'project-0007' : 'Project "${1}" failed to inherit from parent project "${2}", parent project does not exist!',
