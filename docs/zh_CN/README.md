@@ -129,7 +129,7 @@
     - [模板 webpanda\-template](#模板-webpanda-template)
       - [模板递归嵌入会造成死循环](#模板递归嵌入会造成死循环)
     - [遍历 webpanda\-for](#遍历-webpanda-for)
-    - [包裹  webpanda\-void 、&lt;webpanda&gt;](#包裹--webpanda-void-webpanda)
+    - [指令 &lt;webpanda&gt; 、指令注释](#指令-webpanda-指令注释)
     - [分支 webpanda\-if、webpanda\-else\-if、webpanda\-elseif、webpanda\-else](#分支-webpanda-ifwebpanda-else-ifwebpanda-elseifwebpanda-else)
     - [条件 webpanda\-is](#条件-webpanda-is)
     - [属性 webpanda\-attribute、webpanda\-attr](#属性-webpanda-attributewebpanda-attr)
@@ -3119,9 +3119,9 @@ compiler.render(test, {
 
 
 
-### 包裹  webpanda\-void 、&lt;webpanda&gt;
+### 指令 &lt;webpanda&gt; 、指令注释
 
-该命令是将节点当做包裹节点，最终的渲染结果将不包含其节点，但会渲染其子节点。
+该命令是将节点当做指令节点，最终的渲染结果将不包含其节点，但会渲染其子节点。
 
 如果同一个标签存在其他的命令，下列命令才有效果：
 
@@ -3138,14 +3138,6 @@ webpanda-before,webpanda-template,webpanda-for,webpanda-if,webpanda-else-if,webp
 
 
 ```html
-<ul id="example">
-    <!-- 属性的方式 -->
-    <div webpanda-void webpanda-for="(item, index) items">
-    <li>
-        {{ item.message }}
-    </li>
-    </div>
-</ul>
 <ul id="example">
     <!-- 标签的方式 -->
     <webpanda webpanda-for="(item, index) items">
@@ -3172,7 +3164,7 @@ webpanda-before,webpanda-template,webpanda-for,webpanda-if,webpanda-else-if,webp
 </ul>
 ```
 
-用无效命令单标签的方式，配合打印命令实现插值`{{}}`功能：
+用指令单标签的方式，配合打印命令实现插值`{{}}`功能：
 
 ```html
 <webpanda webpanda-text="message"/>
