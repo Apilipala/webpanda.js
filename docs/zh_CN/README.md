@@ -3,7 +3,7 @@
 
 官方网站：[http://webpandajs.com](http://webpandajs.com)  
 
-源码站点：[https://repository.webpandajs.com](https://repository.webpandajs.com)  
+源码站点：[http://repository.webpandajs.com](http://repository.webpandajs.com)  
 
 
 > webpanda.js 是用于在 web 上构建项目的 JavaScript 框架。  
