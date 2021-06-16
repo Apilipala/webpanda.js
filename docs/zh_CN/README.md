@@ -2776,7 +2776,7 @@ webpanda.project ('webpanda-element', function () {
 
 
 
-# webpanda\.compiler(template,config) 编译模板
+# webpanda\.compiler(config) 编译模板
 
 传入模板字符串及配置信息进行模板编译，返回一个编译对象。
 
@@ -2784,7 +2784,9 @@ webpanda.project ('webpanda-element', function () {
 // 获取模板节点
 var app = document.getElementById ("app");
 // 获取编译对象
-var compiler = webpanda.compiler (app.innerHTML, {
+var compiler = webpanda.compiler ({
+    // 模板内容
+    template : app.innerHTML,
     // 调试信息
     debug : '字符串或者数字，渲染出错时定位所属操作',
     // 传入父级编译对象
@@ -2869,9 +2871,9 @@ if (webpanda.compiler.isInstanceOf (obj)) {
 
 
 
-### render(data, config) 渲染
+### render(config) 渲染
 
-特别注意，`data` 对象及其子属性对象，必须是 `constructor == Object || constructor == Array` 这样才会有资格添加数据监听。
+特别注意，`config.data` 对象及其子属性对象（渲染数据），必须是 `constructor == Object || constructor == Array` 这样才会有资格添加数据监听。
 
 ```javascript
 // 获取模板节点
@@ -2889,7 +2891,9 @@ var test = {
     arr:["aaa","bbb",123,"ccc"]
 };
 // 下面是将渲染的内容放置<view>节点之下
-compiler.render (test, {
+compiler.render ({
+    // 渲染数据
+    data : test,
     // 筛选器：支持数组、筛选字符串、抽象节点树对象
     selector : "view",
     // 选项
