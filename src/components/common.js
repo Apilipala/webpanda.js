@@ -1,15 +1,36 @@
 webpanda.project ({
 
-    // 表单相关操作
-    name : 'webpanda-form',
+    // 常用工具
+    name : 'webpanda-common',
+
 
     /**
      * 工程成员属性
      * @var {Object}
      */
     property : {
-
         
+
+        /**
+         * 去掉字符串起始和结尾的空格。
+         * @param {String} text
+         * @return {String}
+         */
+        trim : function (text) {
+            var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+            return text == null ? "" : (text + "").replace (rtrim, "");
+        },
+
+        /**
+         * 确定它的参数是否是一个数字或者字符串数字。
+         * @param {Object} obj 
+         * @return {Boolean}
+         */
+        isNumeric : function (obj) {
+            return (typeof obj === "number" || typeof obj === "string") && !isNaN (obj - parseFloat (obj));
+        },
+
+                
         /**
          * 将关联数组和对象生成 FormData 键值对结构[!<=IE9]
          * -----------------------
@@ -19,7 +40,7 @@ webpanda.project ({
                 "b":{"api":"user.oauth.github.AccessToken","args":{"primaryKey":""}},
                 "a":{"api":"testApi1","args":{"name":"王阿和","info":"这是测试"}}
             };
-            var forms = buildFormData (obj);
+            var forms = formData (obj);
             console.log (JSON.stringify (forms));
 
             打印输出：
@@ -43,8 +64,9 @@ webpanda.project ({
                 "key":"a[args][info]",
                 "value":"这是测试"
             }]
+         * @param {Object} obj 
          */
-        buildFormData : function (obj) {
+        formData : function (obj) {
 
             // 递归循环
             var getChildFormData = function (data) {
@@ -97,7 +119,14 @@ webpanda.project ({
 
 
 
+
+
+
     },
+
+
+
+
 
 
 
