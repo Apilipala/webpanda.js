@@ -210,12 +210,10 @@
     - [post() 发起POST请求](#post-发起post请求)
     - [get() 发起GET请求](#get-发起get请求)
     - [abort() 中断请求任务](#abort-中断请求任务)
-- [webpanda.trim(string) 去除字符串两端的空白字符](#webpandatrimstring-去除字符串两端的空白字符)
 - [webpanda\.encodeURL(var) 编码 URL](#webpandaencodeurlvar-编码-url)
 - [webpanda\.decodeURL(var) 解码 URL](#webpandadecodeurlvar-解码-url)
-- [webpanda\.parseQuery(string) 将URL字符串的query部分, 解析成一个对象](#webpandaparsequerystring-将url字符串的query部分-解析成一个对象)
-- [webpanda\.buildQuery(object) 将关联数组和对象生成 URL Query 字符串](#webpandabuildqueryobject-将关联数组和对象生成-url-query-字符串)
-- [webpanda\.formData(object) 将关联数组和对象生成 FormData 键值对结构\[!\<=IE9\]](#webpandaformdataobject-将关联数组和对象生成-formdata-键值对结构ie9)
+- [webpanda\.encodeQuery(object) 将关联数组和对象生成 URL Query 字符串](#webpandaencodequeryobject-将关联数组和对象生成-url-query-字符串)
+- [webpanda\.decodeQuery(string) 将URL字符串的query部分, 解析成一个对象](#webpandadecodequerystring-将url字符串的query部分-解析成一个对象)
 - [webpanda\.encodeHTML(string) 编码HTML标签](#webpandaencodehtmlstring-编码html标签)
 - [webpanda\.decodeHTML(string) 解码HTML实体](#webpandadecodehtmlstring-解码html实体)
 
@@ -4591,22 +4589,6 @@ ajax.post ();
 
 
 
-# webpanda.trim(string) 去除字符串两端的空白字符
-
-```javascript
-var str = "         lots of spaces before and after         ";
-console.log( "Original String: '" + str + "'" );
-console.log( "webpanda.trim()'ed: '" + webpanda.trim(str) + "'" );
-
-// 输出：
-// Original String: '         lots of spaces before and after         '
-// webpanda.trim()'ed: 'lots of spaces before and after'
-```
-
-
-
-
-
 # webpanda\.encodeURL(var) 编码 URL
 
 支持数组、对象、字符串。
@@ -4649,71 +4631,31 @@ console.log(code);// {a: "abc@#xyz", b: "123$%456"}
 
 
 
-# webpanda\.parseQuery(string) 将URL字符串的query部分, 解析成一个对象
-
-```javascript
-var queryObject = webpanda.parseQuery ("a=a1&b=b1&c=c1");
-console.log (queryObject);// {a: "a1", b: "b1", c: "c1"}
-
-var queryObject2 = webpanda.parseQuery ("a[1]=a1&a[0]=b1&a[c]=c1");
-console.log (queryObject2);// {a: {0: "b1", 1: "a1", c: "c1"}}
-```
-
-
-
-# webpanda\.buildQuery(object) 将关联数组和对象生成 URL Query 字符串
+# webpanda\.encodeQuery(object) 将关联数组和对象生成 URL Query 字符串
 
 ```javascript
 var test1 = {a: "a1", b: "b1", c: "c1"};
-var queryString = webpanda.buildQuery (test1);
+var queryString = webpanda.encodeQuery (test1);
 console.log (queryString);// a=a1&b=b1&c=c1
 
 var test2 = {a: {0: "b1", 1: "a1", c: "c1"}};
-var queryString2 = webpanda.buildQuery (test2);
+var queryString2 = webpanda.encodeQuery (test2);
 console.log (queryString2);// a[0]=b1&a[1]=a1&a[c]=c1
 ```
 
 
 
-
-
-# webpanda\.formData(object) 将关联数组和对象生成 FormData 键值对结构\[!\<=IE9\]
-
-> 注意，FormData接口在IE9及IE9以下版不支持。更多参考：[FormData](https://developer.mozilla.org/zh-CN/docs/Web/API/FormData)
+# webpanda\.decodeQuery(string) 将URL字符串的query部分, 解析成一个对象
 
 ```javascript
-var obj = {
-	"b":{"api":"user.oauth.github.AccessToken","args":{"primaryKey":""}},
-	"a":{"api":"testApi1","args":{"name":"王阿和","info":"这是测试"}}
-};
-var forms = webpanda.formData (obj);
-console.log (JSON.stringify (forms));
+var queryObject = webpanda.decodeQuery ("a=a1&b=b1&c=c1");
+console.log (queryObject);// {a: "a1", b: "b1", c: "c1"}
+
+var queryObject2 = webpanda.decodeQuery ("a[1]=a1&a[0]=b1&a[c]=c1");
+console.log (queryObject2);// {a: {0: "b1", 1: "a1", c: "c1"}}
 ```
 
-打印输出：
 
-```shell
-[{
-	"key":"b[api]",
-	"value":"user.oauth.github.AccessToken"
-},
-{
-	"key":"b[args][primaryKey]",
-	"value":""
-},
-{
-	"key":"a[api]",
-	"value":"testApi1"
-},
-{
-	"key":"a[args][name]",
-	"value":"王阿和"
-},
-{
-	"key":"a[args][info]",
-	"value":"这是测试"
-}]
-```
 
 
 
