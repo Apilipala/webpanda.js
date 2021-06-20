@@ -1704,14 +1704,20 @@ webpanda.project ({
 webpanda.project ({
 
     onexecute : function (project, env) {
-        // 暂停执行
+        // 全局暂停执行
         // project.pause ();
+        // 只暂停执行
+        // this.pause ();
 
-        // 启动执行
+        // 全局启动执行
         // project.start ();
+        // 只启动执行
+        // this.start ();
 
-        // 停止执行
+        // 全局停止执行
         // project.stop ();
+        // 只停止执行
+        // this.stop ();
 
         console.log (project);// 当前执行的工程对象
         console.log (env);// 来自框架设置中自定义的环境变量
@@ -1737,6 +1743,21 @@ webpanda.project ({
 webpanda.project ({
 
     onexecuted : function (project, env) {
+        // 全局暂停执行
+        // project.pause ();
+        // 只暂停执行
+        // this.pause ();
+
+        // 全局启动执行
+        // project.start ();
+        // 只启动执行
+        // this.start ();
+
+        // 全局停止执行
+        // project.stop ();
+        // 只停止执行
+        // this.stop ();
+        
         console.log (project);// 当前执行的工程对象
         console.log (env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程执行状态，0 关闭(停止运行)，1正常(运行中)，2等待
@@ -1760,11 +1781,20 @@ webpanda.project ({
 webpanda.project ({
 
     onexecutestart : function (project, env) {
-        // 暂停执行
+        // 全局暂停执行
         // project.pause ();
+        // 只暂停执行
+        // this.pause ();
 
-        // 停止执行
+        // 全局启动执行
+        // project.start ();
+        // 只启动执行
+        // this.start ();
+
+        // 全局停止执行
         // project.stop ();
+        // 只停止执行
+        // this.stop ();
 
         console.log (project);// 当前执行的工程对象
         console.log (env);// 来自框架设置中自定义的环境变量
@@ -1790,11 +1820,20 @@ webpanda.project ({
 
     onexecutepause : function (project, env) {
 
-        // 启动执行
-        // project.start ();
+        // 全局暂停执行
+        // project.pause ();
+        // 只暂停执行
+        // this.pause ();
 
-        // 停止执行
+        // 全局启动执行
+        // project.start ();
+        // 只启动执行
+        // this.start ();
+
+        // 全局停止执行
         // project.stop ();
+        // 只停止执行
+        // this.stop ();
 
         console.log (project);// 当前执行的工程对象
         console.log (env);// 来自框架设置中自定义的环境变量
@@ -1821,6 +1860,21 @@ webpanda.project ({
 webpanda.project ({
 
     onexecutestop : function (project, env) {
+        // 全局暂停执行
+        // project.pause ();
+        // 只暂停执行
+        // this.pause ();
+
+        // 全局启动执行
+        // project.start ();
+        // 只启动执行
+        // this.start ();
+
+        // 全局停止执行
+        // project.stop ();
+        // 只停止执行
+        // this.stop ();
+        
         console.log (project);// 当前执行的工程对象
         console.log (env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程执行状态，0 关闭(停止运行)，1正常(运行中)，2等待
@@ -1848,14 +1902,20 @@ webpanda.project ({
 webpanda.project ({
 
     onrender : function (project, env) {
-        // 暂停执行
+        // 全局暂停执行
         // project.pause ();
+        // 只暂停渲染
+        // this.pause ();
 
-        // 启动执行
+        // 全局启动执行
         // project.start ();
+        // 只启动渲染
+        // this.start ();
 
-        // 停止执行
+        // 全局停止执行
         // project.stop ();
+        // 只停止渲染
+        // this.stop ();
 
         console.log (project);// 当前渲染的工程对象
         console.log (env);// 来自框架设置中自定义的环境变量
@@ -1882,6 +1942,21 @@ webpanda.project ({
 webpanda.project ({
 
     onrendered : function (project, env) {
+        // 全局暂停执行
+        // project.pause ();
+        // 只暂停渲染
+        // this.pause ();
+
+        // 全局启动执行
+        // project.start ();
+        // 只启动渲染
+        // this.start ();
+
+        // 全局停止执行
+        // project.stop ();
+        // 只停止渲染
+        // this.stop ();
+        
         console.log (project);// 当前渲染的工程对象
         console.log (env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程渲染状态，0 关闭(停止运行)，1正常(运行中)，2等待
@@ -1907,11 +1982,20 @@ webpanda.project ({
 webpanda.project ({
 
     onrenderstart : function (project, env) {
-        // 暂停执行
+        // 全局暂停执行
         // project.pause ();
+        // 只暂停渲染
+        // this.pause ();
 
-        // 停止执行
+        // 全局启动执行
+        // project.start ();
+        // 只启动渲染
+        // this.start ();
+
+        // 全局停止执行
         // project.stop ();
+        // 只停止渲染
+        // this.stop ();
 
         console.log (project);// 当前渲染的工程对象
         console.log (env);// 来自框架设置中自定义的环境变量
@@ -1939,11 +2023,20 @@ webpanda.project ({
 
     onrenderpause : function (project, env) {
 
-        // 启动执行
-        // project.start ();
+        // 全局暂停执行
+        // project.pause ();
+        // 只暂停渲染
+        // this.pause ();
 
-        // 停止执行
+        // 全局启动执行
+        // project.start ();
+        // 只启动渲染
+        // this.start ();
+
+        // 全局停止执行
         // project.stop ();
+        // 只停止渲染
+        // this.stop ();
 
         console.log (project);// 当前渲染的工程对象
         console.log (env);// 来自框架设置中自定义的环境变量
@@ -1970,6 +2063,21 @@ webpanda.project ({
 webpanda.project ({
 
     onrenderstop : function (project, env) {
+        // 全局暂停执行
+        // project.pause ();
+        // 只暂停渲染
+        // this.pause ();
+
+        // 全局启动执行
+        // project.start ();
+        // 只启动渲染
+        // this.start ();
+
+        // 全局停止执行
+        // project.stop ();
+        // 只停止渲染
+        // this.stop ();
+        
         console.log (project);// 当前渲染的工程对象
         console.log (env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程渲染状态，0 关闭(停止运行)，1正常(运行中)，2等待
@@ -1995,6 +2103,21 @@ webpanda.project ({
 webpanda.project ({
 
     onrenderlistener : function (project, env) {
+        // 全局暂停执行
+        // project.pause ();
+        // 只暂停渲染
+        // this.pause ();
+
+        // 全局启动执行
+        // project.start ();
+        // 只启动渲染
+        // this.start ();
+
+        // 全局停止执行
+        // project.stop ();
+        // 只停止渲染
+        // this.stop ();
+        
         console.log (project);// 当前渲染的工程对象
         console.log (env);// 来自框架设置中自定义的环境变量
         console.log (this.abstractNodeTree);// 节点树对象
@@ -2513,7 +2636,7 @@ project.render ({
 
 > 注意，如果在该方法之前已经执行了 `stop()` 那么将无法启动。启动只对暂停时有效。
 
-
+在执行事件中时，表示开始执行；在渲染事件中时，表示开始渲染。如果在执行事件中执行渲染事件，则表示开始执行并且开始渲染。
 
 
 
@@ -2523,7 +2646,7 @@ project.render ({
 
 > 注意，只有正在执行或者正在渲染才能有效，如果已经停止了，无法暂停。
 
-
+在执行事件中时，表示暂停执行；在渲染事件中时，表示暂停渲染。如果在执行事件中执行渲染事件，则表示暂停执行并且暂停渲染。
 
 
 
@@ -2532,6 +2655,8 @@ project.render ({
 返回该工程对象。
 
 > 注意，如果已经停止了，使用无效。
+
+在执行事件中时，表示停止执行；在渲染事件中时，表示停止渲染。如果在执行事件中执行渲染事件，则表示停止执行并且停止渲染。
 
 
 
