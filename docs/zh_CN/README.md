@@ -2639,7 +2639,7 @@ webpanda.project.option.readyState
 | refresh         | render、execute     | 强制刷新渲染                                         |
 | reload          | render、execute     | 重载筛选容器                                         |
 | alone           | render、execute     | 未载入时独享筛选容器（会将筛选容器的其他节点清理掉） |
-| override        | extend              | 覆盖式继承事件                                       |
+| overrideEvent   | extend              | 覆盖式继承事件                                       |
 | disableSelector | extend              | 禁止继承父级 selector                                |
 | disableTemplate | extend              | 禁止继承父级 template                                |
 | disableEvent    | extend              | 禁止继承父级事件函数 on\*                            |
