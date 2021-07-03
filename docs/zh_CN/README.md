@@ -97,6 +97,8 @@
     - [include() 包含源文件](#include-包含源文件)
     - [friend() 友元属性](#friend-友元属性)
     - [clone(name) 克隆工程](#clonename-克隆工程)
+    - [clone.data(obj,key) 克隆渲染数据](#clonedataobjkey-克隆渲染数据)
+    - [clone.property(obj,key) 克隆成员属性](#clonepropertyobjkey-克隆成员属性)
     - [page() 加载页面](#page-加载页面)
     - [execute(args) 执行工程](#executeargs-执行工程)
     - [render(args) 渲染工程](#renderargs-渲染工程)
@@ -2512,6 +2514,25 @@ if (project) {
 ```
 
 特别注意，克隆工程会先以源工程的结构体走一遍创建，然后最后会拷贝源工程最新的属性键值。
+
+
+### clone.data(obj,key) 克隆渲染数据
+
+工程之间的渲染数据肯定存在相互借用或者拷贝，但彼此的渲染数据监听是隔离的，所以需要通过克隆渲染数据来拷贝成新数据。
+
+```javascript
+var obj = {a:123, b:456};
+webpanda.project ("test").clone.data (obj);
+webpanda.project ("test2").clone.data (obj);
+
+// 指定key键名称, 如下相当于: webpanda.project ("test2").data.t = obj
+webpanda.project ("test2").clone.data (obj, 't');
+```
+
+
+### clone.property(obj,key) 克隆成员属性
+
+使用方式参考 `clone.data(obj,key)` 。
 
 
 
