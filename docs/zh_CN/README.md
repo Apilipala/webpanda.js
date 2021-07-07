@@ -24,6 +24,7 @@
     - [includeDisableCache 包含文件是否禁用缓存](#includedisablecache-包含文件是否禁用缓存)
     - [includeSelector 包含文件筛选器](#includeselector-包含文件筛选器)
     - [includeMethod 包含文件筛选器的添加方法](#includemethod-包含文件筛选器的添加方法)
+    - [includeCallback 包含文件执行回调，可自定义操作请求地址信息](#includecallback-包含文件执行回调可自定义操作请求地址信息)
     - [historyPageMaximum 浏览记录中的页面上限](#historypagemaximum-浏览记录中的页面上限)
     - [historyStepMaximum 浏览记录中的步数上限](#historystepmaximum-浏览记录中的步数上限)
     - [router 路由设置](#router-路由设置)
@@ -126,8 +127,9 @@
     - [reparse() 重新解析模板](#reparse-重新解析模板)
     - [clear() 清理渲染节点](#clear-清理渲染节点)
   - [模板语法](#模板语法)
-    - [文本输出  webpanda\-html、双小括号](#文本输出--webpanda-html双小括号)
+    - [文本输出  webpanda\-html、\$大括号](#文本输出--webpanda-html大括号)
     - [文本打印 webpanda\-text、双大括号](#文本打印-webpanda-text双大括号)
+    - [webpanda-data 输出变量](#webpanda-data-输出变量)
     - [模板 webpanda\-template](#模板-webpanda-template)
       - [模板递归嵌入会造成死循环](#模板递归嵌入会造成死循环)
     - [遍历 webpanda\-for](#遍历-webpanda-for)
@@ -421,6 +423,53 @@ webpanda ({
 针对 js、css 文件，在包含时父级的节点筛选(选择)器指定添加方式。
 
 参考 `webpanda.require` 对象方法的使用，可选值：prepend \| append 。
+
+
+### includeCallback 包含文件执行回调，可自定义操作请求地址信息
+
+可以给包含文件地址自定义添加query参数等操作。
+
+```javascript
+webpanda ({
+    // ...
+
+    version : '1.0.1',
+    includeDisableCache : false,
+    includeSelector : 'head',
+    includeMethod : 'append',
+
+    // 包含文件执行时的回调
+    includeCallback : function (include) {
+        // include.handle === require || ajax
+
+        var dates = new Date ();
+        var times = [
+            dates.getFullYear (),// 年
+            dates.getMonth () + 1,// 月
+            dates.getDate (),// 日
+            dates.getHours (),// 时
+            // dates.getMinutes (),// 分
+            // dates.getSeconds (), //秒
+            // dates.getMilliseconds () //毫秒
+        ];
+
+        // 缓存一小时
+        include.handle.url.query._cache = times.join ('');
+    },
+
+    // ...
+});
+```
+
+
+最后包含文件地址最终执行如下：
+
+
+```shell
+http://temp.blog.com/src/pages/home.js?__v=1.0.1&_cache=20217716
+```
+
+> 其中 `_cache=20217715` 参数相当于让浏览器缓存一个小时。
 
 
 
@@ -3093,13 +3142,13 @@ compiler.clear ();
 
 
 
-### 文本输出  webpanda\-html、双小括号
+### 文本输出  webpanda\-html、\$大括号
 
 允许采用文本特殊符号的模板语法来输出 HTML 内容的变量。也就是说不会自动执行了 `webpanda.encodeHTML` 方法。
 
 其中，`webpanda-html` 命令不能在同一个标签中存在多个。如果其节点包含子内容，那么其子内容跳过编译过程，会被当做源字符串打印输出，也就是说不会识别模板语法命令。
 
-> 注意， \(\(\)\) 是 webpanda\-html 等价写法。
+> 注意， \$\{\} 是 webpanda\-html 等价写法。
 
 ```html
 <div webpanda-html="name"></div>
@@ -3107,9 +3156,9 @@ compiler.clear ();
 <div webpanda-html="name"/>
 
 <!--字符串的写法-->
-<div>(( message ))</div>
+<div>${ message }</div>
 <!--使用 JavaScript 表达式-->
-<div>(( message + '测试' ))</div>
+<div>${ message + '测试' }</div>
 ```
 
 
@@ -3139,6 +3188,33 @@ compiler.clear ();
 
 
 
+### webpanda-data 输出变量
+
+
+这种用法主要是用于css代码中。
+
+
+```css
+html {
+    line-height: webpanda-data(--line-height);
+    -webkit-text-size-adjust: 100% 
+}
+```
+
+在标签中使用：
+
+```html
+<div webpanda-data="--line-height" ></div>
+```
+
+> 注意，该命令不能写表达式，只是作为输出渲染变量的操作，并且允许两边有空格。
+
+
+解析后相当于：
+
+```javascript
+project.data['--line-height']
+```
 
 
 
