@@ -133,6 +133,7 @@
     - [模板 webpanda\-template](#模板-webpanda-template)
       - [模板递归嵌入会造成死循环](#模板递归嵌入会造成死循环)
     - [遍历 webpanda\-for](#遍历-webpanda-for)
+    - [片段 webpanda\-fragment](#片段-webpanda-fragment)
     - [指令 &lt;webpanda&gt; 、指令注释](#指令-webpanda-指令注释)
     - [分支 webpanda\-if、webpanda\-else\-if、webpanda\-elseif、webpanda\-else](#分支-webpanda-ifwebpanda-else-ifwebpanda-elseifwebpanda-else)
     - [条件 webpanda\-is](#条件-webpanda-is)
@@ -3343,6 +3344,21 @@ compiler.render(test, {
 
 
 
+### 片段 webpanda\-fragment
+
+
+该命令是将当前节点的子节点包裹，最终解析、渲染结果将不包含其子节点，只会解析并渲染当前节点。
+
+
+```html
+<div webpanda-fragment>
+    <span>这里的节点将不会被渲染，也不会被解析</span>
+</div>
+```
+
+主要用于模板碎片化，利于多个工程之间模板内容相互传递。
+
+
 ### 指令 &lt;webpanda&gt; 、指令注释
 
 该命令是将节点当做指令节点，最终的渲染结果将不包含其节点，但会渲染其子节点。
@@ -3352,7 +3368,7 @@ compiler.render(test, {
 > 这些命令具有优先级，会先执行，所以会有效果。
 
 ```shell
-webpanda-before,webpanda-template,webpanda-for,webpanda-if,webpanda-else-if,webpanda-else,webpanda-is,webpanda-text,webpanda-html
+webpanda-before,webpanda-template,webpanda-for,webpanda-if,webpanda-else-if,webpanda-else,webpanda-is,webpanda-text,webpanda-html,webpanda-fragment
 ```
 
 如果非上列命令，让其他命令与其搭配的话将无其他命令效果，因为无效节点是具有优先级的。该命令有四种写法，一种是属性的方式，一种是标签的方式，其他是注释的方式。
