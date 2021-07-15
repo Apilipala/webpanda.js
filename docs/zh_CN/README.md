@@ -44,12 +44,13 @@
     - [on* 其他事件处理函数](#on-其他事件处理函数)
   - [webpanda() 对象](#webpanda-对象)
     - [execute 执行框架](#execute-执行框架)
-    - [pageRuntime() 获取当前页面的执行时间](#pageruntime-获取当前页面的执行时间)
-    - [pageFirstStatus() 页面是否第一次加载的状态](#pagefirststatus-页面是否第一次加载的状态)
-    - [pageProject() 当前页面的工程对象](#pageproject-当前页面的工程对象)
-    - [pageUrl() 当前页面的URL对象](#pageurl-当前页面的url对象)
-    - [projectAll() 获取所有工程](#projectall-获取所有工程)
-    - [includeAll() 获取所有引入(包含)资源](#includeall-获取所有引入包含资源)
+    - [getPageRuntime() 获取当前页面的执行时间](#getpageruntime-获取当前页面的执行时间)
+    - [getPageFirstStatus() 页面是否第一次加载的状态](#getpagefirststatus-页面是否第一次加载的状态)
+    - [getPageProject() 当前页面的工程对象](#getpageproject-当前页面的工程对象)
+    - [getPageUrl() 当前页面的URL对象](#getpageurl-当前页面的url对象)
+    - [getProjectAll() 获取所有工程](#getprojectall-获取所有工程)
+    - [getIncludeAll() 获取所有引入(包含)资源](#getincludeall-获取所有引入包含资源)
+  - [等待框架启动(执行)之后再执行](#等待框架启动执行之后再执行)
   - [框架与工程的事件执行优先级](#框架与工程的事件执行优先级)
 - [webpanda\.project() 工程](#webpandaproject-工程)
   - [工程定义](#工程定义)
@@ -501,6 +502,7 @@ webpanda ({
     router : {
         // 模式: webpanda.option.hash 、 webpanda.option.history
         // 大小写不敏感设置: webpanda.option.caseInsensitive
+        // 禁止路由(一般用于传统页面插件非单页应用)：webpanda.option.disable
         option : webpanda.option.hash | webpanda.option.caseInsensitive,
         // 页面路径配置
         page : [
@@ -929,61 +931,88 @@ wp.execute ();
 
 
 
-### pageRuntime() 获取当前页面的执行时间
+### getPageRuntime() 获取当前页面的执行时间
 
 ```javascript
-webpanda().pageRuntime();
+webpanda().getPageRuntime();
 ```
 
 
 
-### pageFirstStatus() 页面是否第一次加载的状态
+### getPageFirstStatus() 页面是否第一次加载的状态
 
 ```javascript
-webpanda().pageFirstStatus();
+webpanda().getPageFirstStatus();
 ```
 
 
 
-### pageProject() 当前页面的工程对象
+### getPageProject() 当前页面的工程对象
 
 ```javascript
-webpanda().pageProject();
-```
-
-
-
-
-
-### pageUrl() 当前页面的URL对象
-
-```javascript
-webpanda().pageUrl();
+webpanda().getPageProject();
 ```
 
 
 
 
 
-### projectAll() 获取所有工程
+### getPageUrl() 当前页面的URL对象
 
 ```javascript
-webpanda().projectAll();
+webpanda().getPageUrl();
 ```
 
 
 
 
 
-### includeAll() 获取所有引入(包含)资源
+### getProjectAll() 获取所有工程
 
 ```javascript
-webpanda().includeAll();
+webpanda().getProjectAll();
 ```
 
 
 
 
+
+### getIncludeAll() 获取所有引入(包含)资源
+
+```javascript
+webpanda().getIncludeAll();
+```
+
+
+
+## 等待框架启动(执行)之后再执行
+
+
+```javascript
+webpanda(function () {
+
+    // 等待框架 webpanda ().execute () 执行后执行
+    // ......
+
+});
+```
+
+通过超时设置：
+
+```javascript
+webpanda(function () {
+
+    // 等待框架 webpanda ().execute () 执行后执行
+    // ......
+
+}, {
+    global : true,// 是否全局有效，默认false非全局(页面更新会被取消)
+    timeout : 3000,// 3秒后超时
+    callback : function () {
+        console.log ('这是超时回调函数');
+    }
+});
+```
 
 
 
