@@ -50,8 +50,9 @@
     - [getPageUrl() 当前页面的URL对象](#getpageurl-当前页面的url对象)
     - [getProjectAll() 获取所有工程](#getprojectall-获取所有工程)
     - [getIncludeAll() 获取所有引入(包含)资源](#getincludeall-获取所有引入包含资源)
-  - [等待框架启动(执行)之后再执行](#等待框架启动执行之后再执行)
   - [框架与工程的事件执行优先级](#框架与工程的事件执行优先级)
+  - [等待框架启动(执行)之后再执行](#等待框架启动执行之后再执行)
+  - [传统页面以插件的模式(嵌入)使用框架](#传统页面以插件的模式嵌入使用框架)
 - [webpanda\.project() 工程](#webpandaproject-工程)
   - [工程定义](#工程定义)
     - [name 工程名称](#name-工程名称)
@@ -143,6 +144,7 @@
     - [类 webpanda\-class](#类-webpanda-class)
       - [单个类名称操作 webpanda\-class\-\*](#单个类名称操作-webpanda-class-)
     - [样式 webpanda\-style](#样式-webpanda-style)
+      - [删除样式操作](#删除样式操作)
       - [单个样式操作 webpanda\-style\-\*](#单个样式操作-webpanda-style-)
     - [事件 webpanda\-event](#事件-webpanda-event)
       - [返回值为false，阻止系统默认（行为）](#返回值为false阻止系统默认行为)
@@ -985,6 +987,19 @@ webpanda().getIncludeAll();
 
 
 
+
+
+
+## 框架与工程的事件执行优先级
+
+
+框架定义的事件处理函数为全局，而工程定义的事件处理函数是页面局部的，并且还有标记（激活）的非页面工程的事件。
+
+当事件触发时，优先执行框架定义的事件处理函数，接着执行页面工程定义的事件处理函数，最后执行标记（激活）的非页面工程定义的事件处理函数。
+
+
+
+
 ## 等待框架启动(执行)之后再执行
 
 
@@ -1017,11 +1032,62 @@ webpanda(function () {
 
 
 
-## 框架与工程的事件执行优先级
+## 传统页面以插件的模式(嵌入)使用框架
 
-框架定义的事件处理函数为全局，而工程定义的事件处理函数是页面局部的，并且还有标记（激活）的非页面工程的事件。
 
-当事件触发时，优先执行框架定义的事件处理函数，接着执行页面工程定义的事件处理函数，最后执行标记（激活）的非页面工程定义的事件处理函数。
+主要是不使用框架的路由，那么需要禁用路由：
+
+
+```javascript
+// 初始化配置
+setTimeout (function isWebpandaLoad () {
+
+    if (!webpanda) {
+        setTimeout (isWebpandaLoad, 0);
+        return;
+    }
+
+    webpanda ({
+
+        version : '1.0.9',
+        includeDisableCache : false,
+        includeSelector : 'head',
+        includeMethod : 'append',
+        
+        // 包含文件执行时的回调
+        includeCallback : function (include) {
+            // include.handle === require || ajax
+    
+            var dates = new Date ();
+            var times = [
+                dates.getFullYear (),// 年
+                dates.getMonth () + 1,// 月
+                dates.getDate (),// 日
+                dates.getHours (),// 时
+                // dates.getMinutes (),// 分
+                // dates.getSeconds (), //秒
+                // dates.getMilliseconds () //毫秒
+            ];
+    
+            // 缓存一小时
+            include.handle.url.query._cache = times.join ('');
+        },
+        // 路由设置, 禁用路由
+        router : {
+            option : webpanda.option.disable
+        },
+        // 环境变量
+        environmentVariable : {
+    
+            // ...
+        },
+    
+    }).execute ();    
+
+}, 0);
+```
+
+
 
 
 
@@ -1610,6 +1676,7 @@ webpanda.project ({
 ### data 工程渲染数据
 
 定义工程的模板渲染数据，变量会被渲染监听，用于模板渲染的操作。
+
 
 定义 Object 的方式：
 
@@ -2606,6 +2673,20 @@ webpanda.project ("test2").clone.data (obj);
 
 // 指定key键名称, 如下相当于: webpanda.project ("test2").data.t = obj
 webpanda.project ("test2").clone.data (obj, 't');
+```
+
+> 特别注意，在克隆数据时请勿父子级嵌套，这样会造成死循环错误。
+
+如下代码：
+
+```javascript
+// obj1定义为obj2的父级，obj2是obj1子级，彼此相互嵌套
+var obj1 = {};
+var obj2 = {
+    parent : obj1
+};
+obj1.child = obj2;
+// 这个时候拷贝或者监听数据会出现死循环错误: RangeError: Maximum call stack size exceeded
 ```
 
 
@@ -3620,15 +3701,24 @@ CSS 属性名可以用驼峰式 (camelCase) 或短横线分隔 (kebab-case，记
 
 这样写只会渲染数组中最后一个被浏览器支持的值。在本例中，如果浏览器支持不带浏览器前缀的 `flexbox`，那么就只会渲染： `display: flex`
 
+
+
+#### 删除样式操作 
+
 有时候还可以根据渲染数据的真假值来删除样式，如下，当`v`为假则设为空字符串 ，便会取消掉该样式：
 
 ```html
 <div style="color:green;" webpanda-style="{'color': (v?'red':'') }"></div>
 ```
 
+> 特别注意，与 `webpanda-class` 命令不同，删除样式必须是空字符串，如果是 false 则存在不会生效。  
+那么为什么框架不将 `false` 自动转为空字符串呢？ 为了以后扩展吧。
+
+
 
 
 #### 单个样式操作 webpanda\-style\-\*
+
 
 如果是单个样式操作，可以使用 `webpanda-style-[样式名称]="样式值"` 方式设置，如下所示：
 
