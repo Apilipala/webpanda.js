@@ -1675,7 +1675,35 @@ webpanda.project ({
 
 ### data 工程渲染数据
 
+
 定义工程的模板渲染数据，变量会被渲染监听，用于模板渲染的操作。
+
+
+> 特别注意，在定义工程渲染数据时请勿父子级嵌套，这样会造成死循环错误。
+
+如下代码：
+
+```javascript
+// obj1定义为obj2的父级，obj2是obj1子级，彼此相互嵌套
+var obj1 = {};
+var obj2 = {
+    parent : obj1
+};
+obj1.child = obj2;
+
+// ......
+webpanda.project ({
+
+    // Object 定义的方式
+    data : {
+        test : obj1,
+    },
+
+});
+
+// 这个时候拷贝或者监听数据会出现死循环错误: RangeError: Maximum call stack size exceeded
+```
+
 
 
 定义 Object 的方式：
