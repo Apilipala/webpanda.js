@@ -16,7 +16,7 @@
 
 # 极速的项目构建
 
-webpanda.js 基于 ECMAScript 5 原生 JavaScript 开发，遵循原生 HTML、CSS、JavaScript 的开发模式，拿来即用，无需打包。不依赖各种前端工具（如 webpack 等，但从优化方面考虑，可以借助压缩工具，如：UglifyJS），摒弃繁琐的脚手架、依赖包，开发环境不需要安装 node，不用学习 TypeScript 、JSX，不需要复杂的配置，只面向浏览器本身进行前端开发、调试。
+webpanda.js 基于 ECMAScript 5 原生 JavaScript 开发，遵循原生 HTML、CSS、JavaScript 的开发模式，拿来即用，无需打包。不依赖各种前端工具（如 webpack 等，但从优化方面考虑，可以借助压缩工具，如：UglifyJS），不需要脚手架，不折腾依赖包，开发环境不需要安装 node，不用学习 TypeScript 、JSX，不需要复杂的配置，只面向浏览器本身进行前端开发、调试。
 
 > 直接刷新浏览器，无需打包，返璞归真，一样能模块化，开发即生产，简单又高效，让 Webpack 、Vite 通通滚蛋，只让一切变得简单，让前端的生活充满意义。
 
