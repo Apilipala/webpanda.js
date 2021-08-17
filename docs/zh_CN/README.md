@@ -1,4 +1,4 @@
-# webpanda\.js 
+# webpanda\.js 开发文档
 
 
 官方网站：[http://webpandajs.com](http://webpandajs.com)  
@@ -8,222 +8,6 @@
 
 > webpanda.js 是用于在 web 上构建项目的 JavaScript 框架。  
 > webpanda.js is JavaScript framework for building project on the web.
-
-
-
-- [webpanda\.js](#webpandajs)
-- [安装](#安装)
-  - [兼容性](#兼容性)
-  - [多语言与自定义语言](#多语言与自定义语言)
-  - [开发环境与生产环境](#开发环境与生产环境)
-- [框架](#框架)
-  - [选项 webpanda.option](#选项-webpandaoption)
-  - [代码示例](#代码示例)
-  - [webpanda(object) 定义](#webpandaobject-定义)
-    - [version 版本号](#version-版本号)
-    - [includeDisableCache 包含文件是否禁用缓存](#includedisablecache-包含文件是否禁用缓存)
-    - [includeSelector 包含文件筛选器](#includeselector-包含文件筛选器)
-    - [includeMethod 包含文件筛选器的添加方法](#includemethod-包含文件筛选器的添加方法)
-    - [includeCallback 包含文件执行回调，可自定义操作请求地址信息](#includecallback-包含文件执行回调可自定义操作请求地址信息)
-    - [historyPageMaximum 浏览记录中的页面上限](#historypagemaximum-浏览记录中的页面上限)
-    - [historyStepMaximum 浏览记录中的步数上限](#historystepmaximum-浏览记录中的步数上限)
-    - [router 路由设置](#router-路由设置)
-    - [environmentVariable 环境变量](#environmentvariable-环境变量)
-    - [onpage(project, env) 页面开始执行时](#onpageproject-env-页面开始执行时)
-    - [onpaged(project, env) 页面最后执行时](#onpagedproject-env-页面最后执行时)
-    - [onpagechange(project, env) 页面改变跳转时](#onpagechangeproject-env-页面改变跳转时)
-    - [onpagenotfound(project, env) 页面不存在时触发](#onpagenotfoundproject-env-页面不存在时触发)
-    - [onpageprogress(project, env) 页面生命周期进度](#onpageprogressproject-env-页面生命周期进度)
-    - [onpagedestroy(project, env) 页面离开销毁时](#onpagedestroyproject-env-页面离开销毁时)
-    - [oninclude(project, env) 包含文件开始时](#onincludeproject-env-包含文件开始时)
-    - [onincluded(project, env) 包含文件完成时](#onincludedproject-env-包含文件完成时)
-    - [onproject(project, env) 工程开始加载时](#onprojectproject-env-工程开始加载时)
-    - [onprojected(project, env) 工程完成加载时](#onprojectedproject-env-工程完成加载时)
-    - [onready(project, env) 工程开始准备时](#onreadyproject-env-工程开始准备时)
-    - [onreadied(project, env) 工程完成准备时](#onreadiedproject-env-工程完成准备时)
-    - [on* 其他事件处理函数](#on-其他事件处理函数)
-  - [webpanda() 对象](#webpanda-对象)
-    - [execute 执行框架](#execute-执行框架)
-    - [getPageRuntime() 获取当前页面的执行时间](#getpageruntime-获取当前页面的执行时间)
-    - [getPageFirstStatus() 页面是否第一次加载的状态](#getpagefirststatus-页面是否第一次加载的状态)
-    - [getPageProject() 当前页面的工程对象](#getpageproject-当前页面的工程对象)
-    - [getPageUrl() 当前页面的URL对象](#getpageurl-当前页面的url对象)
-    - [getProjectAll() 获取所有工程](#getprojectall-获取所有工程)
-    - [getIncludeAll() 获取所有引入(包含)资源](#getincludeall-获取所有引入包含资源)
-  - [框架与工程的事件执行优先级](#框架与工程的事件执行优先级)
-  - [等待框架启动(执行)之后再执行](#等待框架启动执行之后再执行)
-  - [传统页面以插件的模式(嵌入)使用框架](#传统页面以插件的模式嵌入使用框架)
-- [webpanda\.project() 工程](#webpandaproject-工程)
-  - [工程定义](#工程定义)
-    - [name 工程名称](#name-工程名称)
-    - [selector 筛选器](#selector-筛选器)
-    - [template 模板](#template-模板)
-    - [include 包含资源文件](#include-包含资源文件)
-      - [异步包含](#异步包含)
-      - [分布式与跨域包含](#分布式与跨域包含)
-    - [extend 继承](#extend-继承)
-      - [继承冲突问题](#继承冲突问题)
-      - [直属与非直属多次继承](#直属与非直属多次继承)
-    - [friend 友元工程](#friend-友元工程)
-    - [property 自定义成员属性](#property-自定义成员属性)
-    - [data 工程渲染数据](#data-工程渲染数据)
-    - [onreadied(project, env) 工程完成准备时](#onreadiedproject-env-工程完成准备时-1)
-    - [onpaged(project, env) 页面最后执行时](#onpagedproject-env-页面最后执行时-1)
-    - [onpagechange(project, env) 页面改变跳转时](#onpagechangeproject-env-页面改变跳转时-1)
-    - [onpagedestroy(project, env) 页面离开销毁时](#onpagedestroyproject-env-页面离开销毁时-1)
-    - [onurlchange(project, env) 页面URL改变时](#onurlchangeproject-env-页面url改变时)
-    - [onexecute(project, env) 工程开始执行时](#onexecuteproject-env-工程开始执行时)
-    - [onexecuted(project, env) 工程结束执行时](#onexecutedproject-env-工程结束执行时)
-    - [onexecutestart(project, env) 工程启动执行时](#onexecutestartproject-env-工程启动执行时)
-    - [onexecutepause(project, env) 工程暂停执行时](#onexecutepauseproject-env-工程暂停执行时)
-    - [onexecutestop(project, env) 工程停止执行时](#onexecutestopproject-env-工程停止执行时)
-    - [onrender(project, env) 工程渲染开始时](#onrenderproject-env-工程渲染开始时)
-    - [onrendered(project, env) 工程渲染结束时](#onrenderedproject-env-工程渲染结束时)
-    - [onrenderstart(project, env) 工程启动渲染时](#onrenderstartproject-env-工程启动渲染时)
-    - [onrenderpause(project, env) 工程渲染暂停时](#onrenderpauseproject-env-工程渲染暂停时)
-    - [onrenderstop(project, env) 工程渲染停止](#onrenderstopproject-env-工程渲染停止)
-    - [onrenderlistener(project, env) 工程渲染监听触发时](#onrenderlistenerproject-env-工程渲染监听触发时)
-    - [onshow(project, env) 进入显示该页面时](#onshowproject-env-进入显示该页面时)
-    - [onhide(project, env) 离开隐藏该页面时](#onhideproject-env-离开隐藏该页面时)
-    - [oncompatibleresize(project, env) 窗口或框架被重新调整大小时](#oncompatibleresizeproject-env-窗口或框架被重新调整大小时)
-    - [oncompatiblescroll(project, env) 窗口滚动时](#oncompatiblescrollproject-env-窗口滚动时)
-    - [on*(project, env) 其他 Document 原生事件](#onproject-env-其他-document-原生事件)
-  - [工程对象](#工程对象)
-    - [name 工程名称](#name-工程名称-1)
-    - [index 工程索引](#index-工程索引)
-    - [parent 父工程](#parent-父工程)
-    - [children 子工程](#children-子工程)
-    - [extend 继承属性](#extend-继承属性)
-    - [property 成员属性](#property-成员属性)
-    - [data 渲染数据](#data-渲染数据)
-    - [ready(callback, setting) 准备工程或准备完成执行](#readycallback-setting-准备工程或准备完成执行)
-    - [include() 包含源文件](#include-包含源文件)
-    - [friend() 友元属性](#friend-友元属性)
-    - [clone(name) 克隆工程](#clonename-克隆工程)
-    - [clone.data(obj,key) 克隆渲染数据](#clonedataobjkey-克隆渲染数据)
-    - [clone.property(obj,key) 克隆成员属性](#clonepropertyobjkey-克隆成员属性)
-    - [page() 加载页面](#page-加载页面)
-    - [execute(args) 执行工程](#executeargs-执行工程)
-    - [render(args) 渲染工程](#renderargs-渲染工程)
-    - [start() 启动执行或渲染](#start-启动执行或渲染)
-    - [pause() 暂停执行或渲染](#pause-暂停执行或渲染)
-    - [stop() 停止执行或渲染](#stop-停止执行或渲染)
-    - [event(config) 启用或关闭事件](#eventconfig-启用或关闭事件)
-    - [template(content) 设置或获取模板内容](#templatecontent-设置或获取模板内容)
-    - [compiler(compilerObject) 设置或获取编译器](#compilercompilerobject-设置或获取编译器)
-    - [selector(ele) 设置或获取筛选器](#selectorele-设置或获取筛选器)
-    - [html() 获取渲染后的节点字符串](#html-获取渲染后的节点字符串)
-    - [text() 获取渲染后的文本字符串](#text-获取渲染后的文本字符串)
-  - [选项 webpanda\.project\.option](#选项-webpandaprojectoption)
-  - [检测 webpanda\.project\.isInstanceOf (obj)](#检测-webpandaprojectisinstanceof-obj)
-  - [获取工程对象](#获取工程对象)
-  - [获取工程准备状态值](#获取工程准备状态值)
-  - [获取当前页面工程](#获取当前页面工程)
-- [webpanda\.include 包含资源文件](#webpandainclude-包含资源文件)
-- [webpanda\.compiler(config) 编译模板](#webpandacompilerconfig-编译模板)
-  - [选项 webpanda.compiler.option](#选项-webpandacompileroption)
-  - [检测 webpanda\.compiler\.isInstanceOf (obj)](#检测-webpandacompilerisinstanceof-obj)
-  - [属性](#属性)
-  - [方法](#方法)
-    - [render(config) 渲染](#renderconfig-渲染)
-    - [reparse() 重新解析模板](#reparse-重新解析模板)
-    - [clear() 清理渲染节点](#clear-清理渲染节点)
-  - [模板语法](#模板语法)
-    - [文本输出  webpanda\-html、\$大括号](#文本输出--webpanda-html大括号)
-    - [文本打印 webpanda\-text、双大括号](#文本打印-webpanda-text双大括号)
-    - [webpanda-data 输出变量](#webpanda-data-输出变量)
-    - [模板 webpanda\-template](#模板-webpanda-template)
-      - [模板递归嵌入会造成死循环](#模板递归嵌入会造成死循环)
-    - [遍历 webpanda\-for](#遍历-webpanda-for)
-    - [片段 webpanda\-fragment](#片段-webpanda-fragment)
-    - [指令 &lt;webpanda&gt; 、指令注释](#指令-webpanda-指令注释)
-    - [分支 webpanda\-if、webpanda\-else\-if、webpanda\-elseif、webpanda\-else](#分支-webpanda-ifwebpanda-else-ifwebpanda-elseifwebpanda-else)
-    - [条件 webpanda\-is](#条件-webpanda-is)
-    - [属性 webpanda\-attribute、webpanda\-attr](#属性-webpanda-attributewebpanda-attr)
-      - [单个属性操作 webpanda\-attribute\-\*](#单个属性操作-webpanda-attribute-)
-    - [类 webpanda\-class](#类-webpanda-class)
-      - [单个类名称操作 webpanda\-class\-\*](#单个类名称操作-webpanda-class-)
-    - [样式 webpanda\-style](#样式-webpanda-style)
-      - [删除样式操作](#删除样式操作)
-      - [单个样式操作 webpanda\-style\-\*](#单个样式操作-webpanda-style-)
-    - [事件 webpanda\-event](#事件-webpanda-event)
-      - [返回值为false，阻止系统默认（行为）](#返回值为false阻止系统默认行为)
-    - [前置 webpanda\-before](#前置-webpanda-before)
-    - [后置 webpanda\-after](#后置-webpanda-after)
-  - [模板预编译参数](#模板预编译参数)
-    - [模板预编译参数会不会与字符串的 “\#” 井号冲突呢？不会](#模板预编译参数会不会与字符串的--井号冲突呢不会)
-    - [表单取值代码示例](#表单取值代码示例)
-  - [模板语法简写](#模板语法简写)
-    - [命令前缀  “webpanda\-” 简写为 “\-”](#命令前缀--webpanda--简写为--)
-    - [命令前缀  “webpanda\-attribute-” 简写为 “\-\-”](#命令前缀--webpanda-attribute--简写为---)
-  - [知识点](#知识点)
-    - [webpanda\-template、webpanda\-html 打印模板字符串比较](#webpanda-templatewebpanda-html-打印模板字符串比较)
-    - [webpanda\-template、webpanda\-for 模板与遍历的编译性质](#webpanda-templatewebpanda-for-模板与遍历的编译性质)
-    - [webpanda\-void、\<webpanda\>、webpanda\-for 无效与遍历渲染性质](#webpanda-voidwebpandawebpanda-for-无效与遍历渲染性质)
-  - [常见错误](#常见错误)
-    - [为什么渲染数据的变量更新了，然而视图并没有自动刷新渲染？](#为什么渲染数据的变量更新了然而视图并没有自动刷新渲染)
-    - [避免渲染数据中函数体未变动以为变动，然后视图并没有自动刷新渲染的错误](#避免渲染数据中函数体未变动以为变动然后视图并没有自动刷新渲染的错误)
-    - [模板渲染出现”Maximum call stack size exceeded“错误](#模板渲染出现maximum-call-stack-size-exceeded错误)
-- [webpanda\.timer (callback, timeout, limit, global) 页面计时器](#webpandatimer-callback-timeout-limit-global-页面计时器)
-  - [属性](#属性-1)
-  - [方法](#方法-1)
-    - [start() 启动计时器](#start-启动计时器)
-    - [stop() 停止计时器](#stop-停止计时器)
-    - [status() 状态](#status-状态)
-- [webpanda\.history 浏览记录](#webpandahistory-浏览记录)
-  - [属性](#属性-2)
-    - [backLength 上一页的数量](#backlength-上一页的数量)
-    - [forwardLength 下一页的数量](#forwardlength-下一页的数量)
-    - [lastLength 上一步的数量](#lastlength-上一步的数量)
-    - [nextLength 下一步的数量](#nextlength-下一步的数量)
-  - [方法](#方法-2)
-    - [back() 上一页](#back-上一页)
-    - [forward() 下一页](#forward-下一页)
-    - [go(number) 跳转到某一页](#gonumber-跳转到某一页)
-    - [last() 上一步](#last-上一步)
-    - [next() 下一步](#next-下一步)
-    - [step(number) 跳转到某一步](#stepnumber-跳转到某一步)
-    - [log() 获取页面的浏览记录列表](#log-获取页面的浏览记录列表)
-- [webpanda\.url(location) 地址解析](#webpandaurllocation-地址解析)
-  - [选项 webpanda\.url\.option](#选项-webpandaurloption)
-  - [检测 webpanda\.url\.isInstanceOf (obj)](#检测-webpandaurlisinstanceof-obj)
-  - [属性](#属性-3)
-  - [方法](#方法-3)
-    - [merge() 合并URL地址或者url对象](#merge-合并url地址或者url对象)
-    - [toString(options) 把 url 对象换为 URL 字符串(构造 URL)](#tostringoptions-把-url-对象换为-url-字符串构造-url)
-- [webpanda\.require(config) 引入资源文件](#webpandarequireconfig-引入资源文件)
-  - [选项 webpanda.require.option](#选项-webpandarequireoption)
-  - [检测 webpanda\.require\.isInstanceOf (obj)](#检测-webpandarequireisinstanceof-obj)
-  - [属性](#属性-4)
-  - [方法](#方法-4)
-    - [onerror(e) 错误事件](#onerrore-错误事件)
-    - [onsuccess(e) 成功事件](#onsuccesse-成功事件)
-    - [append() 向选择器的元素内部追加资源](#append-向选择器的元素内部追加资源)
-    - [prepend() 向选择器的元素内部前置资源](#prepend-向选择器的元素内部前置资源)
-    - [isExists() 判断资源文件是否已经存在](#isexists-判断资源文件是否已经存在)
-    - [isLoad() 判断资源文件是否已经加载](#isload-判断资源文件是否已经加载)
-    - [unload() 卸载已加载的资源文件](#unload-卸载已加载的资源文件)
-    - [remove() 删除已加载的全部资源文件](#remove-删除已加载的全部资源文件)
-- [webpanda.ajax(config) 网络请求](#webpandaajaxconfig-网络请求)
-  - [选项 webpanda.ajax.option](#选项-webpandaajaxoption)
-  - [检测 webpanda\.ajax\.isInstanceOf (obj)](#检测-webpandaajaxisinstanceof-obj)
-  - [属性](#属性-5)
-  - [方法](#方法-5)
-    - [onready(readyState) 当 readyState 改变时执行事件](#onreadyreadystate-当-readystate-改变时执行事件)
-    - [onrequest(XMLHttpRequest) 发送请求前执行事件](#onrequestxmlhttprequest-发送请求前执行事件)
-    - [onresponse(result) 请求完成后执行事件](#onresponseresult-请求完成后执行事件)
-    - [onerror(result) 响应错误事件](#onerrorresult-响应错误事件)
-    - [onsuccess(result) 响应成功事件](#onsuccessresult-响应成功事件)
-    - [request() 发起请求](#request-发起请求)
-    - [post() 发起POST请求](#post-发起post请求)
-    - [get() 发起GET请求](#get-发起get请求)
-    - [abort() 中断请求任务](#abort-中断请求任务)
-- [webpanda\.encodeURL(var) 编码 URL](#webpandaencodeurlvar-编码-url)
-- [webpanda\.decodeURL(var) 解码 URL](#webpandadecodeurlvar-解码-url)
-- [webpanda\.encodeQuery(object) 将关联数组和对象生成 URL Query 字符串](#webpandaencodequeryobject-将关联数组和对象生成-url-query-字符串)
-- [webpanda\.decodeQuery(string) 将URL字符串的query部分, 解析成一个对象](#webpandadecodequerystring-将url字符串的query部分-解析成一个对象)
-- [webpanda\.encodeHTML(string) 编码HTML标签](#webpandaencodehtmlstring-编码html标签)
-- [webpanda\.decodeHTML(string) 解码HTML实体](#webpandadecodehtmlstring-解码html实体)
 
 
 
@@ -297,6 +81,8 @@ webpanda.option.caseInsensitive
 | hash            | 路由 hash 模式               |
 | history         | 路由 history 模式            |
 | caseInsensitive | 设置路径检索时，大小写不敏感 |
+| disableRouter   | 禁止路由                     |
+| disableCache    | 禁用缓存                     |
 
 
 
@@ -308,17 +94,23 @@ webpanda.option.caseInsensitive
 var wp = webpanda ({
     // 版本号
     version : '1.0.0',
-    // 是否禁止浏览器缓存
-    includeDisableCache : true,
-    // 包含筛选器
-    includeSelector : 'head',
-    // 包含筛选器的添加方法
-    includeMethod : 'append',
-    // 浏览记录的页面条数限制
-    historyPageMaximum : 50,
-    // 浏览记录的页面步数限制
-    historyStepMaximum : 50,
-    
+
+    // 包含文件配置
+    include : {
+        // 是否禁止浏览器缓存
+        option : webpanda.option.disableCache,
+        // 包含筛选器
+        selector : 'head',
+        // 包含筛选器的添加方法
+        method : 'append',
+    },
+    // 浏览记录设置
+    history : {
+        // 浏览记录的页面条数限制
+        pageMaximum : 50,
+        // 浏览记录的页面步数限制
+        stepMaximum : 50,
+    },
     // 路由设置
     router : {
         // 模式: hash 、 history
@@ -341,7 +133,7 @@ var wp = webpanda ({
     },
 
     // 环境变量
-    environmentVariable : {
+    environment : {
         // 域名设置
         domain : function () {
             return 'http://example.com/';
@@ -398,6 +190,8 @@ webpanda ({
 
 
 
+
+
 ## webpanda(object) 定义
 
 
@@ -408,88 +202,101 @@ webpanda ({
 
 
 
-### includeDisableCache 包含文件是否禁用缓存
-
-布尔值。如果为 true 那么在包含文件时，query 参数中会添加时间参数，否则不添加。
-
-> 添加实时的时间参数，在包含(引入)文件时，可以避免浏览器的缓存。
-
-
-
-### includeSelector 包含文件筛选器
-
-针对 js、css 文件，在包含时父级的节点筛选(选择)器。
-
-
-
-### includeMethod 包含文件筛选器的添加方法
-
-针对 js、css 文件，在包含时父级的节点筛选(选择)器指定添加方式。
-
-参考 `webpanda.require` 对象方法的使用，可选值：prepend \| append 。
-
-
-### includeCallback 包含文件执行回调，可自定义操作请求地址信息
-
-可以给包含文件地址自定义添加query参数等操作。
+### include 包含文件设置
 
 ```javascript
 webpanda ({
-    // ...
+    
+    // 包含文件配置
+    include : {
 
-    version : '1.0.1',
-    includeDisableCache : false,
-    includeSelector : 'head',
-    includeMethod : 'append',
+        /**
+         * 选项
+         * webpanda.option.disableCache 禁用缓存, 在包含文件时，query 参数中会添加时间参数，添加实时的时间参数，在包含(引入)文件时，可以避免浏览器的缓存。
+         */
+        option : webpanda.option.disableCache,
 
-    // 包含文件执行时的回调
-    includeCallback : function (include) {
-        // include.handle === require || ajax
+        /**
+         * 筛选器
+         * 针对 js、css 文件，在包含时父级的节点筛选(选择)器。
+         * @var {String}
+         */
+        selector : 'head',
 
-        var dates = new Date ();
-        var times = [
-            dates.getFullYear (),// 年
-            dates.getMonth () + 1,// 月
-            dates.getDate (),// 日
-            dates.getHours (),// 时
-            // dates.getMinutes (),// 分
-            // dates.getSeconds (), //秒
-            // dates.getMilliseconds () //毫秒
-        ];
+        /**
+         * 筛选器的添加方法
+         * 针对 js、css 文件，在包含时父级的节点筛选(选择)器指定添加方式。
+         * 参考 `webpanda.require` 对象方法的使用，可选值：prepend | append 。
+         * @var {String}
+         */
+        method : 'append',
 
-        // 缓存一小时
-        include.handle.url.query._cache = times.join ('');
+        /**
+         * 包含文件之前执行回调，可自定义操作请求地址信息
+         * 可以给包含文件地址自定义添加query参数等操作。
+         */
+        callback : function () {
+            // this.handle === require || ajax
+            // 获取环境变量
+            // var env = webpanda ().getEnvironment ();
+            
+            var dates = new Date ();
+            var times = [
+                dates.getFullYear (),// 年
+                dates.getMonth () + 1,// 月
+                dates.getDate (),// 日
+                dates.getHours (),// 时
+                // dates.getMinutes (),// 分
+                // dates.getSeconds (), //秒
+                // dates.getMilliseconds () //毫秒
+            ];
+
+            // 缓存一小时
+            this.handle.url.query._cache = times.join ('');
+            // 最后包含文件地址最终执行如下：
+            // http://temp.blog.com/src/pages/home.js?__v=1.0.1&_cache=20217716
+            // 其中 `_cache=20217715` 参数相当于让浏览器缓存一个小时。
+        }
+
     },
-
-    // ...
+    
 });
 ```
 
 
-最后包含文件地址最终执行如下：
 
+### history 浏览记录设置
 
-```shell
-http://temp.blog.com/src/pages/home.js?__v=1.0.1&_cache=20217716
+```javascript
+webpanda ({
+
+    // 浏览记录设置
+    history : {
+
+        /**
+         * 浏览记录中的页面上限(记录最大值)
+         * 页面变更记录的条数最大值，默认 10 。
+         * 注意，这个是上一页与下一页分别的数量限制。
+         * @var {Number}
+         */
+        pageMaximum : 10,
+
+        /**
+         * 浏览记录中的步数上限(记录最大值)
+         * 在当前页面中，URL变更记录的条数（步数）最大值，默认 10 。
+         * 注意，与 pageMaximum 不同，这个是上一步与下一步共同的数量限制，不是分别限制。
+         * @var {Number}
+         */
+        stepMaximum : 10,
+
+    },
+
+});
 ```
 
-> 其中 `_cache=20217715` 参数相当于让浏览器缓存一个小时。
 
 
 
-### historyPageMaximum 浏览记录中的页面上限
-
-页面变更记录的条数最大值，默认 10 。
-
-> 注意，这个是上一页与下一页分别的数量限制。
-
-
-
-### historyStepMaximum 浏览记录中的步数上限
-
-在当前页面中，URL变更记录的条数（步数）最大值，默认 10 。
-
-> 注意，与 historyPageMaximum 不同，这个是上一步与下一步共同的数量限制，不是分别限制。
 
 
 
@@ -504,7 +311,7 @@ webpanda ({
     router : {
         // 模式: webpanda.option.hash 、 webpanda.option.history
         // 大小写不敏感设置: webpanda.option.caseInsensitive
-        // 禁止路由(一般用于传统页面插件非单页应用)：webpanda.option.disable
+        // 禁止路由(一般用于传统页面插件非单页应用)：webpanda.option.disableRouter
         option : webpanda.option.hash | webpanda.option.caseInsensitive,
         // 页面路径配置
         page : [
@@ -575,7 +382,7 @@ location / {
 
 
 
-### environmentVariable 环境变量
+### environment 环境变量
 
 是一个对象，设置环境变量，在其他地方会带上该参数，主要是设置一些公用属性、方法。
 
@@ -583,7 +390,7 @@ location / {
 webpanda ({
 	
     // 环境变量
-    environmentVariable : {
+    environment : {
 
         // 域名设置
         domain : function () {
@@ -987,6 +794,14 @@ webpanda().getIncludeAll();
 
 
 
+### getEnvironment() 获取环境变量
+
+```javascript
+webpanda().getEnvironment();
+```
+
+
+
 
 
 
@@ -1041,7 +856,9 @@ webpanda(function () {
 ```javascript
 // 初始化配置
 setTimeout (function isWebpandaLoad () {
-
+	
+    // 为了兼容性，比如百度APP的浏览器如果不这么写就会报错（原因不太清楚，无法调试）
+    // 先判断webpanda.js被正常加载进来了才进行配置操作
     if (!webpanda) {
         setTimeout (isWebpandaLoad, 0);
         return;
@@ -3281,13 +3098,13 @@ compiler.clear ();
 
 
 
-### 文本输出  webpanda\-html、\$大括号
+### 文本输出  webpanda\-html、$大括号
 
 允许采用文本特殊符号的模板语法来输出 HTML 内容的变量。也就是说不会自动执行了 `webpanda.encodeHTML` 方法。
 
 其中，`webpanda-html` 命令不能在同一个标签中存在多个。如果其节点包含子内容，那么其子内容跳过编译过程，会被当做源字符串打印输出，也就是说不会识别模板语法命令。
 
-> 注意， \$\{\} 是 webpanda\-html 等价写法。
+> 注意， $\{\} 是 webpanda\-html 等价写法。
 
 ```html
 <div webpanda-html="name"></div>
