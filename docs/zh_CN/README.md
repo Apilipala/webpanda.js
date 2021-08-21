@@ -133,7 +133,7 @@ var wp = webpanda ({
     },
 
     // 环境变量
-    environment : {
+    env : {
         // 域名设置
         domain : function () {
             return 'http://example.com/';
@@ -141,9 +141,9 @@ var wp = webpanda ({
         }
     },
 
-    onpage : function(project, env) {
+    onpage : function(project) {
         console.log (project);// 当前的工程对象，在该事件中始终为 undefined
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.setting);// 路由设置信息
         console.log (this.url);// webpanda.url 对象
         console.log (this.name);// 事件名称
@@ -170,7 +170,7 @@ var wp = webpanda ({
         }
     },
 
-    onincluded : function(project, env) {
+    onincluded : function(project) {
         if (this.include.isError ()) {
             console.log (this.include.location + ' 引入失败', this);
         } else {
@@ -213,6 +213,7 @@ webpanda ({
         /**
          * 选项
          * webpanda.option.disableCache 禁用缓存, 在包含文件时，query 参数中会添加时间参数，添加实时的时间参数，在包含(引入)文件时，可以避免浏览器的缓存。
+         * @var {Number}
          */
         option : webpanda.option.disableCache,
 
@@ -234,11 +235,11 @@ webpanda ({
         /**
          * 包含文件之前执行回调，可自定义操作请求地址信息
          * 可以给包含文件地址自定义添加query参数等操作。
+         * @var {Function}
          */
         callback : function () {
             // this.handle === require || ajax
-            // 获取环境变量
-            // var env = webpanda ().getEnvironment ();
+            // webpanda.env 环境变量
             
             var dates = new Date ();
             var times = [
@@ -317,16 +318,16 @@ webpanda ({
         page : [
             {
                 // path 支持函数
-                path : function (env) {
-                    return env.prefix + '/index/';
+                path : function () {
+                    return webpanda.env.prefix + '/index/';
                 },
                 // 工程名称
                 name : "index",
                 // 选项，设置局部的大小写不敏感
                 option : webpanda.option.caseInsensitive,
                 // 工程文件地址，支持函数、URL字符串、webpanda.url对象
-                src : function (env) {
-                    return env.prefix + "/index.js";
+                src : function () {
+                    return webpanda.env.prefix + "/index.js";
                 },
             },
             {
@@ -382,7 +383,7 @@ location / {
 
 
 
-### environment 环境变量
+### env 环境变量
 
 是一个对象，设置环境变量，在其他地方会带上该参数，主要是设置一些公用属性、方法。
 
@@ -390,7 +391,7 @@ location / {
 webpanda ({
 	
     // 环境变量
-    environment : {
+    env : {
 
         // 域名设置
         domain : function () {
@@ -399,9 +400,9 @@ webpanda ({
 
     },
 
-    onpage : function(project, env) {
+    onpage : function(project) {
         console.log (project);
-        console.log (env);// 来自框架设置中自定义的环境变量 environmentVariable
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量 env
     },
 
 });
@@ -413,7 +414,7 @@ webpanda ({
 
 
 
-### onpage(project, env) 页面开始执行时
+### onpage(project) 页面开始执行时
 
 该事件必须通过使用 `this.page()` 回调函数指定页面工程信息，如果不执行页面将停止加载。
 
@@ -422,9 +423,9 @@ webpanda ({
 ```javascript
 webpanda ({
 	
-    onpage : function(project, env) {
+    onpage : function(project) {
         console.log (project);// 当前的工程对象，在该事件中始终为 undefined
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.setting);// 路由设置信息
         console.log (this.url);// webpanda.url 对象
         console.log (this.name);// 事件名称
@@ -456,14 +457,14 @@ webpanda ({
 
 
 
-### onpaged(project, env) 页面最后执行时
+### onpaged(project) 页面最后执行时
 
 ```javascript
 webpanda ({
 	
-    onpaged : function(project, env) {
+    onpaged : function(project) {
         console.log (project);// 当前的页面工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.url);// webpanda.url 对象
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
@@ -477,14 +478,14 @@ webpanda ({
 
 
 
-### onpagechange(project, env) 页面改变跳转时
+### onpagechange(project) 页面改变跳转时
 
 ```javascript
 webpanda ({
 	
-    onpagechange : function (project, env) {
+    onpagechange : function (project) {
         console.log (project);// 当前的页面工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.url);// webpanda.url 对象
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
@@ -505,14 +506,14 @@ webpanda ({
 
 
 
-### onpagenotfound(project, env) 页面不存在时触发
+### onpagenotfound(project) 页面不存在时触发
 
 ```javascript
 webpanda ({
 	
-    onpagenotfound : function(project, env) {
+    onpagenotfound : function(project) {
         console.log (project);// 当前的页面工程对象，在该事件中始终为 undefined
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.url);// webpanda.url 对象
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
@@ -526,14 +527,14 @@ webpanda ({
 
 
 
-### onpageprogress(project, env) 页面生命周期进度
+### onpageprogress(project) 页面生命周期进度
 
 ```javascript
 webpanda ({
 	
-    onpageprogress : function(project, env) {
+    onpageprogress : function(project) {
         console.log (project);// 当前的页面工程对象，在该事件中有可能为 undefined。工程对象中途才被设置
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.total);// 总进度
         console.log (this.loaded);// 已加载进度
         console.log (this.percent);// 已加载进度百分比
@@ -547,14 +548,14 @@ webpanda ({
 
 
 
-### onpagedestroy(project, env) 页面离开销毁时
+### onpagedestroy(project) 页面离开销毁时
 
 ```javascript
 webpanda ({
     
-    onpagedestroy : function(project, env) {
+    onpagedestroy : function(project) {
         console.log (project);// 当前的页面工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.setting);// 路由设置信息, 来自 工程 page 方法的执行时，该值不为 undefined
         console.log (this.url);// webpanda.url 对象
         console.log (this.name);// 事件名称
@@ -569,14 +570,14 @@ webpanda ({
 
 
 
-### oninclude(project, env) 包含文件开始时
+### oninclude(project) 包含文件开始时
 
 ```javascript
 webpanda ({
 	
-    oninclude : function(project, env) {
+    oninclude : function(project) {
         console.log (project);// 工程对象，在该事件中始终为 undefined
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.include);// 包含对象
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
@@ -588,14 +589,14 @@ webpanda ({
 
 
 
-### onincluded(project, env) 包含文件完成时
+### onincluded(project) 包含文件完成时
 
 ```javascript
 webpanda ({
 	
-    onincluded : function(project, env) {
+    onincluded : function(project) {
         console.log (project);// 工程对象，在该事件中始终为 undefined
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.include);// 包含对象
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
@@ -612,7 +613,7 @@ webpanda ({
 ```javascript
 webpanda ({
 	
-    onincluded : function(project, env) {
+    onincluded : function(project) {
         // 存在错误，说明包含失败
         if (this.include.isError ()) {
             console.log (this.include.location + ' 文件包含失败');
@@ -630,14 +631,14 @@ webpanda ({
 
 
 
-### onproject(project, env) 工程开始加载时
+### onproject(project) 工程开始加载时
 
 ```javascript
 webpanda ({
 	
-    onproject : function(project, env) {
+    onproject : function(project) {
         console.log (project);// 工程对象，在该事件中始终为 undefined
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.projectName);// 工程名称
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
@@ -649,14 +650,14 @@ webpanda ({
 
 
 
-### onprojected(project, env) 工程完成加载时
+### onprojected(project) 工程完成加载时
 
 ```javascript
 webpanda ({
 	
-    onprojected : function(project, env) {
+    onprojected : function(project) {
         console.log (project);// 工程对象，在该事件中始终为 undefined
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.projectName);// 工程名称
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
@@ -670,14 +671,14 @@ webpanda ({
 
 
 
-### onready(project, env) 工程开始准备时
+### onready(project) 工程开始准备时
 
 ```javascript
 webpanda ({
 	
-    onready : function(project, env) {
+    onready : function(project) {
         console.log (project);// 准备的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
         console.log (this);
@@ -688,14 +689,14 @@ webpanda ({
 
 
 
-### onreadied(project, env) 工程完成准备时
+### onreadied(project) 工程完成准备时
 
 ```javascript
 webpanda ({
 	
-    onreadied : function(project, env) {
+    onreadied : function(project) {
         console.log (project);// 准备的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
         console.log (this);
@@ -794,15 +795,6 @@ webpanda().getIncludeAll();
 
 
 
-### getEnvironment() 获取环境变量
-
-```javascript
-webpanda().getEnvironment();
-```
-
-
-
-
 
 
 ## 框架与工程的事件执行优先级
@@ -866,42 +858,84 @@ setTimeout (function isWebpandaLoad () {
 
     webpanda ({
 
-        version : '1.0.9',
-        includeDisableCache : false,
-        includeSelector : 'head',
-        includeMethod : 'append',
+        version : '1.0.0',
+        // 包含文件配置
+        include : {
+            // 禁用缓存
+            option : webpanda.option.disableCache,
+            selector : 'head',
+            method : 'append',
+            // 包含文件执行时的回调
+            callback : function () {
+                // this.handle === require || ajax
         
-        // 包含文件执行时的回调
-        includeCallback : function (include) {
-            // include.handle === require || ajax
-    
-            var dates = new Date ();
-            var times = [
-                dates.getFullYear (),// 年
-                dates.getMonth () + 1,// 月
-                dates.getDate (),// 日
-                dates.getHours (),// 时
-                // dates.getMinutes (),// 分
-                // dates.getSeconds (), //秒
-                // dates.getMilliseconds () //毫秒
-            ];
-    
-            // 缓存一小时
-            include.handle.url.query._cache = times.join ('');
+                var dates = new Date ();
+                var times = [
+                    dates.getFullYear (),// 年
+                    dates.getMonth () + 1,// 月
+                    dates.getDate (),// 日
+                    dates.getHours (),// 时
+                    // dates.getMinutes (),// 分
+                    // dates.getSeconds (), //秒
+                    // dates.getMilliseconds () //毫秒
+                ];
+        
+                // 缓存一小时
+                this.handle.url.query._cache = times.join ('');
+            },
         },
-        // 路由设置, 禁用路由
+        // 路由设置
         router : {
-            option : webpanda.option.disable
+            // 禁用路由: 也就是不使用框架的路由模式
+            option : webpanda.option.disableRouter
         },
         // 环境变量
-        environmentVariable : {
-    
+        env : {
+            
             // ...
         },
     
     }).execute ();    
 
 }, 0);
+```
+
+
+
+
+
+# webpanda\.env 环境变量
+
+设置环境变量：
+
+```javascript
+// 以框架配置的方式
+webpanda ({
+
+    // 环境变量设置
+    env : {
+        // 域名设置
+        domain : function () {
+            return 'http://example.com/';
+        },
+        // ...
+    }
+
+});
+
+// 直接设置的方式
+webpanda.env.domain = function () {
+    return 'http://example.com/';
+};
+```
+
+
+
+使用环境变量：
+
+```javascript
+// 来自自定义的环境变量 domain 方法
+webpanda.env.domain ();
 ```
 
 
@@ -978,10 +1012,11 @@ webpanda.project ({
 
 ```javascript
 webpanda.project ({
-    template : function (project, env) {
+    template : function (project) {
         // 可以返回对象，也可以返回字符串
         return {
-            src : webpanda.url (env.domain () + '/index.html')
+            // 环境变量 webpanda.env
+            src : webpanda.url (webpanda.env.domain () + '/index.html')
         };
     },
 });
@@ -1023,10 +1058,10 @@ webpanda.project ({
             // 也可以在include中引入模板
             src : "index.html",
             option : webpanda.project.option.text,
-            callback : function (project, env) {
+            callback : function (project) {
                 // 无论包含成功还是失败都会执行
                 // project 当前的工程对象。注意，这个时候的工程对象都是未准备好的
-                // env 环境变量。来自框架设置中自定义的环境变量
+                // webpanda.env 环境变量。来自框架设置中自定义的环境变量
                 // this 就是引入对象
                 // this.result 就是 Ajax 对象的返回值
                 // this.result.data 就是模板内容
@@ -1037,10 +1072,10 @@ webpanda.project ({
                 }
                 
             },
-            onsuccess : function (project, env) {
+            onsuccess : function (project) {
                 // 引入成功后执行
             },
-            onerror : function (project, env) {
+            onerror : function (project) {
                 // 引入失败后执行
             },
         },
@@ -1048,9 +1083,9 @@ webpanda.project ({
             src : "index.json",// 也可以忽略其他 option 、callback 参数
         },
         {
-            // src参数支持回调函数，必须返回字符串。好处就是可以使用环境变量
-            src : function (project, env) {
-                return env.domain () + '/components.css';
+            // src参数支持回调函数，必须返回字符串。好处就是可以使用环境变量或者其他程序过程
+            src : function (project) {
+                return webpanda.env.domain () + '/components.css';
             }
         }
     ],
@@ -1066,14 +1101,14 @@ webpanda.project ({
 webpanda.project ({
     
     // 定义函数的方式
-    include : function (project, env) {
+    include : function (project) {
         // project 当前的工程对象。注意，这个时候的工程对象都是未准备好的
-        // env 环境变量。来自框架设置中自定义的环境变量
+        // webpanda.env 环境变量。来自框架设置中自定义的环境变量
         
    		// 返回一个数组
   		return [
             // 函数定义的好处就是可以使用环境变量
-            env.domain () + '/components.css',
+            webpanda.env.domain () + '/components.css',
             webpanda.url ("index.css"),
             {
                 src : "index2.js",
@@ -1112,9 +1147,9 @@ include : [
         src :"/test/sleep.json",
         // 使用 webpanda.project.option.async 选项，表示异步包含
         option : webpanda.project.option.json|webpanda.project.option.async,
-        callback : function (project, env) {
+        callback : function (project) {
             // project 当前的工程对象。注意，这个时候的工程对象有可能未准备好，也有可能准备好了。因为这里是异步操作，可能会等待延迟等情况
-        	// env 环境变量。来自框架设置中自定义的环境变量
+        	// webpanda.env 环境变量。来自框架设置中自定义的环境变量
             console.log (this, project.name, this.result.data);
         },
     },
@@ -1133,14 +1168,14 @@ webpanda.project ({
     include:[
         {
             src : "/default/config.json", 
-            callback : function(project, env) {
+            callback : function(project) {
                 console.log (this.result.data);
             }
         },
         {
             // 获取远程模板内容
             src : "http://example.com/default/template.tpl", 
-            callback : function(project, env) {
+            callback : function(project) {
                 // this.result.data 就是获取的模板内容
                 project.template (this.result.data);
             }
@@ -1196,8 +1231,8 @@ webpanda.project ({
         {
             name : "components",
             // src 支持字符串、webpanda.url对象、函数，其中函数必须返回字符串或者url对象
-            src : function (project, env) {
-                return env.domain () + '/components.js';
+            src : function (project) {
+                return webpanda.env.domain () + '/components.js';
             },
         },
 
@@ -1224,14 +1259,14 @@ webpanda.project ({
 webpanda.project ({
 
     // 继承
-    extend : function (project, env) {
+    extend : function (project) {
         
-        // 函数定义的好处就是可以使用环境变量
+        // 函数定义的好处就是可以使用环境变量或者其他的程序过程
         return [
             "components-test",
             {
                 name : "components",
-                src : env.domain () + '/components.js',
+                src : webpanda.env.domain () + '/components.js',
             },
         ];
     }
@@ -1327,13 +1362,13 @@ webpanda.project ({
             return "这是 public message";
         }
     },
-    ondblclick : function (project, env) {
+    ondblclick : function (project) {
         // this 是事件对象
-        console.log (this, project.name, env);
+        console.log (this, project.name, webpanda.env);
     },
-    onclick : function (project, env) {
+    onclick : function (project) {
         // this 是事件对象
-        console.log (this, project.name, env);
+        console.log (this, project.name, webpanda.env);
     },
 });
 
@@ -1348,9 +1383,9 @@ webpanda.project ({
             return "这是 tools helper";
         };
     },
-    ondblclick : function (project, env) {
+    ondblclick : function (project) {
         // this 是事件对象
-        console.log (this, project.name, env);
+        console.log (this, project.name, webpanda.env);
     },
 });
 
@@ -1406,14 +1441,14 @@ webpanda.project ({
 webpanda.project ({
     
     // 定义函数的方式
-    friend : function (project, env) {
+    friend : function (project) {
         // project 当前的工程对象。注意，这个时候的工程对象都是未准备好的
-        // env 环境变量。来自框架设置中自定义的环境变量
+        // webpanda.env 环境变量。来自框架设置中自定义的环境变量
         
    		// 返回一个数组
         var ret = new Array ();
-        // 合并环境变量中的友元设置: 函数定义的好处就是可以使用环境变量
-        ret = ret.concat (env.friends);
+        // 合并环境变量中的友元设置: 函数定义的好处就是可以使用环境变量或者其他程序过程
+        ret = ret.concat (webpanda.env.friends);
         // 当前自定义的设置
         ret.push ("index");
         return ret;
@@ -1468,10 +1503,10 @@ webpanda.project ({
 webpanda.project ({
 
     // Function 定义的方式
-    property : function (project, env) {
+    property : function (project) {
         // 函数定义的好处就是可以使用当前工程对象、环境变量
         // project 当前的工程对象
-        // env 环境变量。来自框架设置中自定义的环境变量
+        // webpanda.env 环境变量。来自框架设置中自定义的环境变量
         
         var $data = project.data;
 
@@ -1545,10 +1580,10 @@ webpanda.project ({
 webpanda.project ({
 
     // Function 定义的方式
-    data : function (project, env) {
+    data : function (project) {
         // 函数定义的好处就是可以使用当前工程对象、环境变量
         // project 当前的工程对象
-        // env 环境变量。来自框架设置中自定义的环境变量
+        // webpanda.env 环境变量。来自框架设置中自定义的环境变量
         
         var $property = project.property;
 
@@ -1567,14 +1602,14 @@ webpanda.project ({
 
 
 
-### onreadied(project, env) 工程完成准备时
+### onreadied(project) 工程完成准备时
 
 ```javascript
 webpanda.project ({
     
-    onreadied : function (project, env) {
+    onreadied : function (project) {
         console.log (project);// 当前工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
         console.log (this);
@@ -1587,7 +1622,7 @@ webpanda.project ({
 
 
 
-### onpaged(project, env) 页面最后执行时
+### onpaged(project) 页面最后执行时
 
 > 注意，如果在工程中定义，那么该事件在非页面工程中时无效。
 
@@ -1601,7 +1636,7 @@ webpanda.project ({
 
 
 
-### onpagechange(project, env) 页面改变跳转时
+### onpagechange(project) 页面改变跳转时
 
 通过该事件可以阻止页面跳转。
 
@@ -1615,9 +1650,9 @@ webpanda.project ({
 ```javascript
 webpanda.project ({
 
-    onpagechange : function (project, env) {
+    onpagechange : function (project) {
         console.log (project);// 当前的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.url);// webpanda.url 对象
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
@@ -1636,16 +1671,16 @@ webpanda.project ({
 
 
 
-### onpagedestroy(project, env) 页面离开销毁时
+### onpagedestroy(project) 页面离开销毁时
 
 > 注意，如果在工程中定义，那么该事件在非页面工程中时无效。
 
 ```javascript
 webpanda.project ({
     
-    onpagedestroy : function(project, env) {
+    onpagedestroy : function(project) {
         console.log (project);// 当前的页面工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.setting);// 路由设置信息, 来自 工程 page 方法的执行时，该值不为 undefined
         console.log (this.url);// webpanda.url 对象
         console.log (this.name);// 事件名称
@@ -1660,16 +1695,16 @@ webpanda.project ({
 
 
 
-### onurlchange(project, env) 页面URL改变时
+### onurlchange(project) 页面URL改变时
 
 当URL发送改变时，触发该事件。注意，`onpagechange()` 事件触发时（也就是页面跳转时），该事件不会被触发。
 
 ```javascript
 webpanda.project ({
     
-    onurlchange : function (project, env) {
+    onurlchange : function (project) {
         console.log (project);// 当前的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.url);// webpanda.url 对象
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
@@ -1687,7 +1722,7 @@ webpanda.project ({
 
 
 
-### onexecute(project, env) 工程开始执行时
+### onexecute(project) 工程开始执行时
 
 执行 `page()`、`execute()` 工程对象方法或者作为页面工程时，会触发该事件。
 
@@ -1696,7 +1731,7 @@ webpanda.project ({
 ```javascript
 webpanda.project ({
 
-    onexecute : function (project, env) {
+    onexecute : function (project) {
         // 全局暂停执行
         // project.pause ();
         // 只暂停执行
@@ -1713,7 +1748,7 @@ webpanda.project ({
         // this.stop ();
 
         console.log (project);// 当前执行的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程执行状态，0 关闭(停止运行)，1正常(运行中)，2等待
         console.log (this.version);// 执行的版本号
         console.log (this.args);// 工程执行的自定义参数，如：project.execute ({id:1,n:2}); 这里的 {id:1,n:2} 就是 this.args 
@@ -1728,14 +1763,14 @@ webpanda.project ({
 
 
 
-### onexecuted(project, env) 工程结束执行时
+### onexecuted(project) 工程结束执行时
 
 执行 `page()`、`execute()` 工程对象方法或者作为页面工程时，会触发该事件。特别注意：在工程执行时，当 `stop()` 工程对象方法使用后，该事件不会被执行。
 
 ```javascript
 webpanda.project ({
 
-    onexecuted : function (project, env) {
+    onexecuted : function (project) {
         // 全局暂停执行
         // project.pause ();
         // 只暂停执行
@@ -1752,7 +1787,7 @@ webpanda.project ({
         // this.stop ();
         
         console.log (project);// 当前执行的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程执行状态，0 关闭(停止运行)，1正常(运行中)，2等待
         console.log (this.version);// 执行的版本号
         console.log (this.args);// 工程执行的自定义参数，如：project.execute ({id:1,n:2}); 这里的 {id:1,n:2} 就是 this.args 
@@ -1766,14 +1801,14 @@ webpanda.project ({
 
 
 
-### onexecutestart(project, env) 工程启动执行时
+### onexecutestart(project) 工程启动执行时
 
 在工程执行时，使用`start()` 工程对象方法会触发该事件。
 
 ```javascript
 webpanda.project ({
 
-    onexecutestart : function (project, env) {
+    onexecutestart : function (project) {
         // 全局暂停执行
         // project.pause ();
         // 只暂停执行
@@ -1790,7 +1825,7 @@ webpanda.project ({
         // this.stop ();
 
         console.log (project);// 当前执行的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程执行状态，0 关闭(停止运行)，1正常(运行中)，2等待
         console.log (this.version);// 执行的版本号
         console.log (this.args);// 工程执行的自定义参数，如：project.execute ({id:1,n:2}); 这里的 {id:1,n:2} 就是 this.args 
@@ -1804,14 +1839,14 @@ webpanda.project ({
 
 
 
-### onexecutepause(project, env) 工程暂停执行时
+### onexecutepause(project) 工程暂停执行时
 
 在工程执行时，使用`pause()`工程对象方法会触发该事件。
 
 ```javascript
 webpanda.project ({
 
-    onexecutepause : function (project, env) {
+    onexecutepause : function (project) {
 
         // 全局暂停执行
         // project.pause ();
@@ -1829,7 +1864,7 @@ webpanda.project ({
         // this.stop ();
 
         console.log (project);// 当前执行的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程执行状态，0 关闭(停止运行)，1正常(运行中)，2等待
         console.log (this.version);// 执行的版本号
         console.log (this.args);// 工程执行的自定义参数，如：project.execute ({id:1,n:2}); 这里的 {id:1,n:2} 就是 this.args 
@@ -1845,14 +1880,14 @@ webpanda.project ({
 
 
 
-### onexecutestop(project, env) 工程停止执行时
+### onexecutestop(project) 工程停止执行时
 
 在工程执行时，使用`stop()`工程对象方法会触发该事件。
 
 ```javascript
 webpanda.project ({
 
-    onexecutestop : function (project, env) {
+    onexecutestop : function (project) {
         // 全局暂停执行
         // project.pause ();
         // 只暂停执行
@@ -1869,7 +1904,7 @@ webpanda.project ({
         // this.stop ();
         
         console.log (project);// 当前执行的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程执行状态，0 关闭(停止运行)，1正常(运行中)，2等待
         console.log (this.version);// 执行的版本号
         console.log (this.args);// 工程执行的自定义参数，如：project.execute ({id:1,n:2}); 这里的 {id:1,n:2} 就是 this.args 
@@ -1885,7 +1920,7 @@ webpanda.project ({
 
 
 
-### onrender(project, env) 工程渲染开始时
+### onrender(project) 工程渲染开始时
 
 执行 `page()`、`execute()` 、`render()` 工程对象方法或者作为页面工程时，会触发该事件。
 
@@ -1894,7 +1929,7 @@ webpanda.project ({
 ```javascript
 webpanda.project ({
 
-    onrender : function (project, env) {
+    onrender : function (project) {
         // 全局暂停执行
         // project.pause ();
         // 只暂停渲染
@@ -1911,7 +1946,7 @@ webpanda.project ({
         // this.stop ();
 
         console.log (project);// 当前渲染的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程渲染状态，0 关闭(停止运行)，1正常(运行中)，2等待
         console.log (this.version);// 渲染的版本号
         console.log (this.args);// 工程渲染的自定义参数，如：project.render ({id:1,n:2}); 这里的 {id:1,n:2} 就是 this.args 
@@ -1927,14 +1962,14 @@ webpanda.project ({
 
 
 
-### onrendered(project, env) 工程渲染结束时
+### onrendered(project) 工程渲染结束时
 
 执行 `page()`、`execute()` 、`render()` 工程对象方法或者作为页面工程时，会触发该事件。特别注意：在工程渲染时，当 `stop()` 工程对象方法使用后，该事件不会被执行。
 
 ```javascript
 webpanda.project ({
 
-    onrendered : function (project, env) {
+    onrendered : function (project) {
         // 全局暂停执行
         // project.pause ();
         // 只暂停渲染
@@ -1951,7 +1986,7 @@ webpanda.project ({
         // this.stop ();
         
         console.log (project);// 当前渲染的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程渲染状态，0 关闭(停止运行)，1正常(运行中)，2等待
         console.log (this.version);// 渲染的版本号
         console.log (this.args);// 工程渲染的自定义参数，如：project.render ({id:1,n:2}); 这里的 {id:1,n:2} 就是 this.args 
@@ -1967,14 +2002,14 @@ webpanda.project ({
 
 
 
-### onrenderstart(project, env) 工程启动渲染时
+### onrenderstart(project) 工程启动渲染时
 
 在工程渲染时，使用`start()` 工程对象方法会触发该事件。
 
 ```javascript
 webpanda.project ({
 
-    onrenderstart : function (project, env) {
+    onrenderstart : function (project) {
         // 全局暂停执行
         // project.pause ();
         // 只暂停渲染
@@ -1991,7 +2026,7 @@ webpanda.project ({
         // this.stop ();
 
         console.log (project);// 当前渲染的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程渲染状态，0 关闭(停止运行)，1正常(运行中)，2等待
         console.log (this.version);// 渲染的版本号
         console.log (this.args);// 工程渲染的自定义参数，如：project.render ({id:1,n:2}); 这里的 {id:1,n:2} 就是 this.args 
@@ -2007,14 +2042,14 @@ webpanda.project ({
 
 
 
-### onrenderpause(project, env) 工程渲染暂停时
+### onrenderpause(project) 工程渲染暂停时
 
 在工程渲染时，使用`pause()`工程对象方法会触发该事件。
 
 ```javascript
 webpanda.project ({
 
-    onrenderpause : function (project, env) {
+    onrenderpause : function (project) {
 
         // 全局暂停执行
         // project.pause ();
@@ -2032,7 +2067,7 @@ webpanda.project ({
         // this.stop ();
 
         console.log (project);// 当前渲染的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程渲染状态，0 关闭(停止运行)，1正常(运行中)，2等待
         console.log (this.version);// 渲染的版本号
         console.log (this.args);// 工程渲染的自定义参数，如：project.render ({id:1,n:2}); 这里的 {id:1,n:2} 就是 this.args 
@@ -2048,14 +2083,14 @@ webpanda.project ({
 
 
 
-### onrenderstop(project, env) 工程渲染停止
+### onrenderstop(project) 工程渲染停止
 
 在工程渲染时，使用`stop()`工程对象方法会触发该事件。
 
 ```javascript
 webpanda.project ({
 
-    onrenderstop : function (project, env) {
+    onrenderstop : function (project) {
         // 全局暂停执行
         // project.pause ();
         // 只暂停渲染
@@ -2072,7 +2107,7 @@ webpanda.project ({
         // this.stop ();
         
         console.log (project);// 当前渲染的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程渲染状态，0 关闭(停止运行)，1正常(运行中)，2等待
         console.log (this.version);// 渲染的版本号
         console.log (this.args);// 工程渲染的自定义参数，如：project.render ({id:1,n:2}); 这里的 {id:1,n:2} 就是 this.args 
@@ -2088,14 +2123,14 @@ webpanda.project ({
 
 
 
-### onrenderlistener(project, env) 工程渲染监听触发时
+### onrenderlistener(project) 工程渲染监听触发时
 
  用于编译对象渲染时所设置的 `onlistener` 方法，渲染数据更新时就会触发该事件。
 
 ```javascript
 webpanda.project ({
 
-    onrenderlistener : function (project, env) {
+    onrenderlistener : function (project) {
         // 全局暂停执行
         // project.pause ();
         // 只暂停渲染
@@ -2112,7 +2147,7 @@ webpanda.project ({
         // this.stop ();
         
         console.log (project);// 当前渲染的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.abstractNodeTree);// 节点树对象
         console.log (this.event.commands);// 指定渲染的模板命令。可能存在多个，所以是一个索引数组
         console.log (this.event.code);// 所更新的数据键名称
@@ -2132,14 +2167,14 @@ webpanda.project ({
 
 
 
-### onshow(project, env) 进入显示该页面时
+### onshow(project) 进入显示该页面时
 
 ```javascript
 webpanda.project ({
 
-    onshow : function (project, env) {
+    onshow : function (project) {
         console.log (project);// 当前渲染的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.visibilityState);// document.visibilityState 值
         console.log (this.event);// js原生的事件对象参数
         console.log (this.name);// 事件名称
@@ -2154,14 +2189,14 @@ webpanda.project ({
 
 
 
-### onhide(project, env) 离开隐藏该页面时
+### onhide(project) 离开隐藏该页面时
 
 ```javascript
 webpanda.project ({
 
-    onhide : function (project, env) {
+    onhide : function (project) {
         console.log (project);// 当前渲染的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.visibilityState);// document.visibilityState 值
         console.log (this.event);// js原生的事件对象参数
         console.log (this.name);// 事件名称
@@ -2176,16 +2211,16 @@ webpanda.project ({
 
 
 
-### oncompatibleresize(project, env) 窗口或框架被重新调整大小时
+### oncompatibleresize(project) 窗口或框架被重新调整大小时
 
 > 该处理事件函数进行了防抖和节流的兼容优化。
 
 ```javascript
 webpanda.project ({
 
-    oncompatibleresize : function (project, env) {
+    oncompatibleresize : function (project) {
         console.log (project);// 当前渲染的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.width);// 宽
         console.log (this.height);// 高
         console.log (this.event);// js原生的事件对象参数
@@ -2201,7 +2236,7 @@ webpanda.project ({
 
 
 
-### oncompatiblescroll(project, env) 窗口滚动时
+### oncompatiblescroll(project) 窗口滚动时
 
 该事件与 onscroll 处理函数一样，窗口滚动时触发。不过 oncompatiblescroll 做了防抖和节流优化。
 
@@ -2210,9 +2245,9 @@ webpanda.project ({
 ```javascript
 webpanda.project ({
 
-    oncompatiblescroll : function (project, env) {
+    oncompatiblescroll : function (project) {
         console.log (project);// 当前渲染的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.scrollTop);
         console.log (this.scrollLeft);
         console.log (this.scrollWidth);
@@ -2228,7 +2263,7 @@ webpanda.project ({
 
 
 
-### on*(project, env) 其他 Document 原生事件
+### on*(project) 其他 Document 原生事件
 
 支持添加原生的 document 事件，比如给 document 添加双击的事件处理函数，操作如下：
 
@@ -2237,9 +2272,9 @@ webpanda.project ({
 	
     // 在 document 中，JS 原生的双击事件是 ondblclick
     // 在这里就是 "ondblclick" 命名规则, 注意大小写
-    ondblclick : function (project, env) {
+    ondblclick : function (project) {
         console.log (project);// 当前渲染的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.event);// js原生的事件对象参数
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
@@ -2409,10 +2444,10 @@ var project = webpanda.project ();
 project.include ({
     src : "components/components.js",
     option : webpanda.project.option.js,
-    callback : function (project, env) {
+    callback : function (project) {
         // 无论包含成功还是失败都会执行
         // project 当前的工程对象。注意，这个时候的工程对象都是未准备好的
-        // env 环境变量。来自框架设置中自定义的环境变量
+        // webpanda.env 环境变量。来自框架设置中自定义的环境变量
         // this 就是引入对象
         // this.result 就是 Ajax 对象的返回值
         // this.result.data 就是模板内容
@@ -2422,10 +2457,10 @@ project.include ({
             project.template (this.result.data);
         }
     },
-    onsuccess : function (project, env) {
+    onsuccess : function (project) {
         // 包含成功后执行
     },
-    onerror : function (project, env) {
+    onerror : function (project) {
         // 包含失败后执行
     }
 });
@@ -2444,7 +2479,7 @@ project.include ([
     {
         src : "components/components-plugin.js",
         option : webpanda.project.option.js,
-        onsuccess : function (project, env) {
+        onsuccess : function (project) {
             // 包含成功后执行去准备
             webpanda.project ('components-plugin').ready ();
         },
@@ -2453,7 +2488,7 @@ project.include ([
     {
         src : "components/components.js",
         option : webpanda.project.option.js,
-        onsuccess : function (project, env) {
+        onsuccess : function (project) {
             // 包含成功后执行去准备工程，工程准备好后就执行
             webpanda.project ('components').ready (function () {
                 this.execute ();
@@ -2574,10 +2609,10 @@ project.execute ({
     // webpanda.project.option.alone 未载入时独享筛选容器
     // option : webpanda.project.option.reload|webpanda.project.option.refresh;
     // 支持临时事件
-    onexecuted : function (project, env) {
+    onexecuted : function (project) {
         console.log ('这是临时事件');
         console.log (project);// 当前执行的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程执行状态，0 关闭(停止运行)，1正常(运行中)，2等待
         console.log (this.version);// 执行的版本号
         console.log (this.args);// 工程执行的自定义参数，如：project.execute ({id:1,n:2}); 这里的 {id:1,n:2} 就是 this.args 
@@ -2611,7 +2646,7 @@ project.render ({
     // webpanda.project.option.alone 未载入时独享筛选容器
     // option : webpanda.project.option.reload|webpanda.project.option.refresh;
     // 支持临时事件
-    onrender : function (project, env) {
+    onrender : function (project) {
         console.log ('这是临时事件 onrender');
         // 暂停执行
         project.pause ();
@@ -2623,7 +2658,7 @@ project.render ({
         // project.stop ();
 
         console.log (project);// 当前渲染的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程渲染状态，0 关闭(停止运行)，1正常(运行中)，2等待
         console.log (this.version);// 渲染的版本号
         console.log (this.args);// 工程渲染的自定义参数，如：project.render ({id:1,n:2}); 这里的 {id:1,n:2} 就是 this.args 
@@ -2631,7 +2666,7 @@ project.render ({
         console.log (this.runtime);// 当前页面执行时间
         console.log (this);
     },
-    onrenderpause : function (project, env) {
+    onrenderpause : function (project) {
         console.log ('这是临时事件 onrenderpause');
         // 启动执行
         project.start ();
@@ -2640,7 +2675,7 @@ project.render ({
         // project.stop ();
 
         console.log (project);// 当前渲染的工程对象
-        console.log (env);// 来自框架设置中自定义的环境变量
+        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.state);// 工程渲染状态，0 关闭(停止运行)，1正常(运行中)，2等待
         console.log (this.version);// 渲染的版本号
         console.log (this.args);// 工程渲染的自定义参数，如：project.render ({id:1,n:2}); 这里的 {id:1,n:2} 就是 this.args 
@@ -2902,8 +2937,9 @@ var pageProject = webpanda.project ();
 ```javascript
 webpanda.include ({
     src : 'https://repository.webpandajs.com/docs/zh_CN/README.md',
-    onsuccess : function (project, env) {
+    onsuccess : function (project) {
         console.log (project);// 始终返回当前页面工程对象，可能为 undefined
+        console.log (webpanda.env);// 环境变量
         console.log (this.result);// 返回值
     },
 });
@@ -4019,16 +4055,17 @@ webpanda.timer (function () {
 ## 属性
 
 
-| 名称     | 类型     | 描述                                                    |
-| -------- | -------- | ------------------------------------------------------- |
-| callback | Function | 回调函数                                                |
-| limit    | Number   | 可执行的总次数、限制执行次数。如果为0表示不限制         |
-| executed | Number   | 已经执行次数                                            |
-| index    | Number   | 索引，随着页面更新索引有可能会自动改变                  |
-| origin   | Number   | 开端的毫秒时间戳                                        |
-| runtime  | Number   | 当前页面的运行时间(页面版本号)                          |
-| timeout  | Number   | 超时时间、间隔时间                                      |
-| global   | Boolean  | 是否全局有效，true表示全局，false表示属于当前页面计时器 |
+| 名称      | 类型     | 描述                                                         |
+| --------- | -------- | ------------------------------------------------------------ |
+| callback  | Function | 回调函数                                                     |
+| limit     | Number   | 可执行的总次数、限制执行次数。如果为0表示不限制              |
+| executed  | Number   | 已经执行次数                                                 |
+| index     | Number   | 索引，随着页面更新索引有可能会自动改变                       |
+| origin    | Number   | 开端的毫秒时间戳                                             |
+| runtime   | Number   | 当前页面的运行时间(页面版本号)                               |
+| timeout   | Number   | 超时时间、间隔时间                                           |
+| global    | Boolean  | 是否全局有效，true表示全局，false表示属于当前页面计时器      |
+| executing | Boolean  | 执行状态，true表示执行中，定时器必须是前面存在执行完毕之后才会执行下一次 |
 
 
 
