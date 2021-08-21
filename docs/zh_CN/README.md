@@ -66,23 +66,7 @@ webpanda.language ({
 
 # 框架
 
-## 选项 webpanda.option
 
-使用示例：
-
-```javascript
-webpanda.option.caseInsensitive
-```
-
-
-
-| 名称            | 描述                         |
-| --------------- | ---------------------------- |
-| hash            | 路由 hash 模式               |
-| history         | 路由 history 模式            |
-| caseInsensitive | 设置路径检索时，大小写不敏感 |
-| disableRouter   | 禁止路由                     |
-| disableCache    | 禁用缓存                     |
 
 
 
@@ -91,7 +75,7 @@ webpanda.option.caseInsensitive
 ## 代码示例
 
 ```javascript
-var wp = webpanda ({
+webpanda.config ({
     // 版本号
     version : '1.0.0',
 
@@ -141,7 +125,8 @@ var wp = webpanda ({
         }
     },
 
-    onpage : function(project) {
+    // 页面开始执行时
+    onpage : function (project) {
         console.log (project);// 当前的工程对象，在该事件中始终为 undefined
         console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.setting);// 路由设置信息
@@ -151,7 +136,7 @@ var wp = webpanda ({
         console.log (this);
 
         // 如已经设置了，直接执行：可能来自 工程 page 方法的执行
-		if (typeof this.setting != 'undefined') {
+        if (typeof this.setting != 'undefined') {
             this.page (this.setting);
         } 
         else if (typeof this.url.path[1] != 'undefined' && this.url.path[1] == 'login') {
@@ -170,7 +155,8 @@ var wp = webpanda ({
         }
     },
 
-    onincluded : function(project) {
+    // 包含文件开始时
+    onincluded : function (project) {
         if (this.include.isError ()) {
             console.log (this.include.location + ' 引入失败', this);
         } else {
@@ -181,18 +167,45 @@ var wp = webpanda ({
 
 });
 
-// 重置版本号并且执行框架
-webpanda ({
+
+// 重写配置
+webpanda.config ({
     version : '1.0.2',
-    includeDisableCache : true,
-}).execute ();// 执行框架
+    include : {
+        // 启用缓存
+        option : 0,
+    },
+});
+
+// 执行框架
+webpanda.execute ();
 ```
 
 
 
 
 
-## webpanda(object) 定义
+## webpanda\.option 选项
+
+使用示例：
+
+```javascript
+webpanda.option.caseInsensitive
+```
+
+
+
+| 名称            | 描述                         |
+| --------------- | ---------------------------- |
+| hash            | 路由 hash 模式               |
+| history         | 路由 history 模式            |
+| caseInsensitive | 设置路径检索时，大小写不敏感 |
+| disableRouter   | 禁止路由                     |
+| disableCache    | 禁用缓存                     |
+
+
+
+## webpanda\.config(object) 配置
 
 
 
@@ -200,12 +213,22 @@ webpanda ({
 
 是一个字符串，一般用于包含文件时的query参数。
 
+```javascript
+webpanda.config ({
+    // 版本号
+    version : '1.0.0',
+    // ...
+});
+```
+
 
 
 ### include 包含文件设置
 
+是否缓存、包含方式等配置信息：
+
 ```javascript
-webpanda ({
+webpanda.config ({
     
     // 包含文件配置
     include : {
@@ -266,10 +289,12 @@ webpanda ({
 
 
 
+
+
 ### history 浏览记录设置
 
 ```javascript
-webpanda ({
+webpanda.config ({
 
     // 浏览记录设置
     history : {
@@ -299,14 +324,12 @@ webpanda ({
 
 
 
-
-
 ### router 路由设置
 
 
 
 ```javascript
-webpanda ({
+webpanda.config ({
 	
     // 路由设置
     router : {
@@ -381,36 +404,59 @@ location / {
 
 
 
-
-
 ### env 环境变量
 
 是一个对象，设置环境变量，在其他地方会带上该参数，主要是设置一些公用属性、方法。
 
 ```javascript
-webpanda ({
+webpanda.config ({
 	
     // 环境变量
     env : {
-
         // 域名设置
         domain : function () {
             return 'http://example.com/';
         },
-
     },
-
-    onpage : function(project) {
-        console.log (project);
-        console.log (webpanda.env);// 来自框架设置中自定义的环境变量 env
-    },
-
+    // ......
 });
+
+// 使用环境变量演示：
+webpanda.onpage = function (project) {
+    console.log (project);
+    console.log (webpanda.env);// 来自框架设置中自定义的环境变量 env
+};
 ```
 
 
 
+## webpanda.on\* 全局事件
 
+> 除了框架独有的全局事件，还有与工程同名称的事件处理函数。  
+> 注意：事件名称都是小写。
+
+框架设置的事件处理函数是有全局效果的，不仅支持上面所示事件处理函数，同时还支持工程定义的同名事件处理函数。比如：`onexecute`、`onrender` 等。
+
+事件在初始化时是可以直接定义的，如下：
+
+```javascript
+webpanda.onpage = function (project) {
+    // ......
+};
+```
+
+但是，上面的方式只适用于框架执行之前或者页面加载之前，如果要求在页面已经加载完成后临时增加事件处理函数并且及时生效，需要使用下面的方式定义：
+
+```javascript
+webpanda.config ({
+    // 在配置里面定义事件处理函数
+    onpage : function (project) {
+        // ......
+    },
+});
+```
+
+> 这种方式会检测是否更改了事件处理函数，如果存在更改会自动触发事件部署。
 
 
 
@@ -421,9 +467,9 @@ webpanda ({
 > 注意，如果当前页面链接在框架设置中 `webpanda({router:{page:[...]}})` 不存在（未定义），那么会触发 onpagenotfound 事件（页面不存在）。
 
 ```javascript
-webpanda ({
-	
-    onpage : function(project) {
+webpanda.config ({
+
+    onpage : function (project) {
         console.log (project);// 当前的工程对象，在该事件中始终为 undefined
         console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.setting);// 路由设置信息
@@ -431,7 +477,7 @@ webpanda ({
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
         console.log (this);
-
+    
         // 如已经设置了，直接执行：可能来自 工程 page 方法的执行
         if (typeof this.setting != 'undefined') {
             this.page (this.setting);
@@ -460,9 +506,9 @@ webpanda ({
 ### onpaged(project) 页面最后执行时
 
 ```javascript
-webpanda ({
-	
-    onpaged : function(project) {
+webpanda.config ({
+
+    onpaged : function (project) {
         console.log (project);// 当前的页面工程对象
         console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.url);// webpanda.url 对象
@@ -481,8 +527,8 @@ webpanda ({
 ### onpagechange(project) 页面改变跳转时
 
 ```javascript
-webpanda ({
-	
+webpanda.config ({
+
     onpagechange : function (project) {
         console.log (project);// 当前的页面工程对象
         console.log (webpanda.env);// 来自框架设置中自定义的环境变量
@@ -490,7 +536,7 @@ webpanda ({
         console.log (this.name);// 事件名称
         console.log (this.runtime);// 当前页面执行时间
         console.log (this);
-
+    
         if (confirm ("你确定要跳转页面么?")) {
             this.accept ();// 跳转 
         } else {
@@ -509,9 +555,9 @@ webpanda ({
 ### onpagenotfound(project) 页面不存在时触发
 
 ```javascript
-webpanda ({
-	
-    onpagenotfound : function(project) {
+webpanda.config ({
+
+    onpagenotfound : function (project) {
         console.log (project);// 当前的页面工程对象，在该事件中始终为 undefined
         console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.url);// webpanda.url 对象
@@ -530,9 +576,9 @@ webpanda ({
 ### onpageprogress(project) 页面生命周期进度
 
 ```javascript
-webpanda ({
-	
-    onpageprogress : function(project) {
+webpanda.config ({
+
+    onpageprogress : function (project) {
         console.log (project);// 当前的页面工程对象，在该事件中有可能为 undefined。工程对象中途才被设置
         console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.total);// 总进度
@@ -551,9 +597,9 @@ webpanda ({
 ### onpagedestroy(project) 页面离开销毁时
 
 ```javascript
-webpanda ({
-    
-    onpagedestroy : function(project) {
+webpanda.config ({
+
+    onpagedestroy : function (project) {
         console.log (project);// 当前的页面工程对象
         console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.setting);// 路由设置信息, 来自 工程 page 方法的执行时，该值不为 undefined
@@ -573,9 +619,9 @@ webpanda ({
 ### oninclude(project) 包含文件开始时
 
 ```javascript
-webpanda ({
-	
-    oninclude : function(project) {
+webpanda.config ({
+
+    oninclude : function (project) {
         console.log (project);// 工程对象，在该事件中始终为 undefined
         console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.include);// 包含对象
@@ -592,9 +638,9 @@ webpanda ({
 ### onincluded(project) 包含文件完成时
 
 ```javascript
-webpanda ({
-	
-    onincluded : function(project) {
+webpanda.config ({
+
+    onincluded : function (project) {
         console.log (project);// 工程对象，在该事件中始终为 undefined
         console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.include);// 包含对象
@@ -611,9 +657,9 @@ webpanda ({
 如何判断是否包含成功呢？
 
 ```javascript
-webpanda ({
-	
-    onincluded : function(project) {
+webpanda.config ({
+
+    onincluded : function (project) {
         // 存在错误，说明包含失败
         if (this.include.isError ()) {
             console.log (this.include.location + ' 文件包含失败');
@@ -627,16 +673,12 @@ webpanda ({
 
 
 
-
-
-
-
 ### onproject(project) 工程开始加载时
 
 ```javascript
-webpanda ({
-	
-    onproject : function(project) {
+webpanda.config ({
+
+    onproject : function (project) {
         console.log (project);// 工程对象，在该事件中始终为 undefined
         console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.projectName);// 工程名称
@@ -653,9 +695,9 @@ webpanda ({
 ### onprojected(project) 工程完成加载时
 
 ```javascript
-webpanda ({
-	
-    onprojected : function(project) {
+webpanda.config ({
+
+    onprojected : function (project) {
         console.log (project);// 工程对象，在该事件中始终为 undefined
         console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.projectName);// 工程名称
@@ -674,9 +716,9 @@ webpanda ({
 ### onready(project) 工程开始准备时
 
 ```javascript
-webpanda ({
-	
-    onready : function(project) {
+webpanda.config ({
+
+    onready : function (project) {
         console.log (project);// 准备的工程对象
         console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.name);// 事件名称
@@ -692,9 +734,9 @@ webpanda ({
 ### onreadied(project) 工程完成准备时
 
 ```javascript
-webpanda ({
-	
-    onreadied : function(project) {
+webpanda.config ({
+
+    onreadied : function (project) {
         console.log (project);// 准备的工程对象
         console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.name);// 事件名称
@@ -707,111 +749,129 @@ webpanda ({
 
 
 
-### on* 其他事件处理函数
-
-框架设置的事件处理函数是有全局效果的，不仅支持上面所示事件处理函数，同时还支持工程定义的同名事件处理函数。比如：`onexecute`、`onrender` 等。
-
-
-> 注意：事件名称都是小写。
 
 
 
 
+## webpanda\.env 环境变量
 
-## webpanda() 对象
+设置环境变量：
 
-### execute 执行框架
+```javascript
+// 以框架配置的方式
+webpanda.config ({
+
+    // 环境变量设置
+    env : {
+        // 域名设置
+        domain : function () {
+            return 'http://example.com/';
+        },
+        // ...
+    }
+
+});
+
+// 直接设置的方式
+webpanda.env.domain = function () {
+    return 'http://example.com/';
+};
+```
+
+
+
+使用环境变量：
+
+```javascript
+// 来自自定义的环境变量 domain 方法
+webpanda.env.domain ();
+```
+
+
+
+## 
+
+
+
+## webpanda\.getPageRuntime() 获取当前页面的执行时间
+
+```javascript
+webpanda.getPageRuntime();
+```
+
+
+
+## webpanda\.getPageFirstStatus() 页面是否第一次加载的状态
+
+```javascript
+webpanda.getPageFirstStatus();
+```
+
+
+
+## webpanda\.getPageProject() 当前页面的工程对象
+
+```javascript
+webpanda.getPageProject();
+```
+
+
+
+
+
+## webpanda\.getPageUrl() 当前页面的URL对象
+
+```javascript
+webpanda.getPageUrl();
+```
+
+
+
+
+
+## webpanda\.getProjectAll() 获取所有工程
+
+```javascript
+webpanda.getProjectAll();
+```
+
+
+
+
+
+## webpanda\.getIncludeAll() 获取所有引入(包含)资源
+
+```javascript
+webpanda.getIncludeAll();
+```
+
+
+
+
+
+## webpanda\.execute 执行框架
 
 框架配置信息设置好之后，就可以执行框架了。
 
 只要执行了该方法，框架将生效并且初始化。如果该方法多次执行，（非第一次执行）将会刷新页面工程。
 
 ```javascript
-// 框架设置
-var wp = webpanda ({
-
-    // ......
-    
-})
 // 执行框架
-wp.execute ();
+webpanda.execute ();
 ```
 
 
 
 
 
-### getPageRuntime() 获取当前页面的执行时间
-
-```javascript
-webpanda().getPageRuntime();
-```
 
 
 
-### getPageFirstStatus() 页面是否第一次加载的状态
-
-```javascript
-webpanda().getPageFirstStatus();
-```
-
-
-
-### getPageProject() 当前页面的工程对象
-
-```javascript
-webpanda().getPageProject();
-```
-
-
-
-
-
-### getPageUrl() 当前页面的URL对象
-
-```javascript
-webpanda().getPageUrl();
-```
-
-
-
-
-
-### getProjectAll() 获取所有工程
-
-```javascript
-webpanda().getProjectAll();
-```
-
-
-
-
-
-### getIncludeAll() 获取所有引入(包含)资源
-
-```javascript
-webpanda().getIncludeAll();
-```
-
-
-
-
-
-## 框架与工程的事件执行优先级
-
-
-框架定义的事件处理函数为全局，而工程定义的事件处理函数是页面局部的，并且还有标记（激活）的非页面工程的事件。
-
-当事件触发时，优先执行框架定义的事件处理函数，接着执行页面工程定义的事件处理函数，最后执行标记（激活）的非页面工程定义的事件处理函数。
-
-
-
-
-## 等待框架启动(执行)之后再执行
+## webpanda\.ready(callback, setting) 等待框架启动(执行)之后再执行
 
 
 ```javascript
-webpanda(function () {
+webpanda.ready (function () {
 
     // 等待框架 webpanda ().execute () 执行后执行
     // ......
@@ -822,7 +882,7 @@ webpanda(function () {
 通过超时设置：
 
 ```javascript
-webpanda(function () {
+webpanda.ready (function () {
 
     // 等待框架 webpanda ().execute () 执行后执行
     // ......
@@ -835,6 +895,48 @@ webpanda(function () {
     }
 });
 ```
+
+
+
+## webpanda\.include() 包含资源文件
+
+与工程对象的 include 操作一样，不过函数传入工程参数始终返回当前页面的工程对象。
+
+```javascript
+webpanda.include ({
+    src : 'https://repository.webpandajs.com/docs/zh_CN/README.md',
+    onsuccess : function (project) {
+        console.log (project);// 始终返回当前页面工程对象，可能为 undefined
+        console.log (webpanda.env);// 环境变量
+        console.log (this.result);// 返回值
+    },
+});
+```
+
+常使用的方式：
+
+```javascript
+// 包含工程
+webpanda.include ('https://repository.webpandajs.com/src/components/element.js');
+// 操作工程
+webpanda.project ('webpanda-element', function () {
+    // 工程包含成功并且准备完成之后执行
+    console.log (this);
+});
+```
+
+
+
+
+
+
+
+## 框架与工程的事件执行优先级
+
+
+框架定义的事件处理函数为全局，而工程定义的事件处理函数是页面局部的，并且还有标记（激活）的非页面工程的事件。
+
+当事件触发时，优先执行框架定义的事件处理函数，接着执行页面工程定义的事件处理函数，最后执行标记（激活）的非页面工程定义的事件处理函数。
 
 
 
@@ -901,42 +1003,6 @@ setTimeout (function isWebpandaLoad () {
 ```
 
 
-
-
-
-# webpanda\.env 环境变量
-
-设置环境变量：
-
-```javascript
-// 以框架配置的方式
-webpanda ({
-
-    // 环境变量设置
-    env : {
-        // 域名设置
-        domain : function () {
-            return 'http://example.com/';
-        },
-        // ...
-    }
-
-});
-
-// 直接设置的方式
-webpanda.env.domain = function () {
-    return 'http://example.com/';
-};
-```
-
-
-
-使用环境变量：
-
-```javascript
-// 来自自定义的环境变量 domain 方法
-webpanda.env.domain ();
-```
 
 
 
@@ -2930,37 +2996,6 @@ var pageProject = webpanda.project ();
 
 
 
-# webpanda\.include 包含资源文件
-
-与工程对象的 include 操作一样，不过函数传入工程参数始终返回当前页面的工程对象。
-
-```javascript
-webpanda.include ({
-    src : 'https://repository.webpandajs.com/docs/zh_CN/README.md',
-    onsuccess : function (project) {
-        console.log (project);// 始终返回当前页面工程对象，可能为 undefined
-        console.log (webpanda.env);// 环境变量
-        console.log (this.result);// 返回值
-    },
-});
-```
-
-常使用的方式：
-
-```javascript
-// 包含工程
-webpanda.include ('https://repository.webpandajs.com/src/components/element.js');
-// 操作工程
-webpanda.project ('webpanda-element', function () {
-    // 工程包含成功并且准备完成之后执行
-    console.log (this);
-});
-```
-
-
-
-
-
 # webpanda\.compiler(config) 编译模板
 
 传入模板字符串及配置信息进行模板编译，返回一个编译对象。
@@ -3134,7 +3169,7 @@ compiler.clear ();
 
 
 
-### 文本输出  webpanda\-html、$大括号
+### 文本输出  webpanda\-html、$\{\}
 
 允许采用文本特殊符号的模板语法来输出 HTML 内容的变量。也就是说不会自动执行了 `webpanda.encodeHTML` 方法。
 
@@ -3159,7 +3194,7 @@ compiler.clear ();
 
 
 
-### 文本打印 webpanda\-text、双大括号
+### 文本打印 webpanda\-text、\{\{\}\}
 
 允许采用文本特殊符号的模板语法来输出文本内容的变量。该命令的使用会将html实体编码（自动执行了 `webpanda.encodeHTML` 方法）。
 
@@ -3885,7 +3920,7 @@ webpanda\-for 会根据遍历个数进行对内部文本进行编译和渲染，
 
 
 
-### webpanda\-void、\<webpanda\>、webpanda\-for 无效与遍历渲染性质
+### webpanda\-void、&lt;webpanda&gt;、webpanda\-for 无效与遍历渲染性质
 
 无效节点树与遍历节点树都有一个共同的特殊性质。那就是他们都是无效的，不会生成 `HTMLDOMElement` 对象。在显示 `DOM` 对象时，节点树会查询两次查找自己显示位置。如果无效节点树与遍历节点树存在，查找的次数就会增加，而增加的查询次数即两者存在的个数。算法如：`查找次数 = (无效节点树个数) + (遍历节点树个数) + 2`
 
