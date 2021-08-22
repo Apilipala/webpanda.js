@@ -199,9 +199,9 @@ webpanda.option.caseInsensitive
 | --------------- | ---------------------------- |
 | hash            | 路由 hash 模式               |
 | history         | 路由 history 模式            |
-| caseInsensitive | 设置路径检索时，大小写不敏感 |
-| disableRouter   | 禁止路由                     |
-| disableCache    | 禁用缓存                     |
+| caseInsensitive | 设置路径检索时，大小写不敏感  |
+| disablePage     | 禁止页面监听                 |
+| disableCache    | 禁用资源缓存                 |
 
 
 
@@ -335,7 +335,7 @@ webpanda.config ({
     router : {
         // 模式: webpanda.option.hash 、 webpanda.option.history
         // 大小写不敏感设置: webpanda.option.caseInsensitive
-        // 禁止路由(一般用于传统页面插件非单页应用)：webpanda.option.disableRouter
+        // 禁止页面监听(一般用于传统页面插件非单页应用)：webpanda.option.disablePage
         option : webpanda.option.hash | webpanda.option.caseInsensitive,
         // 页面路径配置
         page : [
@@ -988,8 +988,8 @@ setTimeout (function isWebpandaLoad () {
         },
         // 路由设置
         router : {
-            // 禁用路由: 也就是不使用框架的路由模式
-            option : webpanda.option.disableRouter
+            // 禁用页面监听: 也就是不使用框架的路由模式
+            option : webpanda.option.disablePage
         },
         // 环境变量
         env : {
