@@ -2233,116 +2233,32 @@ webpanda.project ({
 
 
 
-### onshow(project) 进入显示该页面时
+### on* 原生的 window、document 事件
 
-```javascript
-webpanda.project ({
+支持添加原生的 window、document 事件，会根据如下规则：
 
-    onshow : function (project) {
-        console.log (project);// 当前渲染的工程对象
-        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
-        console.log (this.visibilityState);// document.visibilityState 值
-        console.log (this.event);// js原生的事件对象参数
-        console.log (this.name);// 事件名称
-        console.log (this.runtime);// 当前页面执行时间
-        console.log (this);
-    },
-
-});
-```
+> 1.window 与 document 都支持的事件，则绑定到 window ；  
+> 2.只有 window 支持的事件，则绑定到 window，只有 document 支持的事件，则绑定到 document；  
+> 3.事件名称都是小写。
 
 
 
-
-
-### onhide(project) 离开隐藏该页面时
-
-```javascript
-webpanda.project ({
-
-    onhide : function (project) {
-        console.log (project);// 当前渲染的工程对象
-        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
-        console.log (this.visibilityState);// document.visibilityState 值
-        console.log (this.event);// js原生的事件对象参数
-        console.log (this.name);// 事件名称
-        console.log (this.runtime);// 当前页面执行时间
-        console.log (this);
-    },
-
-});
-```
-
-
-
-
-
-### oncompatibleresize(project) 窗口或框架被重新调整大小时
-
-> 该处理事件函数进行了防抖和节流的兼容优化。
-
-```javascript
-webpanda.project ({
-
-    oncompatibleresize : function (project) {
-        console.log (project);// 当前渲染的工程对象
-        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
-        console.log (this.width);// 宽
-        console.log (this.height);// 高
-        console.log (this.event);// js原生的事件对象参数
-        console.log (this.name);// 事件名称
-        console.log (this.runtime);// 当前页面执行时间
-        console.log (this);
-    },
-
-});
-```
-
-
-
-
-
-### oncompatiblescroll(project) 窗口滚动时
-
-该事件与 onscroll 处理函数一样，窗口滚动时触发。不过 oncompatiblescroll 做了防抖和节流优化。
-
-> 该处理事件函数进行了防抖和节流的兼容优化。
-
-```javascript
-webpanda.project ({
-
-    oncompatiblescroll : function (project) {
-        console.log (project);// 当前渲染的工程对象
-        console.log (webpanda.env);// 来自框架设置中自定义的环境变量
-        console.log (this.scrollTop);
-        console.log (this.scrollLeft);
-        console.log (this.scrollWidth);
-        console.log (this.scrollHeight);
-        console.log (this.event);// js原生的事件对象参数
-        console.log (this.name);// 事件名称
-        console.log (this.runtime);// 当前页面执行时间
-        console.log (this);
-    },
-
-});
-```
-
-
-
-### on*(project) 其他 Document 原生事件
-
-支持添加原生的 document 事件，比如给 document 添加双击的事件处理函数，操作如下：
+比如添加双击的事件处理函数，操作如下：
 
 ```javascript
 webpanda.project ({
 	
-    // 在 document 中，JS 原生的双击事件是 ondblclick
-    // 在这里就是 "ondblclick" 命名规则, 注意大小写
+    /**
+     * 在 window、document 中，JS 原生的双击事件是 ondblclick
+     * 在这里就是 "ondblclick" 命名规则, 注意大小写
+     * window 与 document 都支持的事件，则绑定到 window
+     * 所以这里等价于 window.ondblclick 
+     */
     ondblclick : function (project) {
         console.log (project);// 当前渲染的工程对象
         console.log (webpanda.env);// 来自框架设置中自定义的环境变量
         console.log (this.event);// js原生的事件对象参数
-        console.log (this.name);// 事件名称
+        console.log (this.name);// 事件名称: ondblclick
         console.log (this.runtime);// 当前页面执行时间
         console.log (this);
     },
@@ -2351,7 +2267,8 @@ webpanda.project ({
 ```
 
 
-> 注意：事件名称都是小写。
+
+
 
 
 
@@ -2787,11 +2704,11 @@ project.render ({
 
 
 
-### event(config) 启用或关闭事件
+### use(config) 使用工程
 
 返回该工程对象。
 
-有时候在页面工程中调用其他工程，并且其他工程在当前工程也能监控一些事件，可以使用该方法。
+有时候在页面工程中调用其他工程，并且其他工程在当前工程也能监控一些事件，可以使用该方法。通过该方法，可以启用或关闭事件。
 
 下面是不支持操作的事件：
 
@@ -2802,16 +2719,17 @@ oninclude,onincluded,onproject,onprojected,onpage,onpagenotfound,onpageprogress,
 参数是布尔值，表示操作所有事件：
 
 ```javascript
-// 开启所有的事件
-webpanda.project("test").event (true);
+// 开启所有的已定义事件
+webpanda.project("test").use (true);
+webpanda.project("test").use ();// 默认是开启所有的已定义事件
 // 关闭所有的事件
-webpanda.project("test").event (false);
+webpanda.project("test").use (false);
 ```
 
 参数是对象，可以使用该方法进行关闭或开启某几个事件：
 
 ```javascript
-webpanda.project("test").event ({
+webpanda.project("test").use ({
     // 关闭双击事件
     ondblclick : false,
     // 开启显示事件
@@ -2824,7 +2742,7 @@ webpanda.project("test").event ({
 注意事项：
 
 > 1) 页面工程的事件本身是自动全部开启的。  
-> 2) 所设置的事件操作，只对当前页面有效。当页面跳转或页面操作更新，那么之前的事件设置将会清理。
+> 2) 所设置的事件操作，只对当前页面有效。当页面跳转或页面操作更新，那么之前的事件设置将会被清理。
 
 
 
@@ -3710,6 +3628,36 @@ this.eClickFnTest = function (e) {
 
 
 
+#### 阻止事件冒泡
+
+方式一，通过模板预编译参数实现：
+
+```html
+<div>
+	<a webpanda-onclick="#stop;eClickFnTest (#event)"></a>
+</div>
+```
+
+方式二，在事件处理函数中，可以直接操作：
+
+```javascript
+/* <div>
+	<a webpanda-onclick="eClickFnTest (#event)"></a>
+</div> */
+this.eClickFnTest = function (e) {
+    if (typeof e.stopPropagation == 'function') {
+        e.stopPropagation ();// 其它浏览器下阻止冒泡
+    } else {
+        e.cancelBubble = true;// ie下阻止冒泡
+    }
+    // ......
+};
+```
+
+
+
+
+
 ### 前置 webpanda\-before
 
 该命令中可以运行 javaScript 表达式，该命令在同一个标签中可以存在多个。
@@ -3785,6 +3733,7 @@ this.eClickFnTest = function (e) {
 | :------- | :----- | :----------------------------------------------------------- |
 | object   | Object | 获取当前抽象节点树                                           |
 | event    | Object | 获取当前事件对象                                             |
+| stop     | Void   | 阻止事件冒泡                                                 |
 | node     | Object | 获取标签的节点对象。这个注意，节点的渲染出错等等，该参数在实际情况有可能为null |
 | value    | Mixed  | 获取节点的值，一般用于input、textarea、select等表单节点      |
 | template | String | 获取节点编译时的模板数据                                     |
