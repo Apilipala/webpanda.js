@@ -958,7 +958,7 @@ setTimeout (function isWebpandaLoad () {
         return;
     }
 
-    webpanda ({
+    webpanda.config ({
 
         version : '1.0.0',
         // 包含文件配置
@@ -997,7 +997,8 @@ setTimeout (function isWebpandaLoad () {
             // ...
         },
     
-    }).execute ();    
+    });
+    webpanda.execute ();    
 
 }, 0);
 ```
@@ -3601,7 +3602,7 @@ CSS 属性名可以用驼峰式 (camelCase) 或短横线分隔 (kebab-case，记
 
 
 
-#### 返回值为false，阻止系统默认（行为）
+#### 返回值为false，阻止事件默认行为
 
 在HTML标签中，写法如下：
 
@@ -3619,7 +3620,7 @@ CSS 属性名可以用驼峰式 (camelCase) 或短横线分隔 (kebab-case，记
 
 ```javascript
 this.eClickFnTest = function (e) {
-    // 自行取消事件的默认行为
+    // 取消事件的默认行为
     e.preventDefault ();
     // 也可以直接返回 false，前提在标签中也用了 return
     return false;
@@ -3628,28 +3629,35 @@ this.eClickFnTest = function (e) {
 
 
 
-#### 阻止事件冒泡
+#### 模板预编译参数 \#preventDefault，阻止事件默认行为
+
+```html
+<a href="https://www.baidu.com/" webpanda-onclick="#preventDefault"></a>
+```
+
+
+
+
+
+#### 模板预编译参数 \#stopPropagation，阻止事件冒泡
 
 方式一，通过模板预编译参数实现：
 
 ```html
 <div>
-	<a webpanda-onclick="#stop;eClickFnTest (#event)"></a>
+	<a webpanda-onclick="#stoppropagation;eClickFnTest (#event)"></a>
 </div>
 ```
 
-方式二，在事件处理函数中，可以直接操作：
+方式二，在事件处理函数中，可以自行操作：
 
 ```javascript
 /* <div>
 	<a webpanda-onclick="eClickFnTest (#event)"></a>
 </div> */
 this.eClickFnTest = function (e) {
-    if (typeof e.stopPropagation == 'function') {
-        e.stopPropagation ();// 其它浏览器下阻止冒泡
-    } else {
-        e.cancelBubble = true;// ie下阻止冒泡
-    }
+    // 阻止冒泡
+    e.stopPropagation ();
     // ......
 };
 ```
@@ -3729,16 +3737,17 @@ this.eClickFnTest = function (e) {
 <div webpanda-style="{'color':getColor(#node,#abstractNodeTree)}"></div>
 ```
 
-| 参数标签 | 值类型 | 描述                                                         |
-| :------- | :----- | :----------------------------------------------------------- |
-| object   | Object | 获取当前抽象节点树                                           |
-| event    | Object | 获取当前事件对象                                             |
-| stop     | Void   | 阻止事件冒泡                                                 |
-| node     | Object | 获取标签的节点对象。这个注意，节点的渲染出错等等，该参数在实际情况有可能为null |
-| value    | Mixed  | 获取节点的值，一般用于input、textarea、select等表单节点      |
-| template | String | 获取节点编译时的模板数据                                     |
-| html     | String | 获取节点的html内容                                           |
-| text     | String | 获取节点包含的文本内容组合起来的文本                         |
+| 参数标签        | 值类型 | 描述                                                         |
+| :-------------- | :----- | :----------------------------------------------------------- |
+| object          | Object | 获取当前抽象节点树                                           |
+| event           | Object | 获取当前事件对象                                             |
+| stopPropagation | Void   | 阻止事件冒泡                                                 |
+| preventDefault  | Void   | 取消事件的默认行为                                           |
+| node            | Object | 获取标签的节点对象。这个注意，节点的渲染出错等等，该参数在实际情况有可能为null |
+| value           | Mixed  | 获取节点的值，一般用于input、textarea、select等表单节点      |
+| template        | String | 获取节点编译时的模板数据                                     |
+| html            | String | 获取节点的html内容                                           |
+| text            | String | 获取节点包含的文本内容组合起来的文本                         |
 
 
 
