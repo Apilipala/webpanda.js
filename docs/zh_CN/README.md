@@ -151,7 +151,7 @@ webpanda.config ({
             });
         } 
         else {
-            this.page ();// 如果当前页面链接在框架设置中 `webpanda({router:{page:[...]}})` 不存在（未定义），那么会触发 onPageNotFound 事件（页面不存在）。
+            this.page ();// 如果当前页面链接在框架设置中 `webpanda.config({router:{page:[...]}})` 不存在（未定义），那么会触发 onPageNotFound 事件（页面不存在）。
         }
     },
 
@@ -464,7 +464,7 @@ webpanda.config ({
 
 该事件必须通过使用 `this.page()` 回调函数指定页面工程信息，如果不执行页面将停止加载。
 
-> 注意，如果当前页面链接在框架设置中 `webpanda({router:{page:[...]}})` 不存在（未定义），那么会触发 onpagenotfound 事件（页面不存在）。
+> 注意，如果当前页面链接在框架设置中 `webpanda.config({router:{page:[...]}})` 不存在（未定义），那么会触发 onpagenotfound 事件（页面不存在）。
 
 ```javascript
 webpanda.config ({
@@ -494,7 +494,7 @@ webpanda.config ({
                 }
             });
         } else {
-            this.page ();// 如果当前页面链接在框架设置中 `webpanda({router:{page:[...]}})` 不存在（未定义），那么会触发 onpagenotfound 事件（页面不存在）。
+            this.page ();// 如果当前页面链接在框架设置中 `webpanda.config({router:{page:[...]}})` 不存在（未定义），那么会触发 onpagenotfound 事件（页面不存在）。
         }
     },
 
@@ -873,7 +873,7 @@ webpanda.execute ();
 ```javascript
 webpanda.ready (function () {
 
-    // 等待框架 webpanda ().execute () 执行后执行
+    // 等待框架 webpanda.execute () 执行后执行
     // ......
 
 });
@@ -884,7 +884,7 @@ webpanda.ready (function () {
 ```javascript
 webpanda.ready (function () {
 
-    // 等待框架 webpanda ().execute () 执行后执行
+    // 等待框架 webpanda.execute () 执行后执行
     // ......
 
 }, {
@@ -3748,6 +3748,7 @@ this.eClickFnTest = function (e) {
 | template        | String | 获取节点编译时的模板数据                                     |
 | html            | String | 获取节点的html内容                                           |
 | text            | String | 获取节点包含的文本内容组合起来的文本                         |
+| window          | Object | 获取 window 对象，用于在模板中使用全局变量                   |
 
 
 
@@ -3760,6 +3761,28 @@ this.eClickFnTest = function (e) {
 ```
 
 上面的代码中，`'#node-'+title` 的 `#node` 会不会被解析成模板预编译参数呢？明确告诉你，不会！因为编译器会自动识别是否在字符串内（是否在单引号或双引号内），如果是字符串则不会被解析的。而后面 `-after="console.log (#node)"`  的 `#node` 则会被解析成模板预编译参数。
+
+
+
+### 在模板中使用全局变量
+
+使用 `#window` 预编译参数：
+
+```html
+<!-- 使用 console.log -->
+<select multiple="multiple" -onchange="#window.console.log (#value)"> </select> 
+
+<!-- 打印当前URL -->
+<div>{{#window.webpanda.url().toString ()}}</div>
+
+<!-- 循环临时数组 -->
+<div -for="(v,k) new #window.Array(13)">
+    {{k}}
+</div>
+<div -for="(v, k) [11, 22, '这是第三个元素', 44]">
+    {{k}} : {{v}}
+</div>
+```
 
 
 
@@ -3779,7 +3802,23 @@ this.eClickFnTest = function (e) {
 > 表单是select，也可以使用 \#value 预编译参数，如果多选，将返回一个数组，其包含所选的值；如果是单选，则直接返回选择的值；如果没有初始值，则返回空字符串。
 
 ```html
-<select multiple="multiple" -onchange="console.log (#value)"> 
+<select multiple="multiple" -onchange="#window.console.log (#value)"> 
+    <optgroup label="喜欢">
+        <option value="hk">Hong Kong</option> 
+        <option value="tw">Taiwan</option> 
+        <option value="cn">China</option> 
+    </optgroup>
+    <optgroup label="不喜欢">
+        <option value="us">United States</option> 
+        <option value="ca">Canada</option> 
+    </optgroup>
+</select> 
+```
+
+单个选项的示例，获取选中的值与文本内容：
+
+```html
+<select -onchange="#window.console.log (#value, #node.options[#node.options.selectedIndex].text);"> 
     <optgroup label="喜欢">
         <option value="hk">Hong Kong</option> 
         <option value="tw">Taiwan</option> 
@@ -3848,6 +3887,32 @@ this.eClickFnTest = function (e) {
 <a -attr-href="'#'+count"></a>
 <a webpanda--href="'#'+count"></a>
 <a --href="'#'+count"></a>
+```
+
+
+
+
+
+
+
+## 模板中使用js关键字
+
+在模板中也可以使用js关键字，但只支持下面几个关键字：
+
+```shell
+if else new return typeof instanceof debugger false true null undefined
+```
+
+示例：
+
+```html
+<!-- 取消事件的默认行为 -->
+<a --href="getUrl()" -onclick="return false"></a>
+
+<!-- 循环临时数组 -->
+<div -for="(v,k) new #window.Array(13)">
+    {{k}}
+</div>
 ```
 
 
