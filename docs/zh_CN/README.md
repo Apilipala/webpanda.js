@@ -900,7 +900,68 @@ webpanda.ready (function () {
 
 ## webpanda\.include() 包含资源文件
 
-与工程对象的 include 操作一样，不过函数传入工程参数始终返回当前页面的工程对象。
+如果传入的参数不合法，则返回 false ，否则返回 true 。
+
+> 主要用于一些插件、组件等源文件，在使用时才加载。
+
+包含单个源文件示例：
+
+```javascript
+webpanda.include ({
+    src : "components/components.js",
+    option : webpanda.project.option.js,
+    callback : function (project) {
+        // 无论包含成功还是失败都会执行
+        // project 始终返回当前页面工程对象，可能为 undefined
+        // webpanda.env 环境变量。来自框架设置中自定义的环境变量
+        // this 就是引入对象
+        // this.result 就是 Ajax 对象的返回值
+        // this.result.data 就是模板内容
+        
+        // 判断是否包含成功
+        if (this.isError ()) {
+            project.template (this.result.data);
+        }
+    },
+    onsuccess : function (project) {
+        // 包含成功后执行
+    },
+    onerror : function (project) {
+        // 包含失败后执行
+    }
+});
+```
+
+包含多个源文件示例：
+
+```javascript
+webpanda.include ([
+    // 引入模板
+    'components/components.html',
+    // 引入插件中的插件，使用异步
+    {
+        src : "components/components-plugin.js",
+        option : webpanda.project.option.js,
+        onsuccess : function (project) {
+            // 包含成功后执行去准备
+            webpanda.project ('components-plugin').ready ();
+        },
+    },
+    // 引入临时使用的工程
+    {
+        src : "components/components.js",
+        option : webpanda.project.option.js,
+        onsuccess : function (project) {
+            // 包含成功后执行去准备工程，工程准备好后就执行
+            webpanda.project ('components').ready (function () {
+                this.execute ();
+            });
+        },
+    }
+]);
+```
+
+其他示例：
 
 ```javascript
 webpanda.include ({
@@ -2413,81 +2474,6 @@ var readyState = test.ready (function () {
 
 
 
-### include() 包含源文件
-
-如果传入的参数不合法，则返回 false ，否则返回 true 。
-
-> 主要用于一些插件、组件等源文件，在使用时才加载。
-
-包含单个源文件示例：
-
-```javascript
-// 获取工程对象
-var project = webpanda.project ();
-// 包含源文件
-project.include ({
-    src : "components/components.js",
-    option : webpanda.project.option.js,
-    callback : function (project) {
-        // 无论包含成功还是失败都会执行
-        // project 当前的工程对象。注意，这个时候的工程对象都是未准备好的
-        // webpanda.env 环境变量。来自框架设置中自定义的环境变量
-        // this 就是引入对象
-        // this.result 就是 Ajax 对象的返回值
-        // this.result.data 就是模板内容
-        
-        // 判断是否包含成功
-        if (this.isError ()) {
-            project.template (this.result.data);
-        }
-    },
-    onsuccess : function (project) {
-        // 包含成功后执行
-    },
-    onerror : function (project) {
-        // 包含失败后执行
-    }
-});
-```
-
-包含多个源文件示例：
-
-```javascript
-// 获取工程对象
-var project = webpanda.project ();
-// 包含源文件
-project.include ([
-    // 引入模板
-    'components/components.html',
-    // 引入插件中的插件，使用异步
-    {
-        src : "components/components-plugin.js",
-        option : webpanda.project.option.js,
-        onsuccess : function (project) {
-            // 包含成功后执行去准备
-            webpanda.project ('components-plugin').ready ();
-        },
-    },
-    // 引入临时使用的工程
-    {
-        src : "components/components.js",
-        option : webpanda.project.option.js,
-        onsuccess : function (project) {
-            // 包含成功后执行去准备工程，工程准备好后就执行
-            webpanda.project ('components').ready (function () {
-                this.execute ();
-            });
-        },
-    }
-]);
-```
-
-
-
-
-
-
-
 ### friend() 友元属性
 
 获取该工程的友元工程名称集合，返回一个索引数组。
@@ -3739,7 +3725,7 @@ this.eClickFnTest = function (e) {
 
 | 参数标签        | 值类型 | 描述                                                         |
 | :-------------- | :----- | :----------------------------------------------------------- |
-| object          | Object | 获取当前抽象节点树                                           |
+| this            | Object | 获取当前抽象节点树                                           |
 | event           | Object | 获取当前事件对象                                             |
 | stopPropagation | Void   | 阻止事件冒泡                                                 |
 | preventDefault  | Void   | 取消事件的默认行为                                           |
