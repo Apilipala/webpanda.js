@@ -1324,7 +1324,7 @@ webpanda.project ({
 继承遵守如下规则：
 
 > (1) 越远父级的 include、on*事件 等优先执行;   
-> (2) 越近父级的 property、data、selector、template 定义，会覆盖越远父级的 property、data、selector、template 定义;  
+> (2) 越近父级的 prototype 、data 、selector 、template 定义，会覆盖越远父级的 prototype 、data 、selector 、template 定义;  
 > (3) selector、template 在派生工程未定义的情况下才继承父级的 selector、template 定义;  
 > (4) 只是继承父级的定义，不是继承父级最新动态属性值。
 
@@ -1337,10 +1337,17 @@ webpanda.project.option.overrideEvent		覆盖式继承事件, 派生工程的事
 webpanda.project.option.disableSelector     禁止继承父级 selector
 webpanda.project.option.disableTemplate     禁止继承父级 template
 webpanda.project.option.disableEvent        禁止继承父级事件函数 on*  
-webpanda.project.option.disableProperty     禁止继承父级 property
+webpanda.project.option.disablePrototype    禁止继承父级 prototype
 webpanda.project.option.disableData         禁止继承父级 data
 webpanda.project.option.disableInclude      禁止继承父级 include
 webpanda.project.option.disableFriend       禁止继承父级 friend
+webpanda.project.option.onlySelector		只继承父级 selector
+webpanda.project.option.onlyTemplate        只继承父级 template
+webpanda.project.option.onlyEvent           只继承父级事件函数 on*  
+webpanda.project.option.onlyPrototype       只继承父级 prototype
+webpanda.project.option.onlyData            只继承父级 data
+webpanda.project.option.onlyInclude         只继承父级 include
+webpanda.project.option.onlyFriend          只继承父级 friend
 ```
 
 
@@ -1368,7 +1375,7 @@ webpanda.project ({
         {
             name: "components-button",
             src: "components/button.js",// 这个可以写到 include 包含，写在这里只能同步、类型指定是js，继承的源文件不能异步
-            use: 'components',// 命名空间、间隔、别名称。继承的父 property 、data 属性, 会添加到指定命名中 （添加到 property.components 、 data.components 对象中）
+            use: 'components',// 命名空间、间隔、别名称。继承的父 prototype 、data 属性, 会添加到指定命名中 （添加到 prototype.components 、 data.components 对象中）
             option: webpanda.project.option.disableEvent,// 禁止事件继承
         },
 
@@ -1471,7 +1478,7 @@ Webpanda ProjectError:
 所谓直属与非直属多次继承，也就是当前派生类继承了多个父级，而某个父级也继承了与当前派生类同一个父级。如下，`home` 工程 与 `public` 工程，都继承了 `tools` 工程：
 
 > public 工程是 home 工程的直属继承，而 public 工程继承的 tools 工程属于 home 工程的非直属继承。而 home 工程继承的 tools 工程是 home 的直属继承。这里的 tools 被 home 继承了两次，一个是非直属继承，另一个是直属继承。  
-> 就算父级工程多次被派生工程继承，而所定义的事件函数始终（去重）只被继承一次。而越近父级的 property、data 定义，会覆盖越远父级的 property、data 定义。
+> 就算父级工程多次被派生工程继承，而所定义的事件函数始终（去重）只被继承一次。而越近父级的 prototype 、data 定义，会覆盖越远父级的 prototype 、data 定义。
 
 ```javascript
 webpanda.project ({
@@ -1605,7 +1612,7 @@ webpanda.project ({
 
 
 
-### property 自定义成员属性
+### prototype 原型属性
 
 自定义工程的成员属性，不会被渲染监听，用于非模板非渲染的操作。
 
@@ -1615,7 +1622,7 @@ webpanda.project ({
 webpanda.project ({
 
     // Object 定义的方式
-    property : {
+    prototype : {
         test : "这是测试",
         message : "你好，webpanda.js!",
     },
@@ -1631,7 +1638,7 @@ webpanda.project ({
 webpanda.project ({
 
     // Function 定义的方式
-    property : function (project) {
+    prototype : function (project) {
         // 函数定义的好处就是可以使用当前工程对象、环境变量
         // project 当前的工程对象
         // webpanda.env 环境变量。来自框架设置中自定义的环境变量
@@ -1644,6 +1651,14 @@ webpanda.project ({
         this.getProject = function() {
           return project;
         };
+        
+        // 特别注意，因为是原型，所以工程可以直接访问
+        // 所以 this 有可能是工程，所以在使用this时注意作用域
+        var _this = this;
+        this.getThis = function () {
+            return _this;
+        };
+        
     },
 
 });
@@ -1713,7 +1728,7 @@ webpanda.project ({
         // project 当前的工程对象
         // webpanda.env 环境变量。来自框架设置中自定义的环境变量
         
-        var $property = project.property;
+        var $prototype = project.prototype;
 
         this.test = "这是测试";
         this.message = "你好，webpanda.js!";
@@ -2386,7 +2401,7 @@ webpanda.project ({
 
 
 
-### property 成员属性
+### prototype 原型属性
 
 工程的自定义成员属性是非渲染数据，不会被渲染监听，相对于模板渲染来说，该属性是私有的，也就是说在模板中无法使用该属性值，只能通过 data 中代理处理。
 
@@ -2397,7 +2412,7 @@ webpanda.project ({
 
     name : 'test',
     // 非渲染数据的定义
-    property : function () {
+    prototype : function () {
 
         this.demonstrator = function (node) {
             // ......
@@ -2407,9 +2422,11 @@ webpanda.project ({
     // 渲染数据
     data : function (project) {
         
-        // 在模板中访问 toDemonstrator (#node), 代理执行了 project.property.demonstrator
+        // 在模板中访问 toDemonstrator (#node), 代理执行了 project.prototype.demonstrator
         this.toDemonstrator = function (node) {
-            project.property.demonstrator (node);
+            project.prototype.demonstrator (node);
+            // 因为是原型，所以也可以直接访问
+            project.demonstrator (node);
         };
 
     },
@@ -2540,7 +2557,7 @@ obj1.child = obj2;
 ```
 
 
-### clone.property(obj,key) 克隆成员属性
+### clone.prototype(obj,key) 克隆成员属性
 
 使用方式参考 `clone.data(obj,key)` 。
 
@@ -2785,25 +2802,32 @@ webpanda.project.option.readyState
 
 
 
-| 名称            | 相关方法            | 描述                                                 |
-| --------------- | ------------------- | ---------------------------------------------------- |
-| readyState      | webpanda\.project() | 工程的准备状态                                       |
-| async           | include             | 异步                                                 |
-| css             | include             | css 文件类型                                         |
-| js              | include             | js 文件类型                                          |
-| json            | include             | json 文件类型                                        |
-| text            | include             | text 文件类型                                        |
-| refresh         | render、execute     | 强制刷新渲染                                         |
-| reload          | render、execute     | 重载筛选容器                                         |
-| alone           | render、execute     | 未载入时独享筛选容器（会将筛选容器的其他节点清理掉） |
-| overrideEvent   | extend              | 覆盖式继承事件                                       |
-| disableSelector | extend              | 禁止继承父级 selector                                |
-| disableTemplate | extend              | 禁止继承父级 template                                |
-| disableEvent    | extend              | 禁止继承父级事件函数 on\*                            |
-| disableProperty | extend              | 禁止继承父级 property                                |
-| disableData     | extend              | 禁止继承父级 data                                    |
-| disableInclude  | extend              | 禁止继承父级 include                                 |
-| disableFriend   | extend              | 禁止继承父级 friend                                  |
+| 名称             | 相关方法            | 描述                                                 |
+| ---------------- | ------------------- | ---------------------------------------------------- |
+| readyState       | webpanda\.project() | 工程的准备状态                                       |
+| async            | include             | 异步                                                 |
+| css              | include             | css 文件类型                                         |
+| js               | include             | js 文件类型                                          |
+| json             | include             | json 文件类型                                        |
+| text             | include             | text 文件类型                                        |
+| refresh          | render、execute     | 强制刷新渲染                                         |
+| reload           | render、execute     | 重载筛选容器                                         |
+| alone            | render、execute     | 未载入时独享筛选容器（会将筛选容器的其他节点清理掉） |
+| overrideEvent    | extend              | 覆盖式继承事件                                       |
+| disableSelector  | extend              | 禁止继承父级 selector                                |
+| disableTemplate  | extend              | 禁止继承父级 template                                |
+| disableEvent     | extend              | 禁止继承父级事件函数 on\*                            |
+| disablePrototype | extend              | 禁止继承父级 prototype                               |
+| disableData      | extend              | 禁止继承父级 data                                    |
+| disableInclude   | extend              | 禁止继承父级 include                                 |
+| disableFriend    | extend              | 禁止继承父级 friend                                  |
+| onlySelector     | extend              | 只继承父级 selector                                  |
+| disableTemplate  | extend              | 只继承父级 template                                  |
+| disableEvent     | extend              | 只继承父级事件函数 on\*                              |
+| disablePrototype | extend              | 只继承父级 prototype                                 |
+| disableData      | extend              | 只继承父级 data                                      |
+| disableInclude   | extend              | 只继承父级 include                                   |
+| disableFriend    | extend              | 只继承父级 friend                                    |
 
 
 
@@ -4090,6 +4114,20 @@ webpanda.timer (function () {
 webpanda.timer (function () {
     console.log ("3秒的定时器");
 }, 3000, 0, true).start ();
+```
+
+
+
+
+
+## 检测 webpanda\.timer\.isInstanceOf (obj)
+
+判断变量的对象类型是否为 webpanda\.timer 实例对象。如果是返回 true，否则返回 false 。
+
+```javascript
+if (webpanda.timer.isInstanceOf (obj)) {
+    // 是 webpanda.timer 对象
+}
 ```
 
 
