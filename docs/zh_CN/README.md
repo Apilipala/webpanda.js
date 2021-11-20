@@ -143,7 +143,7 @@ webpanda.config ({
             e.page ({
                 name : "login",// 工程名称
                 src : "/test/home/login.js",// 工程源文件
-                callback : function (e) {
+                oncallback : function (e) {
                     // 只有在未加载时才执行，否则不执行
                     // 这个回调暂时是保留功能
                     console.log (e);
@@ -260,7 +260,7 @@ webpanda.config ({
          * 可以给包含文件地址自定义添加query参数等操作。
          * @var {Function}
          */
-        callback : function (e) {
+        oncallback : function (e) {
             // this 框架对象
             // e.handle === require || ajax
             // webpanda.env 环境变量
@@ -488,11 +488,6 @@ webpanda.config ({
             e.page ({
                 name : "login",// 工程名称
                 src : "/test/home/login.js",// 工程源文件
-                callback : function (e) {
-                    // 只有在未加载时才执行，否则不执行
-                    // 这个回调暂时是保留功能
-                    console.log (e);
-                }
             });
         } else {
             e.page ();// 如果当前页面链接在框架设置中 `webpanda.config({router:{page:[...]}})` 不存在（未定义），那么会触发 onpagenotfound 事件（页面不存在）。
@@ -894,7 +889,7 @@ webpanda.ready (function () {
 }, {
     global : true,// 是否全局有效，默认false非全局(页面更新会被取消)
     timeout : 3000,// 3秒后超时
-    callback : function () {
+    oncallback : function () {
         console.log ('这是超时回调函数');
     }
 });
@@ -914,7 +909,7 @@ webpanda.ready (function () {
 webpanda.include ({
     src : "components/components.js",
     option : webpanda.project.option.js,
-    callback : function (e) {
+    oncallback : function (e) {
         // 无论包含成功还是失败都会执行
         // this 框架对象
         // webpanda.env 环境变量。来自框架设置中自定义的环境变量
@@ -1037,7 +1032,7 @@ setTimeout (function isWebpandaLoad () {
             selector : 'head',
             method : 'append',
             // 包含文件执行时的回调
-            callback : function (e) {
+            oncallback : function (e) {
                 // e.handle === require || ajax
         
                 var dates = new Date ();
@@ -1182,7 +1177,7 @@ webpanda.project ({
 
 ### include 包含资源文件
 
-引入工程文件、模板文件等。并且，相同的资源只会包含一次（包含会被缓存）。在包含参数中可以设置回调函数 callback ，需要注意，`css` 、`js` 与 `json` 、`text` 回调函数的 `this.handle` 对象是不相同的：
+引入工程文件、模板文件等。并且，相同的资源只会包含一次（包含会被缓存）。在包含参数中可以设置回调函数 `oncallback` 、`onsuccess`、`onerror` ，需要注意，`css` 、`js` 与 `json` 、`text` 回调函数的 `this.handle` 对象是不相同的：
 
 > `css` 、`js`  类型的文件，回调函数 `this.handle` 是 `webpanda.require` 对象；   
 >  `json` 、`text` 类型的文件，回调函数 `this.handle` 是 `webpanda.ajax` 对象。
@@ -1212,7 +1207,7 @@ webpanda.project ({
             // 也可以在include中引入模板
             src : "index.html",
             option : webpanda.project.option.text,
-            callback : function (e) {
+            oncallback : function (e) {
                 // 无论包含成功还是失败都会执行
                 // this 当前的工程对象。注意，这个时候的工程对象都是未准备好的
                 // webpanda.env 环境变量。来自框架设置中自定义的环境变量
@@ -1234,7 +1229,7 @@ webpanda.project ({
             },
         },
         {
-            src : "index.json",// 也可以忽略其他 option 、callback 参数
+            src : "index.json",// 也可以忽略其他 option 、oncallback 、onsuccess、onerror 参数
         },
         {
             // src参数支持回调函数，必须返回字符串。好处就是可以使用环境变量或者其他程序过程
@@ -1300,7 +1295,7 @@ include : [
         src :"/test/sleep.json",
         // 使用 webpanda.project.option.async 选项，表示异步包含
         option : webpanda.project.option.json|webpanda.project.option.async,
-        callback : function (e) {
+        oncallback : function (e) {
             // e 是引入对象
             // this 当前的工程对象。注意，这个时候的工程对象有可能未准备好，也有可能准备好了。因为这里是异步操作，可能会等待延迟等情况
         	// webpanda.env 环境变量。来自框架设置中自定义的环境变量
@@ -1322,14 +1317,14 @@ webpanda.project ({
     include:[
         {
             src : "/default/config.json", 
-            callback : function(e) {
+            oncallback : function(e) {
                 console.log (e.result.data);
             }
         },
         {
             // 获取远程模板内容
             src : "http://example.com/default/template.tpl", 
-            callback : function(e) {
+            oncallback : function(e) {
                 // e.result.data 就是获取的模板内容
                 project.template (e.result.data);
             }
@@ -2523,7 +2518,7 @@ var readyState = test.ready (function () {
 }, {
     global : true,// 是否全局有效，默认false非全局(页面刷新会被取消)
     timeout : 3000,// 3秒后超时
-    callback : function () {
+    oncallback : function () {
         console.log ('这是超时回调函数');
     }
 });
@@ -2920,7 +2915,7 @@ var readyState = webpanda.project ("test", function () {
 }, {
     global : true,// 是否全局有效，默认false非全局(页面刷新会被取消)
     timeout : 3000,// 3秒后超时
-    callback : function () {
+    oncallback : function () {
         console.log ('这是超时回调函数');
     }
 });

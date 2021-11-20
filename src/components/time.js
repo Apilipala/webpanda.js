@@ -4,10 +4,10 @@ webpanda.project ({
     name : 'webpanda-time',
 
     /**
-     * 工程成员属性
+     * 原型
      * @var {Object}
      */
-    property : {
+    prototype : {
         
 
         

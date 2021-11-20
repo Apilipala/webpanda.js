@@ -4,11 +4,11 @@ webpanda.project ({
     name : 'webpanda-element',
 
     /**
-     * 工程成员属性
+     * 原型
      * @var {Object}
      */
-    property : {
-
+    prototype : {
+    
 
         /**
          * 向一个节点(目标)触发点击事件

@@ -5,10 +5,10 @@ webpanda.project ({
 
 
     /**
-     * 工程成员属性
+     * 原型
      * @var {Object}
      */
-    property : {
+    prototype : {
 
         /**
          * 字节单位换算函数（bytes，KB）
