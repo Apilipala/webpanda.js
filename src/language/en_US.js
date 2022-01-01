@@ -16,7 +16,7 @@ webpanda.language ({
     'parse-0006' : '"${1}" command not valid, missing class name!',
     'parse-0007' : '"${1}" command is not valid. Missing style key name!',
     'parse-0008' : '"${1}" command missing event name!',
-    'parse-0009' : '"${1}" command syntax errors, "elseif | else" command node must be present before the "if", "else" command node must exist before "elseif | if" command',
+    'parse-0009' : '"${1}" command syntax errors, "else if | else" command node must be present before the "if", "else" command node must exist before "else if | if" command',
 
     // parse、render
     'render-0001' : 'Render error, "${1}" is a property of render data, cannot be defined as traversal unit key other name!',

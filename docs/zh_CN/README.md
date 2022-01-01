@@ -3416,19 +3416,18 @@ webpanda-before,webpanda-template,webpanda-for,webpanda-if,webpanda-else-if,webp
 
 
 
-### 分支 webpanda\-if、webpanda\-else\-if、webpanda\-elseif、webpanda\-else
+### 分支 webpanda\-if、webpanda\-else\-if、webpanda\-else
 
 该组命令用于条件性地渲染一块内容。这块内容只会在命令的表达式返回 `truthy` 值的时候被渲染。该组命令不能在同一个标签中同时存在或存在多个。
 
 `webpanda-if` 指令用于条件性地渲染一块内容。这块内容只会在指令的表达式返回 `truthy` 值的时候被渲染。`webpanda-else` 延伸了 `webpanda-if` 语句，可以在 `webpanda-if` 语句中的表达式的值为 `falsy` 时执行语句。`webpanda-else-if`，和此名称暗示的一样，是 `webpanda-if` 和 `webpanda-else` 的组合。和 `webpanda-else` 一样，它延伸了 `webpanda-if` 语句，可以在原来的 `webpanda-if` 表达式值为 `falsy` 时执行不同语句。
 
-但是和 `webpanda-else` 不一样的是，它仅在 `webpanda-else-if` 的条件表达式值为 `truthy` 时执行语句。注意，`webpanda-elseif` 只是 `webpanda-else-if` 的简写，两者是效果一样的。
+但是和 `webpanda-else` 不一样的是，它仅在 `webpanda-else-if` 的条件表达式值为 `truthy` 时执行语句。
 
 ```html
 <div webpanda-if="typeof testArray == 'object'">testArray 是一个对象</div>
 <!--条件中间是可以写文本和注释的-->
-<!--webpanda-elseif 和 webpanda-else-if 是效果一样的-->
-<div webpanda-elseif="testArray">
+<div webpanda-else-if="testArray">
     testArray 不是数组，但是一个真值
 </div>
 <div webpanda-else>
@@ -3470,34 +3469,32 @@ webpanda-before,webpanda-template,webpanda-for,webpanda-if,webpanda-else-if,webp
 
 
 
-### 属性 webpanda\-attribute、webpanda\-attr
+### 属性 webpanda\-attribute
 
 该命令的表达式结果返回字符串作为属性值。
 
-该命令在同一个标签中可以存在多个。 
-
-`webpanda-attr` 是`webpanda-attribute`的别名，语法为`webpanda-attr="对象表达式"`，示例如下：
+该命令在同一个标签中可以存在多个。语法为`webpanda-attribute="对象表达式"`，示例如下：
 
 ```html
-<div webpanda-attr="{name:'attrTestName', id:'attrTestId', var:attrTest}">属性添加别名称</div>
+<div webpanda-attribute="{name:'attrTestName', id:'attrTestId', var:attrTest}">添加属性</div>
 <div webpanda-attribute="{as:attrTestAs}">属性添加全名称</div>
-<div webpanda-attr="{as:attrTestAs}" webpanda-attr="arrObjsTest">可以存在多个属性设置</div>
+<div webpanda-attribute="{as:attrTestAs}" webpanda-attribute="arrObjsTest">可以存在多个属性设置</div>
 ```
 
 input、option 值的设置：
 
 ```html
-<input type="Text" webpanda-attr="{value:setValue}"/>
-<input type="Radio" webpanda-attr="{checked:setBool}"/>
+<input type="Text" webpanda-attribute="{value:setValue}"/>
+<input type="Radio" webpanda-attribute="{checked:setBool}"/>
 <select>
-    <option webpanda-attr="{selected:'selected',value:'hk'}">Hong Kong</option>
+    <option webpanda-attribute="{selected:'selected',value:'hk'}">Hong Kong</option>
 </select>
 ```
 
 textarea 值的设置有两种方式：
 
 ```html
-<textarea webpanda-attr="{value:setValue}"></textarea>
+<textarea webpanda-attribute="{value:setValue}"></textarea>
 ```
 
 等价于：
@@ -3515,8 +3512,8 @@ textarea 值的设置有两种方式：
 如果是单个属性操作，可以使用 `webpanda-attribute-[属性名称]="值"` 方式设置，如下所示：
 
 ```html
-<input type="Text" webpanda-attr-value="setValue"/>
-<textarea webpanda-attr-value="setValue"></textarea>
+<input type="Text" webpanda-attribute-value="setValue"/>
+<textarea webpanda-attribute-value="setValue"></textarea>
 ```
 
 
@@ -3802,10 +3799,10 @@ this.eClickFnTest = function (e) {
 如下写法：
 
 ```html
-<h1 --test="'#node-'+title" -after="console.log (#node)">{{title}}</h1>
+<h1 --test="'#node-'+title" -after="#window.console.log (#node)">{{title}}</h1>
 ```
 
-上面的代码中，`'#node-'+title` 的 `#node` 会不会被解析成模板预编译参数呢？明确告诉你，不会！因为编译器会自动识别是否在字符串内（是否在单引号或双引号内），如果是字符串则不会被解析的。而后面 `-after="console.log (#node)"`  的 `#node` 则会被解析成模板预编译参数。
+上面的代码中，`'#node-'+title` 的 `#node` 会不会被解析成模板预编译参数呢？明确告诉你，不会！因为编译器会自动识别是否在字符串内（是否在单引号或双引号内），如果是字符串则不会被解析的。而后面 `-after="#window.console.log (#node)"`  的 `#node` 则会被解析成模板预编译参数。
 
 
 
@@ -3921,7 +3918,6 @@ this.eClickFnTest = function (e) {
 如下：
 
 ```html
-<a webpanda-attr-href="'#'+count"></a>
 <a webpanda-attribute-href="'#'+count"></a>
 <a webpanda-attribute="{href:'#'+count}"></a>
 ```
@@ -3929,7 +3925,7 @@ this.eClickFnTest = function (e) {
 简写为：
 
 ```html
-<a -attr-href="'#'+count"></a>
+<a -attribute-href="'#'+count"></a>
 <a webpanda--href="'#'+count"></a>
 <a --href="'#'+count"></a>
 ```
@@ -3945,7 +3941,7 @@ this.eClickFnTest = function (e) {
 在模板中也可以使用js关键字，但只支持下面几个关键字：
 
 ```shell
-if else new return typeof instanceof debugger false true null undefined
+new return typeof instanceof debugger false true null undefined
 ```
 
 示例：
@@ -3960,13 +3956,45 @@ if else new return typeof instanceof debugger false true null undefined
 </div>
 ```
 
-
+> 注意，在模板命令中不支持 `if else function` 关键字。
 
 
 
 
 
 ## 知识点
+
+
+
+### 模板表达式中的 this 与 \#this 区别
+
+`this` 是表示渲染数据，如下所示，三种写法是等价的：
+
+```html
+<div -style-color="this['colorRed']"></div>
+<div -style-color="this.colorRed"></div>
+<div -style-color="colorRed"></div>
+```
+
+`#this` 是获取当前虚拟节点树对象，如下所示：
+
+```html
+<h1 -after="#window.console.log (#this)">{{title}}</h1>
+```
+
+
+
+
+
+
+
+### 节点的属性、类、样式、事件等渲染优先级
+
+```shell
+子节点渲染 children > 属性 attribute > 类 class > 样式 style > 事件 event
+```
+
+根据上面所示，在最开始渲染的时候，如果在属性 (`webpanda-attribute`) 中去取动态渲染的类名称或者动态渲染的样式是取不到的。
 
 
 
@@ -4113,12 +4141,12 @@ _this.setCatalogsScrollTop = function() {
 
 # webpanda\.timer (callback, timeout, limit, global) 页面计时器
 
-返回一个计时器对象, 如果参数不合法则返回 undefined 。参数介绍如下：
+返回一个计时器对象。参数介绍如下：
 
 > callback 回调函数；   
-> timeout 超时时间；   
-> limit 执行次数限制，如果小于1，则表示无限循环。  
-> global 是否为全局有效，如果为true表示全局，页面更新不会被清理，否则页面更新就会被清理。
+> timeout 超时时间。默认为 0；  
+> limit 执行次数限制，如果小于1，则表示无限循环。默认为 0；   
+> global 是否为全局有效，如果为true表示全局，页面更新不会被清理，否则页面更新就会被清理。默认为 false。
 
 不是全局的计时器被认作为页面计时器，就是在当前页面有效，只要页面更新就会自动取消。在单页应用模式下，我怀疑定时器、超时器的ID池存在不够用、爆库的风险。所以建议使用计时器统一管理。
 
@@ -4237,27 +4265,53 @@ timer.stop ();
 
 
 
-### backLength 上一页的数量
+### backList 上一页的日志列表
 
-返回一个整数，该整数表示当前页面的相对位置前面的页数。
+是一个数组，该数组是上一页的日志列表。
 
+获取上一页的数量：
 
-
-### forwardLength 下一页的数量
-
-返回一个整数，该整数表示当前页面的相对位置后面的页数。
-
-
-
-### lastLength 上一步的数量
-
-返回一个整数，该整数表示当前页面的相对位置前面的步数。
+```javascript
+var backLength = webpanda.history.backList.length;
+```
 
 
 
-### nextLength 下一步的数量
 
-返回一个整数，该整数表示当前页面的相对位置后面的步数。
+
+### forwardList 下一页的日志列表
+
+是一个数组，该数组是下一页的日志列表。
+
+获取下一页的数量：
+
+```javascript
+var forwardLength = webpanda.history.forwardList.length;
+```
+
+
+
+
+
+
+
+### current 当前页面的日志数据
+
+是一个日志对象，该对象是当前页面的日志。
+
+获取当前页面的上一步的数量：
+
+```javascript
+var lastLength = webpanda.history.current && webpanda.history.current.getLastLength () || 0;
+```
+
+获取当前页面的下一步的数量：
+
+```javascript
+var nextLength = webpanda.history.current && webpanda.history.current.getNextLength () || 0;
+```
+
+
 
 
 
@@ -4344,16 +4398,6 @@ webpanda.history.step (2);// 到下2步
 ```
 
 
-
-
-
-### log() 获取页面的浏览记录列表
-
-获取浏览记录的列表：上一页集合 `back`、当前页 `current`、下一页集合 `forward`。
-
-```javascript
-var logs = webpanda.history.log ();
-```
 
 
 
@@ -4672,7 +4716,7 @@ var ajax = webpanda.ajax ({
     // url: webpanda.url ("http://example.com/?api=example.test"), 等价于 url:"http://example.com/?api=example.test"
     // 发起POST请求
     method : 'POST',
-    data : {a:'aa', b:'bb'},
+    body : {a:'aa', b:'bb'},
     // 设置异步请求、响应数据类型为JSON
     option : webpanda.ajax.option.async | webpanda.ajax.option.responseJson,
     // 设置超时时间，毫秒
@@ -4683,6 +4727,11 @@ var ajax = webpanda.ajax ({
     },
     // 发送请求前执行事件
     onrequest : function (XMLHttpRequest) {
+        // 参考文档：https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest/withCredentials
+        // 如果在发送来自其他域的XMLHttpRequest请求之前，未设置 withCredentials 为true，那么就不能为它自己的域设置cookie值。
+        // 而通过设置 withCredentials 为true获得的第三方cookies，将会依旧享受同源策略，因此不能被通过document.cookie或者从头部相应请求的脚本等访问。
+        XMLHttpRequest.withCredentials = true;
+        
         console.log("XMLHttpRequest", XMLHttpRequest);
     },
     // 完成事件
@@ -4725,7 +4774,7 @@ var ajax = webpanda.ajax ({
     url : 'http://example.com/?api=example.test',
     // 发起POST请求
     method : 'POST',
-    data : formData,
+    body : formData,
     // 设置异步请求、响应数据类型为JSON
     option : webpanda.ajax.option.async | webpanda.ajax.option.responseJson,
     // 完成事件
@@ -4790,15 +4839,15 @@ if (webpanda.ajax.isInstanceOf (obj)) {
 | :------- | :--------------------- | :----------------------------------------------------------- |
 | url      | url Object             | 资源文件地址对象                                             |
 | method   | GET                    | 请求方法                                                     |
-| data     | Object/FormData/String | 请求的参数                                                   |
+| body     | Object/FormData/String | 请求中要发送的数据体                                         |
 | header   | Object                 | 请求头                                                       |
 | option   | int                    | 选项，通过 webpanda\.ajax\.option 设置值。可以设置请求方法(只支持 POST、GET)、设置同步(默认异步)、响应数据类型 |
 | user     | String/NULL            | 可用于身份验证的可选用户名；默认情况下，值为null             |
 | password | String/NULL            | 可用于身份验证的可选密码；默认情况下，值为null               |
 
-注意，`header` 默认值：`{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'}` 。当 `data` 参数类型是 `FormData` 那么 `Content-Type` 会被阻止使用（使用无效），因为`FormData` 类型的请求参数会将 form 数据放置 `Content-Type` 中。
+注意，`header` 默认值：`{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'}` 。当 `body` 参数类型是 `FormData` 那么 `Content-Type` 会被阻止使用（使用无效），因为`FormData` 类型的请求参数会将 form 数据放置 `Content-Type` 中。
 
-请求的参数`data` 如果是字符串，格式如：`&a=bar1&b=bar2` 。
+请求的参数`body` 如果是字符串，格式如：`&a=bar1&b=bar2` 。
 
 
 
