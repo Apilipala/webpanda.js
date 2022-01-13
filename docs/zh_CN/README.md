@@ -4718,7 +4718,7 @@ var ajax = webpanda.ajax ({
     method : 'POST',
     body : {a:'aa', b:'bb'},
     // 设置异步请求、响应数据类型为JSON
-    option : webpanda.ajax.option.async | webpanda.ajax.option.responseJson,
+    option : webpanda.ajax.option.async | webpanda.ajax.option.responseJSON,
     // 设置超时时间，毫秒
     timeout : 3000,
     // 当 readyState 改变时事件
@@ -4776,7 +4776,7 @@ var ajax = webpanda.ajax ({
     method : 'POST',
     body : formData,
     // 设置异步请求、响应数据类型为JSON
-    option : webpanda.ajax.option.async | webpanda.ajax.option.responseJson,
+    option : webpanda.ajax.option.async | webpanda.ajax.option.responseJSON,
     // 完成事件
     onresponse : function (result) {
         console.log("请求完成", result.data, result.status, result.message);
@@ -4813,9 +4813,9 @@ webpanda.ajax.option.async
 | async        | 设置为异步请求 (不设置则为同步) |
 | responseText | 设置响应的数据类型为 text       |
 | responseXML  | 设置响应的数据类型为 xml        |
-| responseJson | 设置响应的数据类型为 json       |
+| responseJSON | 设置响应的数据类型为 json       |
 
-响应数据同时设置的话，其优先级为 `responseText>responseXML>responseJson` 。
+响应数据同时设置的话，其优先级为 `responseText>responseXML>responseJSON` 。
 
 
 
@@ -4881,7 +4881,7 @@ webpanda.ajax ({
 var ajax = webpanda.ajax ({
     url : 'http://example.com/',
     // 设置异步请求、响应数据类型为JSON
-    option : webpanda.ajax.option.async | webpanda.ajax.option.responseJson,
+    option : webpanda.ajax.option.async | webpanda.ajax.option.responseJSON,
     onrequest : function (XMLHttpRequest) {
         // this 是当前请求对象。
         XMLHttpRequest.setRequestHeader ('X-Requested-With', 'test:X-Requested-With');
@@ -4965,7 +4965,7 @@ var ajax = webpanda.ajax ({
     // 指定请求方法 POST
     method: 'POST',
     // 设置异步请求、响应数据类型为JSON
-    option: webpanda.ajax.option.async | webpanda.ajax.option.responseJson,
+    option: webpanda.ajax.option.async | webpanda.ajax.option.responseJSON,
 });
 ajax.request ();
 ```
